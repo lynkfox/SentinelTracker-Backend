@@ -1,0 +1,7 @@
+pytest
+aws-cdk-lib
+constructs
+black
+pre-commit
+boto3
+pydantic
