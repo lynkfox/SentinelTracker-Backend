@@ -53,4 +53,14 @@ class Comparator(ApiEnum):
     """
 
     VERSUS = "versus"
+    WITH = "with"
     IN = "in"
+
+
+class Default(Enum):
+    """
+    Defaults for entities in LookUp and elsewhere.
+    """
+
+    BASE = "base"
+    ALL = "all"
