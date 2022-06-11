@@ -1,5 +1,6 @@
 import pytest
 from common._snippets import *
+from dataclasses import dataclass
 
 
 class Test_Snippets:
@@ -42,6 +43,14 @@ class Test_Snippets:
         test_model = Integer()
         assert test_model.schema == {"type": "integer"}
 
-    def test_array_snippet_schema_generates(self):
+    def test_array_snippet_schema_generates_with_simple_object_type(self):
         test_model = Array(items=[String])
         assert test_model.schema == {"type": "array", "items": ["string"]}
+
+    def test_array_snippet_schema_generates_with_object_with_schema(self):
+        @dataclass
+        class Test:
+            schema: dict
+
+        test_model = Array(items=[Test(schema={"test": "test"})])
+        assert test_model.schema == {"type": "array", "items": [{"test": "test"}]}

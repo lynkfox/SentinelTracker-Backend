@@ -7,6 +7,10 @@ def _ignored_attribute(attribute: str, value: any) -> bool:
     Checks attribute and values to see if this should be ignored in the
     schema output.
 
+    Parameters:
+        attribute(str): an attribute of a class __dict__
+        value(any): the value of the above attribute from the class __dict__
+
     Returns:
         (bool): True -> ignore this attribute/value
     """
@@ -77,12 +81,31 @@ class Array(SchemaSnippet):
         self.schema = self._build_schema_object()
 
     def _build_schema_object(self) -> dict:
-        self.items = [item.__name__.lower() for item in self.items]
+
+        self.items = [self._map_item_type(item) for item in self.items]
         return {
             attribute: value
             for attribute, value in self.__dict__.items()
             if not _ignored_attribute(attribute, value)
         }
+
+    def _map_item_type(self, item: any) -> any:
+        simple_items = [
+            String.__name__,
+            Integer.__name__,
+            Number.__name__,
+            Null.__name__,
+        ]
+        try:
+            if item.__name__ in simple_items:
+                return item.__name__.lower()
+        except Exception:
+            return item.schema
+
+
+@dataclass
+class Null(SchemaSnippet):
+    type: str = "null"
 
 
 @dataclass

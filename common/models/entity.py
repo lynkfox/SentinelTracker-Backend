@@ -57,3 +57,7 @@ class Entity(Schema):
     name: str = field(init=False, default=None)
     set: Optional[BoxSet] = field(init=False, default=None)
     type: Optional[Type] = field(init=False, default=None)
+    total_games: Optional[int] = field(init=False, default=None)
+    total_wins: Optional[int] = field(init=False, default=None)
+    _pk: str = field(init=False, default="ENTITY#")
+    _sk: str = field(init=False, default="META#")
