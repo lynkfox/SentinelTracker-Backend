@@ -5,3 +5,4 @@ black
 pre-commit
 boto3
 pydantic
+aws_cdk.aws_lambda_python_alpha

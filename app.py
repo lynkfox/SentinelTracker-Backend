@@ -4,7 +4,7 @@ import os
 import aws_cdk as cdk
 
 from configurations.common import DeploymentProperties
-from stacks.sentinel_tracker_backend import MainStack
+from stacks.sentine_tracker_backend import MainStack
 
 app = cdk.App()
 default_environment = cdk.Environment(
@@ -17,5 +17,4 @@ MainStack(
     env=default_environment,
     deployment_properties=deployment_props,
 )
-
 app.synth()
