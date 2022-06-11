@@ -26,3 +26,31 @@ class ApiEventTypes(Enum):
     CORS_PREFLIGHT = "OPTIONS"
     GET = "GET"
     POST = "POST"
+
+
+class ApiEnum(Enum):
+    @classmethod
+    def has_member(cls, key) -> bool:
+        """
+        Quick check to see if key is within this class.
+        """
+        return key.upper() in cls.__members__
+
+
+class Selector(ApiEnum):
+    """
+    Restful API selector types
+    """
+
+    VILLAIN = "villain"
+    HERO = "hero"
+    ENVIRONMENT = "environment"
+
+
+class Comparator(ApiEnum):
+    """
+    Restful API comparator types
+    """
+
+    VERSUS = "versus"
+    IN = "in"

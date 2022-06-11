@@ -30,6 +30,16 @@ class Entity(BaseModel):
         ).lower()
 
 
+class EntityComparison(BaseModel):
+    character: str = Field(...)
+    compared_against: str = Field(...)
+    total_games: Optional[int] = Field(0, ge=0)
+    total_wins: Optional[int] = Field(0, ge=0)
+    _pk: str = PrivateAttr()
+    _sk: str = PrivateAttr()
+    _url: str = PrivateAttr()
+
+
 class Game(BaseModel):
     pass
 
@@ -46,7 +56,7 @@ class User(BaseModel):
     class Config:
         title = "An Entity"
         underscore_attrs_are_private = True
-        description = "A singluar Representitive of an Entity, either a Hero, Villain, or Environment."
+        description = "A singluar Representitive of a User"
 
     def __init__(self, **data):
         super().__init__(**data)
