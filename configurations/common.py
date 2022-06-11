@@ -1,11 +1,10 @@
 from dataclasses import dataclass, field
-from configurations.common import Environment
 
 
 @dataclass
 class DeploymentProperties:
     PREFIX: str = field(default="Sentinels")
-    ENVIRONMENT: str = field(default=Environment.DEMO)
+    ENVIRONMENT: str = field(default="DEMO")
 
     def prefix_name(self, name: str, lower: bool = False) -> str:
         """

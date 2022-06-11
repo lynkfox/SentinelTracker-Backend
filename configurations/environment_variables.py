@@ -1,4 +1,5 @@
-from configurations import ResourceNames, Environment
+from configurations import Environment
+from dataclasses import dataclass, field
 
 
 @dataclass

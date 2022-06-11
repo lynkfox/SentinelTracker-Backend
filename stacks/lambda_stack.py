@@ -6,13 +6,14 @@ from aws_cdk import NestedStack
 from aws_cdk import aws_iam as iam
 from aws_cdk import aws_lambda
 from aws_cdk import aws_dynamodb as dynamodb
+from aws_cdk import aws_lambda_python_alpha as python_lambda
 from constructs import Construct
 import os
 from pathlib import Path
 
 from configurations import ResourceNames, DirectoryLocations
 from configurations.common import DeploymentProperties
-from configurations.environment_variables import get_entity_env
+from configurations.environment_variables import LambdaEnvironmentVariables
 
 root_directory = Path(__file__).parents[1]
 
@@ -41,8 +42,6 @@ class LambdaStack(NestedStack):
 
         self.lambda_mapping = {}
 
-        get_entity_env["TABLE_NAME"] = dynamo_table.table_name
-
         get_entity = aws_lambda.Function(
             self,
             ResourceNames.GET_ENTITY,
@@ -50,7 +49,9 @@ class LambdaStack(NestedStack):
             code=aws_lambda.Code.from_asset(
                 os.path.join(root_directory, DirectoryLocations.GET_ENTITY)
             ),
-            environment=get_entity_env,
+            environment=LambdaEnvironmentVariables(
+                {}, ResourceNames.GET_ENTITY, dynamo_table.table_name
+            ),
             runtime=aws_lambda.Runtime.PYTHON_3_9,
             handler="handler.lambda_handler",
             layers=[layer],
