@@ -1,0 +1,170 @@
+{
+ "Resources": {
+  "commonFE63BF5B": {
+   "Type": "AWS::Lambda::LayerVersion",
+   "Properties": {
+    "Content": {
+     "S3Bucket": "cdk-hnb659fds-assets-879417600751-us-east-2",
+     "S3Key": "402bc51fb0344d8040c2c37ef64609abeba8366fdd0103e03a0ca0464a5a70fc.zip"
+    },
+    "LayerName": "Sentinels-DEMO-common"
+   },
+   "Metadata": {
+    "aws:cdk:path": "SentinelTrackerBackend/Lambdas/common/Resource",
+    "aws:asset:path": "asset.402bc51fb0344d8040c2c37ef64609abeba8366fdd0103e03a0ca0464a5a70fc.zip",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Content"
+   }
+  },
+  "GetSentinelsEntitiesServiceRoleA67AF146": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "SentinelTrackerBackend/Lambdas/Get-Sentinels-Entities/ServiceRole/Resource"
+   }
+  },
+  "GetSentinelsEntitiesServiceRoleDefaultPolicy93A8A294": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "dynamodb:*",
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Ref": "referencetoSentinelTrackerBackendStorageStackNestedStackStorageStackNestedStackResource44CE16EFOutputsSentinelTrackerBackendStorageStackstatisticsC741EC1CArn"
+        },
+        {
+         "Ref": "AWS::NoValue"
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "GetSentinelsEntitiesServiceRoleDefaultPolicy93A8A294",
+    "Roles": [
+     {
+      "Ref": "GetSentinelsEntitiesServiceRoleA67AF146"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "SentinelTrackerBackend/Lambdas/Get-Sentinels-Entities/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "GetSentinelsEntitiesD1DB7357": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-879417600751-us-east-2",
+     "S3Key": "6a17c14463b1b9dc207398414885064b49f55ce49fb384a992d5e89a35bce20b.zip"
+    },
+    "Role": {
+     "Fn::GetAtt": [
+      "GetSentinelsEntitiesServiceRoleA67AF146",
+      "Arn"
+     ]
+    },
+    "Environment": {
+     "Variables": {
+      "POWERTOOLS_SERVICE_NAME": "Get-Sentinels-Entities",
+      "TABLE": {
+       "Ref": "referencetoSentinelTrackerBackendStorageStackNestedStackStorageStackNestedStackResource44CE16EFOutputsSentinelTrackerBackendStorageStackstatisticsC741EC1CRef"
+      },
+      "LOG_EVEL": "DEBUG"
+     }
+    },
+    "FunctionName": "Sentinels-DEMO-Get-Sentinels-Entities",
+    "Handler": "handler.lambda_handler",
+    "Layers": [
+     {
+      "Ref": "commonFE63BF5B"
+     }
+    ],
+    "Runtime": "python3.9"
+   },
+   "DependsOn": [
+    "GetSentinelsEntitiesServiceRoleDefaultPolicy93A8A294",
+    "GetSentinelsEntitiesServiceRoleA67AF146"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "SentinelTrackerBackend/Lambdas/Get-Sentinels-Entities/Resource",
+    "aws:asset:path": "asset.6a17c14463b1b9dc207398414885064b49f55ce49fb384a992d5e89a35bce20b",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "GetSentinelsEntitiesInvokeFcyXBRX02EWa52GlFECQiCzDt0fdRUDi4mo4foC5aU9894B2DA": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "GetSentinelsEntitiesD1DB7357",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com"
+   },
+   "Metadata": {
+    "aws:cdk:path": "SentinelTrackerBackend/Lambdas/Get-Sentinels-Entities/InvokeFcyXBRX02EWa52GlF+ECQiCzDt0fdRUDi4mo4foC5aU="
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/1WOwQrCMBBEv6X3dBWLiEcreBIpFbyWNF3r2jaBbIKUkn+3jR709GaYmWU3sNnBOpEvTlXTpT3VMF2QHTZXJ1Un5qCaejnUjYTpLEe0N7RMRovjXf/5k9fKfYNfXaAdiJdKEJxVkhkdw2HB7CH3qkOXS0ZBcoCpND0us8jC9KTGeCWqEEQczr+1pNvYQzbeKgyiGN3D6FUGe9gmTyZKrdeOBoTywzfv3JY67AAAAA=="
+   },
+   "Metadata": {
+    "aws:cdk:path": "SentinelTrackerBackend/Lambdas/CDKMetadata/Default"
+   }
+  }
+ },
+ "Parameters": {
+  "referencetoSentinelTrackerBackendStorageStackNestedStackStorageStackNestedStackResource44CE16EFOutputsSentinelTrackerBackendStorageStackstatisticsC741EC1CArn": {
+   "Type": "String"
+  },
+  "referencetoSentinelTrackerBackendStorageStackNestedStackStorageStackNestedStackResource44CE16EFOutputsSentinelTrackerBackendStorageStackstatisticsC741EC1CRef": {
+   "Type": "String"
+  }
+ },
+ "Outputs": {
+  "SentinelTrackerBackendLambdasGetSentinelsEntitiesF063FFA0Arn": {
+   "Value": {
+    "Fn::GetAtt": [
+     "GetSentinelsEntitiesD1DB7357",
+     "Arn"
+    ]
+   }
+  }
+ }
+}

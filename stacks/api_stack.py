@@ -37,7 +37,7 @@ class ApiStack(NestedStack):
 
         self.backend_api.apply_removal_policy(core.RemovalPolicy.DESTROY)
 
-        lambda_mapping[ResourceNames.DATA_INTERACTION].grant_invoke(
+        lambda_mapping[ResourceNames.GET_ENTITY].grant_invoke(
             iam.ServicePrincipal("apigateway.amazonaws.com")
         )
 

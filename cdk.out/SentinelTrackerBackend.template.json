@@ -1,0 +1,174 @@
+{
+ "Resources": {
+  "StorageStackNestedStackStorageStackNestedStackResourceDF048E59": {
+   "Type": "AWS::CloudFormation::Stack",
+   "Properties": {
+    "TemplateURL": {
+     "Fn::Join": [
+      "",
+      [
+       "https://s3.us-east-2.",
+       {
+        "Ref": "AWS::URLSuffix"
+       },
+       "/cdk-hnb659fds-assets-879417600751-us-east-2/5737e7e8b17b5e13b81e1e0f4c3859ba7181b9340a4b4075940addf9c80c431e.json"
+      ]
+     ]
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "SentinelTrackerBackend/StorageStack.NestedStack/StorageStack.NestedStackResource",
+    "aws:asset:path": "SentinelTrackerBackendStorageStack52A9AD46.nested.template.json",
+    "aws:asset:property": "TemplateURL"
+   }
+  },
+  "LambdasNestedStackLambdasNestedStackResource871D36BA": {
+   "Type": "AWS::CloudFormation::Stack",
+   "Properties": {
+    "TemplateURL": {
+     "Fn::Join": [
+      "",
+      [
+       "https://s3.us-east-2.",
+       {
+        "Ref": "AWS::URLSuffix"
+       },
+       "/cdk-hnb659fds-assets-879417600751-us-east-2/7a8ecbe748ceddbe85361ea68b3ddc83a8a8c250349641236712218547de6107.json"
+      ]
+     ]
+    },
+    "Parameters": {
+     "referencetoSentinelTrackerBackendStorageStackNestedStackStorageStackNestedStackResource44CE16EFOutputsSentinelTrackerBackendStorageStackstatisticsC741EC1CArn": {
+      "Fn::GetAtt": [
+       "StorageStackNestedStackStorageStackNestedStackResourceDF048E59",
+       "Outputs.SentinelTrackerBackendStorageStackstatisticsC741EC1CArn"
+      ]
+     },
+     "referencetoSentinelTrackerBackendStorageStackNestedStackStorageStackNestedStackResource44CE16EFOutputsSentinelTrackerBackendStorageStackstatisticsC741EC1CRef": {
+      "Fn::GetAtt": [
+       "StorageStackNestedStackStorageStackNestedStackResourceDF048E59",
+       "Outputs.SentinelTrackerBackendStorageStackstatisticsC741EC1CRef"
+      ]
+     }
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "SentinelTrackerBackend/Lambdas.NestedStack/Lambdas.NestedStackResource",
+    "aws:asset:path": "SentinelTrackerBackendLambdas9421FAFD.nested.template.json",
+    "aws:asset:property": "TemplateURL"
+   }
+  },
+  "ApiNestedStackApiNestedStackResourceD6AA1271": {
+   "Type": "AWS::CloudFormation::Stack",
+   "Properties": {
+    "TemplateURL": {
+     "Fn::Join": [
+      "",
+      [
+       "https://s3.us-east-2.",
+       {
+        "Ref": "AWS::URLSuffix"
+       },
+       "/cdk-hnb659fds-assets-879417600751-us-east-2/dde46a548be2c8cb423a16edae585a6d63fbc439b99d4f0b0348883686bd0f37.json"
+      ]
+     ]
+    },
+    "Parameters": {
+     "referencetoSentinelTrackerBackendLambdasNestedStackLambdasNestedStackResource25535BFDOutputsSentinelTrackerBackendLambdasGetSentinelsEntitiesF063FFA0Arn": {
+      "Fn::GetAtt": [
+       "LambdasNestedStackLambdasNestedStackResource871D36BA",
+       "Outputs.SentinelTrackerBackendLambdasGetSentinelsEntitiesF063FFA0Arn"
+      ]
+     }
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "SentinelTrackerBackend/Api.NestedStack/Api.NestedStackResource",
+    "aws:asset:path": "SentinelTrackerBackendApiE1D48352.nested.template.json",
+    "aws:asset:property": "TemplateURL"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/zPSMzLXM1BMLC/WTU7J1s3JTNKrDi5JTM7WcU7LgzP8S0sKSktArKDU4vzSouTUWp2AypKM/Dx9Yz1LPVPFrOLMTN2i0rySzNxUvSAIDQCoYflIWwAAAA=="
+   },
+   "Metadata": {
+    "aws:cdk:path": "SentinelTrackerBackend/CDKMetadata/Default"
+   }
+  }
+ },
+ "Outputs": {
+  "ApiEndpoint": {
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://",
+      {
+       "Fn::GetAtt": [
+        "ApiNestedStackApiNestedStackResourceD6AA1271",
+        "Outputs.SentinelTrackerBackendApiSentinelTrackerAPI3135D4D9Ref"
+       ]
+      },
+      ".execute-api.us-east-2.",
+      {
+       "Ref": "AWS::URLSuffix"
+      },
+      "/",
+      {
+       "Fn::GetAtt": [
+        "ApiNestedStackApiNestedStackResourceD6AA1271",
+        "Outputs.SentinelTrackerBackendApiSentinelTrackerAPIDeploymentStageDEMO008C34CARef"
+       ]
+      },
+      "/"
+     ]
+    ]
+   },
+   "Export": {
+    "Name": "apiUrl"
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}

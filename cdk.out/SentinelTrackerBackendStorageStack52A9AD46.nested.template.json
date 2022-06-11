@@ -1,0 +1,63 @@
+{
+ "Resources": {
+  "statistics3E3E0E09": {
+   "Type": "AWS::DynamoDB::Table",
+   "Properties": {
+    "KeySchema": [
+     {
+      "AttributeName": "pk",
+      "KeyType": "HASH"
+     },
+     {
+      "AttributeName": "sk",
+      "KeyType": "RANGE"
+     }
+    ],
+    "AttributeDefinitions": [
+     {
+      "AttributeName": "pk",
+      "AttributeType": "S"
+     },
+     {
+      "AttributeName": "sk",
+      "AttributeType": "S"
+     }
+    ],
+    "ProvisionedThroughput": {
+     "ReadCapacityUnits": 5,
+     "WriteCapacityUnits": 5
+    },
+    "TableName": "Sentinels-DEMO-statistics"
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "SentinelTrackerBackend/StorageStack/statistics/Resource"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/zPSMzLXM1BMLC/WTU7J1s3JTNKr9kstLklNCS5JTM7WAUrEp1TmJebmpwBlQhKTclJ1nNPywIxanaDU4vzSomSwEIxdqxNQWZKRn6dvrGepZ6qYVZyZqVtUmleSmZuqFwShAX6P1uZ1AAAA"
+   },
+   "Metadata": {
+    "aws:cdk:path": "SentinelTrackerBackend/StorageStack/CDKMetadata/Default"
+   }
+  }
+ },
+ "Outputs": {
+  "SentinelTrackerBackendStorageStackstatisticsC741EC1CArn": {
+   "Value": {
+    "Fn::GetAtt": [
+     "statistics3E3E0E09",
+     "Arn"
+    ]
+   }
+  },
+  "SentinelTrackerBackendStorageStackstatisticsC741EC1CRef": {
+   "Value": {
+    "Ref": "statistics3E3E0E09"
+   }
+  }
+ }
+}
