@@ -1,7 +1,7 @@
-from enums import enum
+from enum import Enum
 
 
-class BoxSet(enum):
+class BoxSet(Enum):
     FIRST_EDITION = "First Edition"
     ENHANCED_EDITION = "Enhanced Edition"
     DEFINITIVE_EDITION = "Definitive Edition"
@@ -14,7 +14,7 @@ class BoxSet(enum):
     OBLIVAEON = "OblivAeon"
 
 
-class Type(enum):
+class Type(Enum):
     HERO = "Hero"
     VILLAIN = "Villain"
     TEAM_VILLAIN = "Team Villain"
@@ -22,7 +22,7 @@ class Type(enum):
     ENVIRONMENT = "Environment"
 
 
-class ApiEventTypes(enum):
+class ApiEventTypes(Enum):
     CORS_PREFLIGHT = "OPTIONS"
     GET = "GET"
     POST = "POST"
