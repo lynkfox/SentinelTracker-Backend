@@ -1,5 +1,7 @@
 from dataclasses import dataclass, field
+from typing import Optional
 from common.models.enums import BoxSet, Type, ApiEventTypes
+from common.models import Schema
 
 
 @dataclass
@@ -51,8 +53,7 @@ class GetEntity(ApiEvent):
 
 
 @dataclass
-class Entity:
-    props: {}
-    name: str = field(init=False)
-    set: BoxSet = field(init=False)
-    type: Type = field(init=False)
+class Entity(Schema):
+    name: str = field(init=False, default=None)
+    set: Optional[BoxSet] = field(init=False, default=None)
+    type: Optional[Type] = field(init=False, default=None)

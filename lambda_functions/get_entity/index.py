@@ -17,13 +17,16 @@ def lambda_handler(event: dict, context: dict) -> dict:
     Handles all routing of the api, based on path.
     """
 
-    _event = GetEntity(event)
-    body = {"message": "Invalid format"}
-
     try:
+
+        _event = GetEntity(event)
+        body = {"message": "Invalid format"}
 
         if _event.IS_OPTIONS:
             body = {"message": "Preflight Accepted"}
+
+        if _event.IS_GET:
+            body = get_entity(_event.entity_name, dynamo_resource=DYNAMO_RESOURCE)
 
     except Exception as e:
         logger.exception("Unhandled Error")
