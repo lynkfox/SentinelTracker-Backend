@@ -92,6 +92,7 @@ class Villain(Character):
     plague_rat = "plague_rat"
     progeny = "progeny"
     proletariat = "proletariat"
+    ranek_kel_voss = "ranek_kel_voss"
     sanction = "sanction"
     sergeant_steel = "sergeant_steel"
     spite = "spite"
@@ -127,6 +128,58 @@ class Environment(Character):
     time_cataclysm = "time_cataclysm"
     tomb_of_anubis = "the_tomb_of_anubis"
     wagner_mars_base = "wagner_mars_base"
+
+
+class AlternateTags(Character):
+    freedom_five = "freedom_five"
+    freedom_six = "freedom_six"
+    termi_nation = "termi_nation"
+    prime_wardens = "prime_wardens"
+    xtreme_prime_wardens = "xtream_prime_wardens"
+    adamant = "adamant"
+    dark_watch = "dark_watch"
+    scion = "scion"
+    team_villain = "team_villain"
+
+    spirit_of_the_void = "spirit_of_the_void"  # Akash hero
+    dark_conductor = "dark_conductor"  # Argent
+    supply_and_demand = "supply_and_demand"  # Benchmark
+    gi = "gi"  # bunker
+    requital = "requital"  # Captain Cosmic
+    best_of_times = "best_of_times"  # Chrono Ranger
+    malpractice = "malpractice"  # Dr Medico
+    redeemer = "redeemer"  # Fanatic
+    santa = "santa"  # Guise
+    complitionist = "complitionist"  # Guise
+    eternal = "eternal"  # Haka
+    super_sentai = "super_sentai"  # Idealist
+    rogue_agent = "rogue_agent"  # KNYFE
+    curse_of_the_black_spot = "curse_of_the_black_spot"  # La Coodora
+    americas_greatest = "americas_greatest"  # Legacy
+    americas_newest = "americas_newest"  # young legacy
+    americas_cleverist = "americas_cleverist"  # Legacy
+    bloodmage = "bloodmage"  # Lifeline
+    heroic = "heroic"  # heroic luminary - lady luminary
+    road_warrior = "road_warrior"  # Mainstay
+    the_hunted = "the_hunted"  # Naturalist
+    u = "u"  # omnitron-u
+    fugue_state = "fugue_state"  # parse
+    horus_of_the_two_horizon = "horus_of_the_two_horizon"  # Ra
+    setting_sun = "setting_sun"  # Ra
+    of_the_infinite = "of_the_infinite"  # Scholar
+    action_hero = "action_hero"  # Stuntman
+    super_scientific = "super_scientific"  # Tachyon
+    dark = "dark"  # visionary
+    unleashed = "unleashed"  # visionary
+    rook_city = "rook_city"  # wraith
+    cosmic_inventor = "cosmic_inventor"  # writhe
+
+    mad_bomber = "mad_bomber"  # baron blade
+    skinwalker = "skinwalker"  # gloomweaver
+    heroic = "heroic"  # infinitor
+    trickster = "trickster"  # kismet
+    cosmic = "cosmic"  # omnitron
+    agent_of_gloom = "agent_of_gloom"  # spite
 
 
 HERO_DISPLAY_MAPPING = {
@@ -206,6 +259,7 @@ VILLAIN_DISPLAY_MAPPING = {
     Villain.plague_rat: "Plague Rat",
     Villain.progeny: "Progeny",
     Villain.proletariat: "Proletariat",
+    Villain.ranek_kel_voss: "Ranek Kel'Voss",
     Villain.sanction: "Sanction",
     Villain.sergeant_steel: "Sergeant Steel",
     Villain.spite: "Spite",
