@@ -8,7 +8,7 @@ class Character(Enum):
         Quick check to see if key is within this class.
         """
         if isinstance(key, str):
-            return key.upper() in cls.__members__
+            return key.lower() in cls.__members__
         elif isinstance(key, Enum):
             return key.name in cls.__members__
         else:
