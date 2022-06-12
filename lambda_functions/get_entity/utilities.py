@@ -98,6 +98,13 @@ class LookUp:
         """
         Builds an Operation to add to the instructions.
         """
+        instruction = self._determine_instruction(self.path_parts[current_index])
+
+        next_part = (
+            self.path_parts[current_index + 1]
+            if self.total_parts > current_index + 1
+            else Default.ALL
+        )
 
         follow_up_part = (
             self.path_parts[current_index + 2]
@@ -105,15 +112,12 @@ class LookUp:
             else None
         )
 
-        instruction = self._determine_instruction(self.path_parts[current_index])
         entity_type, character_enum = self._determine_entity_type(
-            self.path_parts[current_index]
+            self.path_parts[current_index], next_part, instruction
         )
 
         name_selection = (
-            character_enum(self.path_parts[current_index + 1])
-            if self.total_parts > current_index + 1
-            else Default.ALL
+            character_enum(next_part) if next_part != Default.ALL else Default.ALL
         )
 
         if follow_up_part is not None and (
@@ -139,7 +143,9 @@ class LookUp:
         else:
             return Comparator(path_part)
 
-    def _determine_entity_type(self, path_part) -> Tuple[Selector, Enum]:
+    def _determine_entity_type(
+        self, path_part, next_part, current_instruction
+    ) -> Tuple[Selector, Enum]:
         """
         Sets the Entity_Type to the one passed if the first instruction,
             else checks the Enums for determining the type (and dealing)
@@ -150,6 +156,7 @@ class LookUp:
         """
         if len(self.operations) == 0:
             select = Selector(path_part)
+
             if select == Selector.HERO:
                 return select, Hero
             if select == Selector.VILLAIN:
@@ -157,23 +164,42 @@ class LookUp:
             if select == Selector.ENVIRONMENT:
                 return select, Environment
 
-        else:
-            if path_part == Hero.akash_bhuta or path_part == Villain.akash_bhuta:
-                return self._deal_with_duplicate_type(path_part)
+        elif next_part == Default.ALL:
+            first_instruction = self.operations[0].entity_type
+            last_instruction = self.operations[-1].entity_type
 
-            if Hero.has_member(path_part):
+            if current_instruction == Comparator.WITH:
+                if last_instruction == Selector.HERO:
+                    return last_instruction, None
+                if last_instruction == Selector.VILLAIN:
+                    return last_instruction, None
+
+            if current_instruction == Comparator.VERSUS:
+                if first_instruction == Selector.HERO:
+                    return Selector.VILLAIN, None
+                if first_instruction == Selector.VILLAIN:
+                    return Selector.HERO, None
+
+            if current_instruction == Comparator.IN:
+                return Selector.ENVIRONMENT, Environment
+
+        else:
+            if next_part == Hero.akash_bhuta or next_part == Villain.akash_bhuta:
+                return self._deal_with_duplicate_type(next_part)
+
+            if Hero.has_member(next_part):
                 return Selector.HERO, Hero
 
-            if Villain.has_member(path_part):
+            if Villain.has_member(next_part):
                 return Selector.VILLAIN, Villain
 
-            if Environment.has_member(path_part):
+            if Environment.has_member(next_part):
                 return Selector.ENVIRONMENT, Environment
 
     def _deal_with_duplicate_type(self, path_part) -> Tuple[Selector, Enum]:
         """
         dealing with Type for those who have the same name as another
-        entity type (ie: akash_bhuta)
+            entity type (ie: akash_bhuta)
         """
         for operation in self.operations:
             if operation.entity_type == Selector.HERO:
