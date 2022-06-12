@@ -15,8 +15,8 @@ class Test_Lookup:
 
         assert len(test_lookup.operations) == 1
         assert test_lookup.operations[0].instruction == Comparator.START
-        assert test_lookup.operations[0].primary_name == Default.ALL
-        assert test_lookup.operations[0].alternate is None
+        assert test_lookup.operations[0].name_selection == Default.ALL
+        assert test_lookup.operations[0].alternate_selection is None
 
         # test_path = "/hero/absolute_zero"
 

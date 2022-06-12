@@ -10,7 +10,7 @@ def test_has_member_works_with_string():
 
 
 def test_has_member_works_with_Enum():
-    assert Coparator.has_member(Comparator.START)
+    assert Comparator.has_member(Comparator.START)
 
 
 def test_has_member_returns_false_with_non_same_enum():
