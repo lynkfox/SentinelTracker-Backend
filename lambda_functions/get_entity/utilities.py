@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from common.models.enums import Selector, Comparator, Default, Type
-from common.models.character_enums import Hero, Villain, Environment
+from common.models.character_enums import Hero, Villain, Environment, AlternateTags
 from typing import Union, List, Tuple
 from enum import Enum
 
@@ -102,7 +102,7 @@ class LookUp:
         follow_up_part = (
             self.path_parts[current_index + 2]
             if self.total_parts > current_index + 2
-            else Default.BASE
+            else None
         )
 
         instruction = self._determine_instruction(self.path_parts[current_index])
@@ -116,10 +116,11 @@ class LookUp:
             else Default.ALL
         )
 
-        if not Selector.has_member(follow_up_part) and not Comparator.has_member(
-            follow_up_part
+        if follow_up_part is not None and (
+            not Selector.has_member(follow_up_part)
+            and not Comparator.has_member(follow_up_part)
         ):
-            alternate_selection = follow_up_part
+            alternate_selection = AlternateTags(follow_up_part)
         else:
             alternate_selection = Default.BASE
 
@@ -155,6 +156,7 @@ class LookUp:
                 return select, Villain
             if select == Selector.ENVIRONMENT:
                 return select, Environment
+
         else:
             if path_part == Hero.akash_bhuta or path_part == Villain.akash_bhuta:
                 return self._deal_with_duplicate_type(path_part)

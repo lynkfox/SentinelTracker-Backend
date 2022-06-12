@@ -159,7 +159,7 @@ class AlternateTags(Character):
     americas_newest = "americas_newest"  # young legacy
     americas_cleverist = "americas_cleverist"  # Legacy
     bloodmage = "bloodmage"  # Lifeline
-    heroic = "heroic"  # heroic luminary - lady luminary
+    heroic = "heroic"  # heroic luminary - and infinitor
     road_warrior = "road_warrior"  # Mainstay
     the_hunted = "the_hunted"  # Naturalist
     u = "u"  # omnitron-u
@@ -176,7 +176,6 @@ class AlternateTags(Character):
 
     mad_bomber = "mad_bomber"  # baron blade
     skinwalker = "skinwalker"  # gloomweaver
-    heroic = "heroic"  # infinitor
     trickster = "trickster"  # kismet
     cosmic = "cosmic"  # omnitron
     agent_of_gloom = "agent_of_gloom"  # spite
