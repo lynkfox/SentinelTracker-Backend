@@ -1,22 +1,22 @@
 from dataclasses import dataclass, field
-from common.models.enums import Selector, Comparator, Default
-from typing import Union
+from common.models.enums import Selector, Comparator, Default, Type
+from common.models.character_enums import Hero, Villain, Environment
+from typing import Union, List
+
+
+@dataclass
+class Operation:
+    instruction: Union[Selector, Comparator]
+    entity_type: Type
+    primary_name: Union[str, Default]
+    alternate: Union[str, Default]
 
 
 @dataclass
 class LookUp:
     path: str
-    left_selector: Selector = field(init=False, default=Selector.HERO)
-    left_name: Union[str, Default, None] = field(init=False, default=None)
-    left_alternate: Union[str, Default, None] = field(init=False, default=None)
-    first_qualifier: Comparator = field(init=False, default=None)
-    right_selector: Union[Selector, None] = field(init=False, default=None)
-    right_name: Union[str, Default, None] = field(init=False, default=None)
-    right_alternate: Union[str, Default, None] = field(init=False, default=None)
-    second_qualifier: Comparator = field(init=False, default=None)
-    second_selector: Union[Selector, None] = field(init=False, default=None)
-    second_right_name: Union[str, Default, None] = field(init=False, default=None)
-    path_part: list = field(init=False, default_factory=list)
+    operations: List[Operation] = field(init=False, default_factory=list)
+    path_parts: list = field(init=False, default_factory=list)
     total_parts: int = field(init=False, default=0)
 
     def __post_init__(self):
@@ -27,82 +27,64 @@ class LookUp:
         self.parse_path()
 
     def parse_path(self):
-        left_set = False
-        right_set = False
-        second_right_set = False
-
         for index, path_part in enumerate(self.path_parts):
-            if not left_set and Selector.has_member(path_part):
+            if Selector.has_member(path_part) or Comparator.has_member(path_part):
+                self.operations.append(self._build_operation(current_index=index))
 
-                self.left_name, self.left_alternate = self._determine_name_and_alt(
-                    current_index=index
-                )
-                self.left_selector = Selector(path_part)
-                left_set = True
+    def _build_operation(self, current_index) -> Operation:
 
-            elif (left_set and not right_set) and Comparator.has_member(path_part):
-                self.first_qualifier = Comparator(path_part)
-                self.right_name, self.right_alternate = self._determine_name_and_alt(
-                    current_index=index
-                )
-                self.right_selector = self._determine_selector(self.first_qualifier)
-                right_set = True
+        next_part = (
+            self.path_parts[current_index + 1]
+            if self.total_parts > current_index + 1
+            else Default.ALL
+        )
+        follow_up_part = (
+            self.path_parts[current_index + 2]
+            if self.total_parts > current_index + 2
+            else Default.BASE
+        )
 
-            elif (right_set and not second_right_set) and Comparator.has_member(
-                path_part
-            ):
-                self.second_right_name, _ = self._determine_name_and_alt(
-                    current_index=index
-                )
-                self.second_qualifier = Comparator(path_part)
-                self.second_selector = self._determine_selector(self.second_qualifier)
-                second_right_set = True
-            else:
-                continue
+        instruction = self._determine_instruction(self.path_parts[current_index])
+        entity_type = self._determine_entity_type(self.path_parts[current_index])
 
-    def _determine_selector(self, comparison: Comparator) -> Selector:
-        """
-        depending on the Comparator returns the Selector
-        """
-        if comparison == Comparator.IN:
-            return Selector.ENVIRONMENT
-        if comparison == Comparator.VERSUS:
-            return (
-                Selector.HERO
-                if self.left_selector is Selector.VILLAIN
-                else Selector.VILLAIN
-            )
-        if comparison == Comparator.WITH:
-            return self.left_selector
+        primary_name = next_part
 
-    def _determine_name_and_alt(self, current_index: int) -> (str, str):
-        """
-        picks up the next two iterations of the path parts and returns them or defaults.
-        """
-        next_index = current_index + 1
-        second_index = current_index + 2
-        if self.total_parts > next_index:
-            next_part = self.path_parts[next_index]
-            base_name = (
-                next_part if not Comparator.has_member(next_part) else Default.ALL
-            )
-
+        if not Selector.has_member(follow_up_part) and not Comparator.has_member(
+            follow_up_part
+        ):
+            alternate = follow_up_part
         else:
-            base_name = Default.ALL
+            alternate = Default.BASE
 
-        if self.total_parts > second_index and base_name is not Default.ALL:
-            second_part = self.path_parts[second_index]
-            alt_name = (
-                second_part if not Comparator.has_member(second_part) else Default.BASE
-            )
-        elif self.total_parts == second_index:
-            alt_name = Default.BASE
+        if next_part is Default.ALL:
+            alternate = None
+
+        return Operation(instruction, entity_type, primary_name, alternate)
+
+    def _determine_instruction(self, path_part) -> Comparator:
+        if len(self.operations) == 0:
+            return Comparator.START
         else:
-            alt_name = None
+            return Comparator(path_part)
 
-        return base_name, alt_name
+    def _determine_entity_type(self, path_part) -> Selector:
+        if len(self.operations) == 0:
+            return Selector(path_part)
+        else:
+            if path_part == Hero.akash_bhuta or path_part == Villain.akash_bhuta:
+                return self._deal_with_akash()
 
+            if Hero.has_member(path_part):
+                return Selector.HERO
 
-if __name__ == "__main__":
+            if Villain.has_member(path_part):
+                return Selector.VILLAIN
 
-    LookUp("/hero/absolute_zero/versus/baron_blade")
+            if Environment.has_member(path_part):
+                return Selector.ENVIRONMENT
+
+    def _deal_with_akash(self):
+        if len(self.operations) == 0:
+            return Selector(self.path_parts[0])
+        else:
+            pass

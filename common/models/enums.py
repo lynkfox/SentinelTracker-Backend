@@ -34,7 +34,12 @@ class ApiEnum(Enum):
         """
         Quick check to see if key is within this class.
         """
-        return key.upper() in cls.__members__
+        if isinstance(key, str):
+            return key.upper() in cls.__members__
+        elif isinstance(key, Enum):
+            return key.name in cls.__members__
+        else:
+            return False
 
 
 class Selector(ApiEnum):
@@ -52,6 +57,7 @@ class Comparator(ApiEnum):
     Restful API comparator types
     """
 
+    START = "start"
     VERSUS = "versus"
     WITH = "with"
     IN = "in"
