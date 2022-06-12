@@ -6,15 +6,15 @@ from common.models.enums import BoxSet, Type, ApiEventTypes
 @dataclass
 class ApiEvent:
     event: {}
+    path: str = field(init=False)
     path_parts: list = field(init=False)
     IS_OPTIONS: bool = field(init=False)
     IS_GET: bool = field(init=False)
     IS_POST: bool = field(init=False)
 
     def __post_init__(self):
-        self.path_parts = (
-            self.event.get("pathParameters", {}).get("proxy", "").split("/")
-        )
+        self.path = self.event.get("pathParameters", {}).get("proxy", "")
+        self.path_parts = self.path.split("/")
         self.determine_type()
 
     def determine_type(self):

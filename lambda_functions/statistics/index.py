@@ -3,7 +3,7 @@ import os
 
 import boto3
 from aws_lambda_powertools import Logger
-from common.models.entity import GetEntity
+from common.models.entity import Statistics
 
 logger = Logger()
 
@@ -19,7 +19,7 @@ def lambda_handler(event: dict, context: dict) -> dict:
 
     try:
 
-        _event = GetEntity(event)
+        _event = Statistics(event)
         body = {"message": "Invalid format"}
 
         if _event.IS_OPTIONS:

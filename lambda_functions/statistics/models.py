@@ -1,15 +1,19 @@
 from dataclasses import dataclass, field
 from common.models.entity import ApiEvent
 from common.models.enums import ApiEventTypes
+from utilities import LookUp
 
 
 @dataclass
-class GetEntity(ApiEvent):
+class Statistics(ApiEvent):
     entity_name: str = field(init=False)
     api_type: str = field(init=False)
+    look_up_data: LookUp = field(init=False)
 
     def __post_init__(self):
         self._is_allowed_method()
+
+        self.look_up_data = LookUp(self.path)
 
     def _is_allowed_method(self):
         """

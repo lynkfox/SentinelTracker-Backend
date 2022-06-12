@@ -42,20 +42,20 @@ class LambdaStack(NestedStack):
 
         self.lambda_mapping = {}
 
-        get_entity = aws_lambda.Function(
+        statistics = aws_lambda.Function(
             self,
-            ResourceNames.GET_ENTITY,
-            function_name=props.prefix_name(ResourceNames.GET_ENTITY),
+            ResourceNames.STATISTICS,
+            function_name=props.prefix_name(ResourceNames.STATISTICS),
             code=aws_lambda.Code.from_asset(
-                os.path.join(root_directory, DirectoryLocations.GET_ENTITY)
+                os.path.join(root_directory, DirectoryLocations.STATISTICS)
             ),
             environment=LambdaEnvironmentVariables(
-                {}, ResourceNames.GET_ENTITY, dynamo_table.table_name
+                {}, ResourceNames.STATISTICS, dynamo_table.table_name
             ).as_dict(),
             runtime=aws_lambda.Runtime.PYTHON_3_9,
             handler="index.lambda_handler",
             layers=[layer],
         )
 
-        self.lambda_mapping[ResourceNames.GET_ENTITY] = get_entity
-        dynamo_table.grant_full_access(get_entity)
+        self.lambda_mapping[ResourceNames.STATISTICS] = statistics
+        dynamo_table.grant_full_access(statistics)

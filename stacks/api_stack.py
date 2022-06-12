@@ -37,7 +37,7 @@ class ApiStack(NestedStack):
 
         self.backend_api.apply_removal_policy(core.RemovalPolicy.DESTROY)
 
-        lambda_mapping[ResourceNames.GET_ENTITY].grant_invoke(
+        lambda_mapping[ResourceNames.STATISTICS].grant_invoke(
             iam.ServicePrincipal("apigateway.amazonaws.com")
         )
 
@@ -99,19 +99,19 @@ class ApiStack(NestedStack):
             response_templates=response_template,
         )
 
-        get_entity_api = apigateway.LambdaIntegration(
-            handler=lambda_mapping[ResourceNames.GET_ENTITY],
+        statistics_integration = apigateway.LambdaIntegration(
+            handler=lambda_mapping[ResourceNames.STATISTICS],
             proxy=True,
             integration_responses=[json_200_integration_response],
         )
 
-        get_entity_method = apigateway.MethodOptions(
+        statistics_method = apigateway.MethodOptions(
             api_key_required=False, method_responses=[json_200_method_response]
         )
 
         statistics.add_proxy(
-            default_integration=get_entity_api,
-            default_method_options=get_entity_method,
+            default_integration=statistics_integration,
+            default_method_options=statistics_method,
             default_cors_preflight_options=apigateway.CorsOptions(
                 allow_origins=apigateway.Cors.ALL_ORIGINS,
                 allow_credentials=True,
