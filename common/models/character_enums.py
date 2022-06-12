@@ -215,7 +215,7 @@ VILLAIN_DISPLAY_MAPPING = {
 
 ENVIRONMENT_DISPLAY_MAPPING: {
     Environment.the_block: "The Block",
-    Environment.the_celestial_tribunal: "The Celestial Tribunal",
+    Environment.celestial_tribunal: "The Celestial Tribunal",
     Environment.champion_studios: "Champion Studios",
     Environment.court_of_blood: "The Court of Blood",
     Environment.dok_thorath_capital: "Dok'Thorath Capital",

@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from common.models.enums import Selector, Comparator, Default, Type
 from common.models.character_enums import Hero, Villain, Environment
-from typing import Union, List
+from typing import Union, List, Tuple
 from enum import Enum
 
 
@@ -46,26 +46,39 @@ class LookUp:
             if Selector.has_member(path_part) or Comparator.has_member(path_part):
                 operation = self._build_operation(current_index=index)
 
-                self.hero_count += self._increment_to_maximum(
-                    operation.entity_type, Selector.HERO, self.hero_count, 5
-                )
-                self.villain_count += self._increment_to_maximum(
-                    operation.entity_type, Selector.VILLAIN, self.villain_count, 5
-                )
-                self.environment_count += self._increment_to_maximum(
-                    operation.entity_type,
-                    Selector.ENVIRONMENT,
-                    self.environment_count,
-                    1,
-                )
-                self.versus_count += self._increment_to_maximum(
-                    operation.instruction, Comparator.VERSUS, self.versus_count, 1
-                )
-                self.in_count += self._increment_to_maximum(
-                    operation.instruction, Comparator.IN, self.in_count, 1
-                )
+                self._check_number_of_characters(operation)
+                self._check_number_of_comparisons(operation)
 
                 self.operations.append(operation)
+
+    def _check_number_of_characters(self, operation):
+        """
+        Checks entities to see if there are more than maximum amount
+        (5 heroes, 5 villains, 1 environment)
+        """
+        self.hero_count += self._increment_to_maximum(
+            operation.entity_type, Selector.HERO, self.hero_count, 5
+        )
+        self.villain_count += self._increment_to_maximum(
+            operation.entity_type, Selector.VILLAIN, self.villain_count, 5
+        )
+        self.environment_count += self._increment_to_maximum(
+            operation.entity_type,
+            Selector.ENVIRONMENT,
+            self.environment_count,
+            1,
+        )
+
+    def _check_number_of_comparisons(self, operation):
+        """
+        Checks comparsion operations (versus and in) if there is more than 1
+        """
+        self.versus_count += self._increment_to_maximum(
+            operation.instruction, Comparator.VERSUS, self.versus_count, 1
+        )
+        self.in_count += self._increment_to_maximum(
+            operation.instruction, Comparator.IN, self.in_count, 1
+        )
 
     def _increment_to_maximum(self, left: Enum, right: Enum, current: int, max: int):
         """
@@ -93,9 +106,12 @@ class LookUp:
         )
 
         instruction = self._determine_instruction(self.path_parts[current_index])
-        entity_type = self._determine_entity_type(self.path_parts[current_index])
+        entity_type, character_enum = self._determine_entity_type(
+            self.path_parts[current_index]
+        )
+
         name_selection = (
-            self.path_parts[current_index + 1]
+            character_enum(self.path_parts[current_index + 1])
             if self.total_parts > current_index + 1
             else Default.ALL
         )
@@ -122,36 +138,45 @@ class LookUp:
         else:
             return Comparator(path_part)
 
-    def _determine_entity_type(self, path_part) -> Selector:
+    def _determine_entity_type(self, path_part) -> Tuple[Selector, Enum]:
         """
         Sets the Entity_Type to the one passed if the first instruction,
             else checks the Enums for determining the type (and dealing)
             with special situations like Akash'Bhuta
+
+        Also returns the Enum type that follows the Selector, for use in
+            determing name_selection, alternate_selection
         """
         if len(self.operations) == 0:
-            return Selector(path_part)
+            select = Selector(path_part)
+            if select == Selector.HERO:
+                return select, Hero
+            if select == Selector.VILLAIN:
+                return select, Villain
+            if select == Selector.ENVIRONMENT:
+                return select, Environment
         else:
             if path_part == Hero.akash_bhuta or path_part == Villain.akash_bhuta:
                 return self._deal_with_duplicate_type(path_part)
 
             if Hero.has_member(path_part):
-                return Selector.HERO
+                return Selector.HERO, Hero
 
             if Villain.has_member(path_part):
-                return Selector.VILLAIN
+                return Selector.VILLAIN, Villain
 
             if Environment.has_member(path_part):
-                return Selector.ENVIRONMENT
+                return Selector.ENVIRONMENT, Environment
 
-    def _deal_with_duplicate_type(self, path_part):
+    def _deal_with_duplicate_type(self, path_part) -> Tuple[Selector, Enum]:
         """
         dealing with Type for those who have the same name as another
         entity type (ie: akash_bhuta)
         """
         for operation in self.operations:
             if operation.entity_type == Selector.HERO:
-                return Selector.VILLAIN
+                return Selector.VILLAIN, Villain
             elif operation.entity_type == Selector.VILLAIN:
-                return Selector.HERO
+                return Selector.HERO, Hero
             else:
                 continue
