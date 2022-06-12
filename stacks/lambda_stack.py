@@ -53,7 +53,7 @@ class LambdaStack(NestedStack):
                 {}, ResourceNames.GET_ENTITY, dynamo_table.table_name
             ).as_dict(),
             runtime=aws_lambda.Runtime.PYTHON_3_9,
-            handler="handler.lambda_handler",
+            handler="index.lambda_handler",
             layers=[layer],
         )
 

@@ -140,6 +140,7 @@ class AlternateTags(Character):
     dark_watch = "dark_watch"
     scion = "scion"
     team_villain = "team_villain"
+    definitive = "definitive"  # definitive edition
 
     spirit_of_the_void = "spirit_of_the_void"  # Akash hero
     dark_conductor = "dark_conductor"  # Argent

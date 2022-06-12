@@ -70,8 +70,14 @@ class ApiStack(NestedStack):
         # )
 
         version_one = apigateway.Resource(
-            self, "SchemaResource", parent=self.backend_api.root, path_part="v1.0"
+            self, "version_one", parent=self.backend_api.root, path_part="v1.0"
         )
+
+        statistics = apigateway.Resource(
+            self, "statistics", parent=version_one, path_part="statistics"
+        )
+
+        user = apigateway.Resource(self, "user", parent=version_one, path_part="user")
 
         response_template = {
             "application/json": """$input.path('$.body')\n"""
@@ -103,7 +109,7 @@ class ApiStack(NestedStack):
             api_key_required=False, method_responses=[json_200_method_response]
         )
 
-        version_one.add_proxy(
+        statistics.add_proxy(
             default_integration=get_entity_api,
             default_method_options=get_entity_method,
             default_cors_preflight_options=apigateway.CorsOptions(

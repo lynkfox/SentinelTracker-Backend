@@ -269,3 +269,107 @@ class Test_Lookup:
         assert len(test_lookup.operations) == 2
         assert test_lookup.operations[0] == operation_one
         assert test_lookup.operations[1] == operation_two
+
+    def test_character_with_character_versus_character(self):
+        test_path = "/hero/absolute_zero/with/tachyon/versus/baron_blade"
+        test_lookup = LookUp(test_path)
+        operation_one = Operation(
+            Comparator.START,
+            Selector.HERO,
+            Hero.absolute_zero,
+            Default.BASE,
+        )
+        operation_two = Operation(
+            Comparator.WITH, Selector.HERO, Hero.tachyon, Default.BASE
+        )
+
+        operation_three = Operation(
+            Comparator.VERSUS,
+            Selector.VILLAIN,
+            Villain.baron_blade,
+            Default.BASE,
+        )
+
+        assert len(test_lookup.operations) == 3
+        assert test_lookup.operations[0] == operation_one
+        assert test_lookup.operations[1] == operation_two
+        assert test_lookup.operations[2] == operation_three
+
+    def test_character_with_character_versus_character_in_environment(self):
+        test_path = (
+            "/hero/absolute_zero/with/tachyon/versus/baron_blade/in/insula_primalis"
+        )
+        test_lookup = LookUp(test_path)
+        operation_one = Operation(
+            Comparator.START,
+            Selector.HERO,
+            Hero.absolute_zero,
+            Default.BASE,
+        )
+        operation_two = Operation(
+            Comparator.WITH, Selector.HERO, Hero.tachyon, Default.BASE
+        )
+
+        operation_three = Operation(
+            Comparator.VERSUS,
+            Selector.VILLAIN,
+            Villain.baron_blade,
+            Default.BASE,
+        )
+        operation_four = Operation(
+            Comparator.IN,
+            Selector.ENVIRONMENT,
+            Environment.insula_primalis,
+            Default.BASE,
+        )
+
+        assert len(test_lookup.operations) == 4
+        assert test_lookup.operations[0] == operation_one
+        assert test_lookup.operations[1] == operation_two
+        assert test_lookup.operations[2] == operation_three
+        assert test_lookup.operations[3] == operation_four
+
+    def test_environent_with_character(self):
+        test_path = "/environment/insula_primalis/with/absolute_zero"
+        test_lookup = LookUp(test_path)
+        operation_one = Operation(
+            Comparator.START,
+            Selector.ENVIRONMENT,
+            Environment.insula_primalis,
+            Default.BASE,
+        )
+
+        operation_two = Operation(
+            Comparator.WITH,
+            Selector.HERO,
+            Hero.absolute_zero,
+            Default.BASE,
+        )
+
+        assert len(test_lookup.operations) == 2
+        assert test_lookup.operations[0] == operation_one
+        assert test_lookup.operations[1] == operation_two
+
+    def test_definitive_prefix_on_existing_alternate(self):
+        test_path = "/villain/baron_blade/definitive_mad_bomber"
+        test_lookup = LookUp(test_path)
+        operation_one = Operation(
+            Comparator.START,
+            Selector.VILLAIN,
+            Villain.baron_blade,
+            AlternateTags.mad_bomber,
+            True,
+        )
+
+        assert len(test_lookup.operations) == 1
+        assert test_lookup.operations[0] == operation_one
+
+    def test_charachter_with_just_definitive(self):
+        test_path = "/villain/baron_blade/definitive"
+        test_lookup = LookUp(test_path)
+        operation_one = Operation(
+            Comparator.START, Selector.VILLAIN, Villain.baron_blade, Default.BASE, True
+        )
+
+        assert len(test_lookup.operations) == 1
+        assert test_lookup.operations[0] == operation_one

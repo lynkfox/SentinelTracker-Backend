@@ -6,7 +6,7 @@ from constructs import Construct
 
 from configurations import ResourceNames
 from configurations.common import DeploymentProperties
-from lambda_functions.common.attributes import DynamoAttributes
+from common.attributes import DynamoAttributes
 
 
 class StorageStack(NestedStack):

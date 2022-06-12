@@ -1,8 +1,15 @@
+import os
+
 from dataclasses import dataclass, field
+from common.attributes import DynamoAttributes
 from common.models.enums import Selector, Comparator, Default, Type
 from common.models.character_enums import Hero, Villain, Environment, AlternateTags
 from typing import Union, List, Tuple
 from enum import Enum
+from aws_lambda_powertools import Logger
+from boto3.dynamodb.conditions import Key
+
+logger = Logger(child=True)
 
 
 @dataclass
@@ -11,6 +18,7 @@ class Operation:
     entity_type: Type
     name_selection: Union[str, Default]
     alternate_selection: Union[str, Default]
+    definitive: bool = field(default=False)
 
 
 @dataclass
@@ -99,40 +107,80 @@ class LookUp:
         """
         Builds an Operation to add to the instructions.
         """
-        instruction = self._determine_instruction(self.path_parts[current_index])
+        try:
+            instruction = self._determine_instruction(self.path_parts[current_index])
 
-        next_part = (
-            self.path_parts[current_index + 1]
-            if self.total_parts > current_index + 1
-            else Default.ALL
-        )
+            next_part = (
+                self.path_parts[current_index + 1]
+                if self.total_parts > current_index + 1
+                else Default.ALL
+            )
 
-        follow_up_part = (
-            self.path_parts[current_index + 2]
-            if self.total_parts > current_index + 2
-            else None
-        )
+            follow_up_part = (
+                self.path_parts[current_index + 2]
+                if self.total_parts > current_index + 2
+                else None
+            )
 
-        entity_type, character_enum = self._determine_entity_type(
-            self.path_parts[current_index], next_part, instruction
-        )
+            entity_type, character_enum = self._determine_entity_type(
+                self.path_parts[current_index], next_part, instruction
+            )
 
-        name_selection = (
-            character_enum(next_part) if next_part != Default.ALL else Default.ALL
-        )
+            name_selection = (
+                character_enum(next_part) if next_part != Default.ALL else Default.ALL
+            )
 
-        if follow_up_part is not None and (
-            not Selector.has_member(follow_up_part)
-            and not Comparator.has_member(follow_up_part)
-        ):
-            alternate_selection = AlternateTags(follow_up_part)
-        else:
-            alternate_selection = Default.BASE
+            if follow_up_part is not None and "definitive_" in follow_up_part:
+                definitive = True
+                follow_up_part = follow_up_part.replace("definitive_", "")
 
-        if name_selection is Default.ALL:
-            alternate_selection = None
+            else:
+                definitive = False
 
-        return Operation(instruction, entity_type, name_selection, alternate_selection)
+            if follow_up_part is not None and (
+                not Selector.has_member(follow_up_part)
+                and not Comparator.has_member(follow_up_part)
+            ):
+                alternate_selection = AlternateTags(follow_up_part)
+            else:
+                alternate_selection = Default.BASE
+
+            if name_selection is Default.ALL:
+                alternate_selection = None
+
+            if alternate_selection is AlternateTags.definitive:
+                alternate_selection = Default.BASE
+                definitive = True
+
+            return Operation(
+                instruction,
+                entity_type,
+                name_selection,
+                alternate_selection,
+                definitive,
+            )
+
+        except ValueError as e:
+            logger.exception(
+                "Unable to determine Operation",
+                extra={
+                    "current_index": current_index,
+                    "current_point": self.path_parts[current_index],
+                },
+            )
+
+            raise ValueError("Unable to determine Operation")
+
+        except Exception as e:
+            logger.exception(
+                "Unknown Error",
+                extra={
+                    "current_index": current_index,
+                    "current_point": self.path_parts[current_index],
+                },
+            )
+
+            raise e
 
     def _determine_instruction(self, path_part) -> Comparator:
         """
@@ -174,6 +222,8 @@ class LookUp:
                 if last_instruction == Selector.VILLAIN:
                     return last_instruction, None
 
+                return self._determine_entity_by_attached_part(next_part)
+
             if current_instruction == Comparator.VERSUS:
                 first_instruction = self.operations[0].entity_type
                 if first_instruction == Selector.HERO:
@@ -185,17 +235,26 @@ class LookUp:
                 return Selector.ENVIRONMENT, Environment
 
         else:
-            if next_part == Hero.akash_bhuta or next_part == Villain.akash_bhuta:
-                return self._deal_with_duplicate_type(next_part)
+            select, enum_type = self._determine_entity_by_attached_part(next_part)
+            if select is not None:
+                return select, enum_type
 
-            if Hero.has_member(next_part):
-                return Selector.HERO, Hero
+        raise ValueError("Unable to determine call")
 
-            if Villain.has_member(next_part):
-                return Selector.VILLAIN, Villain
+    def _determine_entity_by_attached_part(self, next_part) -> Tuple[Selector, Enum]:
+        if next_part == Hero.akash_bhuta or next_part == Villain.akash_bhuta:
+            return self._deal_with_duplicate_type(next_part)
 
-            if Environment.has_member(next_part):
-                return Selector.ENVIRONMENT, Environment
+        if Hero.has_member(next_part):
+            return Selector.HERO, Hero
+
+        if Villain.has_member(next_part):
+            return Selector.VILLAIN, Villain
+
+        if Environment.has_member(next_part):
+            return Selector.ENVIRONMENT, Environment
+
+        raise ValueError()
 
     def _deal_with_duplicate_type(self, path_part) -> Tuple[Selector, Enum]:
         """
@@ -209,3 +268,13 @@ class LookUp:
                 return Selector.HERO, Hero
             else:
                 continue
+
+        raise ValueError()
+
+
+def generate_query(instructions: List[Operation]) -> any:
+    """
+    Takes Instructions and parses out appropritate PK/SK
+    """
+    first_instruction = instructions[0]
+    pk = f"{first_instruction.entity_type.value.upper()}#{first_instruction.name_selection.value}"
