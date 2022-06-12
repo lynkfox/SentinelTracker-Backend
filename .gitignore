@@ -5,6 +5,8 @@ google_api_service_credentials.json
 credentials.json
 token.json
 
+.vscode
+
 # Unit test / coverage reports
 htmlcov/
 .tox/

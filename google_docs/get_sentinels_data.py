@@ -1,5 +1,5 @@
 from __future__ import print_function
-from auth import get_google_credentials_through_oath2
+from auth import get_google_credentials_through_oath2, get_mysql_client
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
@@ -7,13 +7,13 @@ from googleapiclient.errors import HttpError
 
 # The ID of a sample document.
 DOCUMENT_ID = '1bVppJL4rC5lWULLGZ7AP5xH6YZLYsv86Wme1SpU6agE'
-RANGE = 'Form Responses 4!A1:AL2'
+RANGE = 'Form Responses 4!A1:AL20'
 
 
 def main():
-    """Shows basic usage of the Docs API.
-    Prints the title of a sample document.
-    """
+
+    client=get_mysql_client()
+
     creds = get_google_credentials_through_oath2()
 
     try:
