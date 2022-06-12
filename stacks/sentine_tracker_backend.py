@@ -26,7 +26,27 @@ class MainStack(Stack):
         super().__init__(scope, construct_id, **kwargs)
 
         self.props = deployment_properties
-        self.props.vpc = ec2.Vpc.from_lookup(self, "VPC", is_default=True)
+
+        # vpc = ec2.Vpc.from_lookup(self, "VPCFromLookup", is_default=True)
+        vpc = ec2.Vpc(
+            self,
+            "VPC",
+            nat_gateways=1,
+            subnet_configuration=[
+                ec2.SubnetConfiguration(
+                    name="tracker-public", subnet_type=ec2.SubnetType.PUBLIC
+                ),
+                ec2.SubnetConfiguration(
+                    name="tracker-private", subnet_type=ec2.SubnetType.PRIVATE_WITH_NAT
+                ),
+                ec2.SubnetConfiguration(
+                    name="tracker-isolated", subnet_type=ec2.SubnetType.PRIVATE_ISOLATED
+                ),
+            ],
+        )
+        vpc.apply_removal_policy(core.RemovalPolicy.DESTROY)
+
+        self.props.vpc = vpc
 
         storage = StorageStack(self, "StorageStack", self.props)
 

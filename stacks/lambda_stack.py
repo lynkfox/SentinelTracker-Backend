@@ -6,7 +6,6 @@ from aws_cdk import NestedStack
 from aws_cdk import aws_iam as iam
 from aws_cdk import aws_lambda
 from aws_cdk import aws_dynamodb as dynamodb
-from aws_cdk import aws_lambda_python_alpha as python_lambda
 from constructs import Construct
 import os
 from pathlib import Path
@@ -55,6 +54,7 @@ class LambdaStack(NestedStack):
             runtime=aws_lambda.Runtime.PYTHON_3_9,
             handler="index.lambda_handler",
             layers=[layer],
+            vpc=props.vpc,
         )
 
         self.lambda_mapping[ResourceNames.STATISTICS] = statistics
