@@ -1,10 +1,13 @@
 from dataclasses import dataclass, field
+from aws_cdk import aws_ec2 as ec2
+from typing import Optional
 
 
 @dataclass
 class DeploymentProperties:
     PREFIX: str = field(default="Sentinels")
     ENVIRONMENT: str = field(default="DEMO")
+    vpc: Optional[ec2.IVpc] = field(default=None)
 
     def prefix_name(self, name: str, lower: bool = False) -> str:
         """

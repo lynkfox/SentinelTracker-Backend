@@ -2,6 +2,8 @@ import aws_cdk as core
 from aws_cdk import NestedStack
 from aws_cdk import aws_dynamodb as dynamodb
 from aws_cdk import aws_s3 as s3
+from aws_cdk import aws_rds as rds
+from aws_cdk import aws_ec2 as ec2
 from constructs import Construct
 
 from configurations import ResourceNames
@@ -34,4 +36,16 @@ class StorageStack(NestedStack):
                 name=DynamoAttributes.SORT_KEY, type=dynamodb.AttributeType.STRING
             ),
             removal_policy=core.RemovalPolicy.DESTROY,
+        )
+
+        instance = rds.DatabaseInstance(
+            self,
+            "Instance",
+            engine=rds.DatabaseInstanceEngine.mysql(
+                version=rds.MysqlEngineVersion.VER_8_0_28
+            ),
+            vpc=props.vpc,
+            vpc_subnets=ec2.SubnetSelection(
+                subnet_type=ec2.SubnetType.PRIVATE_WITH_NAT
+            ),
         )
