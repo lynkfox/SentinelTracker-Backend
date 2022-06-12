@@ -28,6 +28,7 @@ class LookUp:
     def __post_init__(self):
         # remove first character "/" from the path property
         self.path = self.path[1:] if self.path[0] == "/" else self.path
+        self.path = self.path[:-1] if self.path[-1] == "/" else self.path
         self.path_parts = self.path.split("/")
         self.total_parts = len(self.path_parts)
         self.parse_path()
