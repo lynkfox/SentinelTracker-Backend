@@ -45,32 +45,32 @@ class ApiStack(NestedStack):
         #
         # certificate_arn = "arn for the cert"
         # domain_name = "some.domain.name"
-        # quick_rater_domain = apigateway.DomainName(
-        #     self, 'ToolsDomain',
+        # domain = apigateway.DomainName(
+        #     self, 'Domain',
         #     certificate=certmanager.Certificate.from_certificate_arn(self, "API Cert", certificate_arn=certificate_arn),
         #     domain_name=domain_name,
         # )
 
-        # quick_rater_domain.add_base_path_mapping(
+        # domain.add_base_path_mapping(
         #     target_api=self.backend_api,
         #     stage=self.backend_api.deployment_stage
         # )
 
         # route53_host_zone = route53.HostedZone.from_hosted_zone_attributes(
         #     self, "Route53HostZone",
-        #     hosted_zone_id=self.props.HOST_ZONE_ID,
-        #     zone_name=self.props.HOST_ZONE_NAME
+        #     hosted_zone_id=props.HOST_ZONE_ID,
+        #     zone_name=props.HOST_ZONE_NAME
         # )
 
         # route53.ARecord(
         #     self, "DomainAliasRecord",
         #     zone=route53_host_zone,
-        #     target=route53.RecordTarget.from_alias(r53_targets.ApiGatewayDomain(quick_rater_domain)),
+        #     target=route53.RecordTarget.from_alias(r53_targets.ApiGatewayDomain(domain)),
         #     record_name=domain_name
         # )
 
         version_one = apigateway.Resource(
-            self, "version_one", parent=self.backend_api.root, path_part="v1.0"
+            self, "version_one", parent=self.backend_api.root, path_part="v1"
         )
 
         statistics = apigateway.Resource(
