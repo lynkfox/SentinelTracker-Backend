@@ -208,7 +208,7 @@ class AlternateTags(Character):
     malpractice = "malpractice"  # Dr Medico
     redeemer = "redeemer"  # Fanatic
     santa = "santa"  # Guise
-    completionist = "complitionist"  # Guise
+    completionist = "completionist"  # Guise
     eternal = "eternal"  # Haka
     super_sentai = "super_sentai"  # Idealist
     rogue_agent = "rogue_agent"  # KNYFE
@@ -255,7 +255,7 @@ class AlternateTags(Character):
     ace_of_swords = "ace_of_swords"  # Cauldron baccarat
     ace_of_sorrows = "ace_of_sorrows"  # Cauldron baccarat
     the_fair = "the_fair"  # Cauldron the knight
-    the_beserker = "the_beserker"  # Cauldron the knight
+    the_berserker = "the_berserker"  # Cauldron the knight
     season_of_change = "season_of_change"  # Cauldron lady
     shardmaster = "shardmaster"  # Cauldron malichae
     warden_of_chaos = "warden_of_chaos"  # Cauldron necor
@@ -288,12 +288,12 @@ ALTERNATE_TAG_DISPLAY_MAPPING = {
     AlternateTags.team_villain: ": Team Villain",
     AlternateTags.definitive: ", Definitive",  # definitive edition
     AlternateTags.first_appearance: ", First Appearance of",
-    AlternateTags.spirit_of_the_void: ": The Spirit Of The Void",  # Akash hero
+    AlternateTags.spirit_of_the_void: ": The Spirit of the Void",  # Akash hero
     AlternateTags.dark_conductor: ": Dark Conductor",  # Argent
     AlternateTags.supply_and_demand: ": Supply And Demand",  # Benchmark
     AlternateTags.gi: ", GI",  # bunker
     AlternateTags.requital: ": Requital",  # Captain Cosmic
-    AlternateTags.best_of_times: ", Best Of Times",  # Chrono Ranger
+    AlternateTags.best_of_times: ", Best of Times",  # Chrono Ranger
     AlternateTags.malpractice: ": Malpractice",  # Dr Medico
     AlternateTags.redeemer: ", Redeemer",  # Fanatic
     AlternateTags.santa: ", Santa",  # Guise
@@ -301,19 +301,19 @@ ALTERNATE_TAG_DISPLAY_MAPPING = {
     AlternateTags.eternal: ", Eternal",  # Haka
     AlternateTags.super_sentai: ", Super Sentai",  # Idealist
     AlternateTags.rogue_agent: ": Rogue Agent",  # KNYFE
-    AlternateTags.curse_of_the_black_spot: "and The Curse Of The Black Spot",  # La Coodora
-    AlternateTags.americas_greatest: ", Americas Greatest",  # Legacy
-    AlternateTags.americas_newest: ", Americas Newest",  # young legacy
-    AlternateTags.americas_cleverest: ", Americas Cleverest",  # Legacy
+    AlternateTags.curse_of_the_black_spot: " and The Curse of the Black Spot",  # La Coodora
+    AlternateTags.americas_greatest: ", America's Greatest",  # Legacy
+    AlternateTags.americas_newest: ", America's Newest",  # young legacy
+    AlternateTags.americas_cleverest: ", America's Cleverest",  # Legacy
     AlternateTags.bloodmage: ": Bloodmage",  # Lifeline
     AlternateTags.heroic: ", Heroic",  # heroic luminary - and infinitor
     AlternateTags.road_warrior: ": Road Warrior",  # Mainstay
     AlternateTags.the_hunted: ", The Hunted",  # Naturalist
-    AlternateTags.u: " - Omnitron-U",  # omnitron-u
+    AlternateTags.u: " : Omnitron-U",  # omnitron-u
     AlternateTags.fugue_state: ": Fugue State",  # parse
-    AlternateTags.horus_of_the_two_horizon: ": Horus Of The Two Horizon",  # Ra
+    AlternateTags.horus_of_the_two_horizon: ": Horus of the Two Horizons",  # Ra
     AlternateTags.setting_sun: ": Setting Sun",  # Ra
-    AlternateTags.of_the_infinite: " Of The Infinite",  # Scholar
+    AlternateTags.of_the_infinite: " of the Infinite",  # Scholar
     AlternateTags.extremist: ", Extremist",  # Sky-Scraper
     AlternateTags.action_hero: ", Action Hero",  # Stuntman
     AlternateTags.super_scientific: ", Super Scientific",  # Tachyon
@@ -325,14 +325,14 @@ ALTERNATE_TAG_DISPLAY_MAPPING = {
     AlternateTags.skinwalker: ", Skinwalker",  # gloomweaver
     AlternateTags.trickster: ", Trickster",  # kismet
     AlternateTags.cosmic: ", Cosmic",  # omnitron
-    AlternateTags.agent_of_gloom: ", Agent Of Gloom",  # spite
-    AlternateTags.definitive_mad_bomber: ", Mad Bomber: Critcal Event!",
-    AlternateTags.mecha: ": Critcal Event! Akash'Mecha", # Akash Bhuta Definitive Edition
-    AlternateTags.mocktriarch: ": Critcal Event! MOCKtriarch", # Matriarch Definitive Edition
-    AlternateTags.definitive_cosmic: ", Cosmic: Critcal Event! ", # Omnitron Definitive Edition
-    AlternateTags.censor: ": Critcal Event! Censor", # Grand Warlord voss Definitive Edition
-    AlternateTags.sunrise: ", Sunrise: Critcal Event! ", # Citizen Dawn Definitive Edition
-    AlternateTags.first_response: ", First_Response",  # Cauldron team
+    AlternateTags.agent_of_gloom: ", Agent of Gloom",  # spite
+    AlternateTags.definitive_mad_bomber: ", Mad Bomber: Critical Event!",
+    AlternateTags.mecha: ": Critical Event! Akash'Mecha", # Akash Bhuta Definitive Edition
+    AlternateTags.mocktriarch: ": Critical Event! MOCKtriarch", # Matriarch Definitive Edition
+    AlternateTags.definitive_cosmic: ", Cosmic: Critical Event! ", # Omnitron Definitive Edition
+    AlternateTags.censor: ": Critical Event! Censor", # Grand Warlord voss Definitive Edition
+    AlternateTags.sunrise: ", Sunrise: Critical Event! ", # Citizen Dawn Definitive Edition
+    AlternateTags.first_response: ", First Response",  # Cauldron team
     AlternateTags.alt_1929: ": 1929", # NOTE TODO - Handle this in the api
     AlternateTags.alt_2199: ": 2199", # NOTE TODO - Handle this in the api
     AlternateTags.ministry_of_strategic_science: ": Ministry of Strategic Science",  # Cauldron team
@@ -341,7 +341,7 @@ ALTERNATE_TAG_DISPLAY_MAPPING = {
     AlternateTags.ace_of_swords: ": Ace of Swords",  # Cauldron baccarat
     AlternateTags.ace_of_sorrows: ": Ace of Sorrows",  # Cauldron baccarat
     AlternateTags.the_fair: ", Fair",  # Cauldron the knight
-    AlternateTags.the_beserker: ", Beserker",  # Cauldron the knight
+    AlternateTags.the_berserker: ", Berserker",  # Cauldron the knight
     AlternateTags.season_of_change: ": Season of Change",  # Cauldron lady
     AlternateTags.shardmaster: ": Shardmaster",  # Cauldron malichae
     AlternateTags.warden_of_chaos: ": Warden of chaos",  # Cauldron necor

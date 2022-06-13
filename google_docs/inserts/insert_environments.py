@@ -1,8 +1,9 @@
 import json
 
 from dataclasses import dataclass, field
+from common.dynamo import build_pk,build_meta_sk
 from common.models.character_enums import AlternateTags, Environment, ENVIRONMENT_DISPLAY_MAPPING, ALTERNATE_TAG_DISPLAY_MAPPING
-from common.models.enums import BoxSet
+from common.models.enums import BoxSet, Type
 from typing import Union
 
 @dataclass
@@ -13,11 +14,14 @@ class EnvironmentInsert():
     dynamo_meta_query: str = field(init=False)
 
     def __post_init__(self):
-        self.box_set = self.box_set.value
         query = {
-            "pk": f"{self.full_name.value}#ENVIRONMENT" if self.alternate_name is None else f"{self.full_name.value}_{_deal_with_alt_prefix(self.alternate_name.value)}#ENVIRONMENT_ALT",
-            "sk": f"META#"
+            "pk": build_pk(
+                self.full_name, self.alternate_name, self.box_set, Type.ENVIRONMENT
+            ),
+            "sk": build_meta_sk(self.alternate_name),
         }
+        self.box_set = self.box_set.value
+
         self.alternate_name = ALTERNATE_TAG_DISPLAY_MAPPING.get(self.alternate_name)
         self.full_name = ENVIRONMENT_DISPLAY_MAPPING.get(self.full_name)
         self.dynamo_meta_query = json.dumps(query)

@@ -120,7 +120,7 @@ ALTER TABLE `opponents` ADD FOREIGN KEY (`villain_four`) REFERENCES `villains` (
 
 ALTER TABLE `opponents` ADD FOREIGN KEY (`villain_five`) REFERENCES `villains` (`full_name`);
 
-ALTER TABLE `gameDetails` ADD FOREIGN KEY (`user`) REFERENCES `users` (`username`);
+ALTER TABLE `gameDetails` ADD FOREIGN KEY (`username`) REFERENCES `users` (`username`);
 
 ALTER TABLE `gameDetails` ADD FOREIGN KEY (`oblivaeon_details`) REFERENCES `oblivaeonSetups` (`id_hash`);
 

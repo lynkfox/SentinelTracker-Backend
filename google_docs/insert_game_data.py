@@ -13,22 +13,31 @@ def main():
     """
     client = get_mysql_client()
 
+    print("Inserting Box Sets...")
     cursor = client.cursor()
     insert_box_sets(cursor)
     client.commit()
+    print(f"{cursor.rowcount} BoxSet records inserted.")
 
+    print("Inserting Villains")
     cursor = client.cursor()
     insert_entities(cursor, SqlTables.VILLAINS ,create_values(VILLAINS_TO_INSERT))
     client.commit()
+    print(f"{cursor.rowcount} Villain records inserted.")
 
+    print("Inserting Heroes")
     cursor = client.cursor()
     insert_entities(cursor, SqlTables.HEROES ,create_values(HEROES_TO_INSERT))
     client.commit()
+    print(f"{cursor.rowcount} Hero records inserted.")
 
+    print("Inserting Environments")
     cursor = client.cursor()
     insert_entities(cursor, SqlTables.ENVIRONMENTS ,create_values(ENVIRONMENTS_TO_INSERT))
     client.commit()
+    print(f"{cursor.rowcount} Environment records inserted.")
 
+    print("All Done")
 
 def insert_box_sets(cursor):
     sql = f"INSERT INTO {SqlTables.BOX_SETS} ({SqlColumns.FULL_NAME}, {SqlColumns.DYNAMO_META}) VALUES (%s, %s)"
@@ -62,7 +71,7 @@ def _clean_name(name:str) -> str:
     specialChars = " :-'()" 
     for char in specialChars:
         name = name.replace(char, "_")
-    return name
+    return name.replace("__", "_")
 
 
 if __name__ == "__main__":

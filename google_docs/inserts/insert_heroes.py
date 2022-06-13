@@ -1,8 +1,9 @@
 import json
 
 from dataclasses import dataclass, field
-from common.models.character_enums import VILLAIN_DISPLAY_MAPPING, AlternateTags, Hero, Villain, HERO_DISPLAY_MAPPING, ALTERNATE_TAG_DISPLAY_MAPPING
-from common.models.enums import BoxSet
+from common.dynamo import build_pk, build_meta_sk
+from common.models.character_enums import AlternateTags, Hero, HERO_DISPLAY_MAPPING, ALTERNATE_TAG_DISPLAY_MAPPING
+from common.models.enums import BoxSet, Type
 from typing import Union
 
 @dataclass
@@ -13,11 +14,15 @@ class HeroInsert():
     dynamo_meta_query: str = field(init=False)
 
     def __post_init__(self):
-        self.box_set = self.box_set.value
+        
+
         query = {
-            "pk": f"{self.full_name.value}#HERO" if self.alternate_name is None else f"{self.full_name.value}_{_deal_with_alt_prefix(self.alternate_name.value)}#HERO_ALT",
-            "sk": f"META#"
+            "pk": build_pk(
+                self.full_name, self.alternate_name, self.box_set, Type.HERO
+            ),
+            "sk": build_meta_sk(self.alternate_name),
         }
+        self.box_set = self.box_set.value
         self.alternate_name = ALTERNATE_TAG_DISPLAY_MAPPING.get(self.alternate_name)
         self.full_name = HERO_DISPLAY_MAPPING.get(self.full_name)
         self.dynamo_meta_query = json.dumps(query)
@@ -652,7 +657,7 @@ HEROES_TO_INSERT = [
     HeroInsert(
         Hero.the_knight,
         BoxSet.CAULDRON,
-        AlternateTags.the_beserker
+        AlternateTags.the_berserker
     ),
     HeroInsert(
         Hero.the_knight,
