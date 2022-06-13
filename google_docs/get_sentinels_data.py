@@ -1,5 +1,6 @@
 from __future__ import print_function
-from auth import get_google_credentials_through_oath2, get_mysql_client
+from auth import get_google_credentials_through_oath2
+from common.rds import get_mysql_client
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 

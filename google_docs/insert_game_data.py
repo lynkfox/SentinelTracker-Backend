@@ -1,4 +1,4 @@
-from google_docs.auth import get_mysql_client
+from common.rds import get_mysql_client
 from google_docs.google_aws_common import SqlColumns, SqlTables
 from common.models.enums import BoxSet
 from inserts.insert_environments import ENVIRONMENTS_TO_INSERT

@@ -4,6 +4,26 @@ from common.models.character_enums import (
     AlternateTags,
     ALTERNATE_TAG_DISPLAY_MAPPING,
 )
+import boto3
+import json
+from common.models.enums import SqlTables
+import mysql
+
+
+def get_mysql_client():
+
+    client = boto3.client("secretsmanager")
+
+    response = client.get_secret_value(SecretId="InstanceSecret478E0A47-adqUOEATZRYd")
+
+    secrets = json.loads(response["SecretString"])
+
+    return mysql.connector.connect(
+        host=secrets["host"],
+        user=secrets["username"],
+        password=secrets["password"],
+        database=SqlTables.STATISTICS_DB_NAME,
+    )
 
 
 def create_rds_key(

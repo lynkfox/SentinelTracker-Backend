@@ -32,19 +32,3 @@ def get_google_credentials_through_oath2():
         with open("token.json", "w") as token:
             token.write(creds.to_json())
     return creds
-
-
-def get_mysql_client():
-
-    client = boto3.client("secretsmanager")
-
-    response = client.get_secret_value(SecretId="InstanceSecret478E0A47-adqUOEATZRYd")
-
-    secrets = json.loads(response["SecretString"])
-
-    return mysql.connector.connect(
-        host=secrets["host"],
-        user=secrets["username"],
-        password=secrets["password"],
-        database=SqlTables.STATISTICS_DB_NAME,
-    )
