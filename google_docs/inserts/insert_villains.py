@@ -15,8 +15,8 @@ class VillainInsert():
     def __post_init__(self):
         self.box_set = self.box_set.value
         query = {
-            "pk": f"VILLAIN#{self.full_name.value.upper()}",
-            "sk": f"META#VILLAIN" if self.alternate_name is None else f"META#VILLAIN#ALT#{_deal_with_definitive(self.alternate_name.value).upper()}"
+            "pk": f"{self.full_name.value}#VILLAIN" if self.alternate_name is None else f"{self.full_name.value}_{_deal_with_alt_prefix(self.alternate_name.value)}#VILLAIN_ALT",
+            "sk": f"META#"
         }
         self.alternate_name = ALTERNATE_TAG_DISPLAY_MAPPING.get(self.alternate_name)
         self.full_name = VILLAIN_DISPLAY_MAPPING.get(self.full_name)
@@ -24,10 +24,11 @@ class VillainInsert():
         if self.alternate_name is not None:
             self.full_name = f"{self.full_name}{self.alternate_name}"
 
-def _deal_with_definitive(name:str):
-    key = "definitive_"
+def _deal_with_alt_prefix(name:str):
+    key = "alt_"
     if name.startswith(key):
-        return name.replace(key, "{key[-1]}#")
+        return name.replace(key, "")
+        
     else:
         return name
 
@@ -320,6 +321,95 @@ VILLAINS_TO_INSERT = [
     VillainInsert(
         Villain.wager_master,
         BoxSet.WAGER_MASTER
+    ),
+    VillainInsert(
+        Villain.anathema,
+        BoxSet.CAULDRON
+    ),
+    VillainInsert(
+        Villain.anathema,
+        BoxSet.CAULDRON,
+        AlternateTags.evolved
+    ),
+    VillainInsert(
+        Villain.dendron,
+        BoxSet.CAULDRON
+    ),
+    VillainInsert(
+        Villain.dendron,
+        BoxSet.CAULDRON,
+        AlternateTags.windcolor
+    ),
+    VillainInsert(
+        Villain.gray,
+        BoxSet.CAULDRON
+    ),
+    VillainInsert(
+        Villain.the_ram,
+        BoxSet.CAULDRON
+    ),
+    VillainInsert(
+        Villain.the_ram,
+        BoxSet.CAULDRON,
+        AlternateTags.alt_1929
+    ),
+    VillainInsert(
+        Villain.tiamat,
+        BoxSet.CAULDRON
+    ),
+    VillainInsert(
+        Villain.tiamat,
+        BoxSet.CAULDRON,
+        AlternateTags.hydra
+    ),
+    VillainInsert(
+        Villain.oriphel,
+        BoxSet.CAULDRON_EXPERIMENTAL
+    ),
+    VillainInsert(
+        Villain.swarm_eater,
+        BoxSet.CAULDRON_EXPERIMENTAL
+    ),
+    VillainInsert(
+        Villain.swarm_eater,
+        BoxSet.CAULDRON_EXPERIMENTAL,
+        AlternateTags.hivemind
+    ),
+    VillainInsert(
+        Villain.vector,
+        BoxSet.CAULDRON_EXPERIMENTAL
+    ),
+    VillainInsert(
+        Villain.phase,
+        BoxSet.CAULDRON_STORMFALL
+    ),
+    VillainInsert(
+        Villain.celadroch,
+        BoxSet.CAULDRON_STORMFALL
+    ),
+    VillainInsert(
+        Villain.menagerie,
+        BoxSet.CAULDRON_STORMFALL
+    ),
+    VillainInsert(
+        Villain.infernal_choir,
+        BoxSet.CAULDRON_ADRIFT
+    ),
+    VillainInsert(
+        Villain.mistress_of_fate,
+        BoxSet.CAULDRON_ADRIFT
+    ),
+    VillainInsert(
+        Villain.mythos,
+        BoxSet.CAULDRON_ADRIFT
+    ),
+    VillainInsert(
+        Villain.outlander,
+        BoxSet.CAULDRON_ADRIFT
+    ),
+    VillainInsert(
+        Villain.screamachine,
+        BoxSet.CAULDRON_ADRIFT
     )
 
 

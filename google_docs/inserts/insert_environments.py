@@ -15,8 +15,8 @@ class EnvironmentInsert():
     def __post_init__(self):
         self.box_set = self.box_set.value
         query = {
-            "pk": f"ENVIRONMENT#{self.full_name.value.upper()}",
-            "sk": f"META#ENVIRONMENT" if self.alternate_name is None else f"META#ENVIRONMENT#ALT#{_deal_with_definitive(self.alternate_name.value).upper()}"
+            "pk": f"{self.full_name.value}#ENVIRONMENT" if self.alternate_name is None else f"{self.full_name.value}_{_deal_with_alt_prefix(self.alternate_name.value)}#ENVIRONMENT_ALT",
+            "sk": f"META#"
         }
         self.alternate_name = ALTERNATE_TAG_DISPLAY_MAPPING.get(self.alternate_name)
         self.full_name = ENVIRONMENT_DISPLAY_MAPPING.get(self.full_name)
@@ -24,10 +24,11 @@ class EnvironmentInsert():
         if self.alternate_name is not None:
             self.full_name = f"{self.full_name}{self.alternate_name}"
 
-def _deal_with_definitive(name:str):
-    key = "definitive_"
+def _deal_with_alt_prefix(name:str):
+    key = "alt_"
     if name.startswith(key):
-        return name.replace(key, "{key[-1]}#")
+        return name.replace(key, "")
+        
     else:
         return name
 
@@ -170,6 +171,58 @@ ENVIRONMENTS_TO_INSERT = [
         Environment.wagner_mars_base,
         BoxSet.DEFINITIVE_EDITION,
         AlternateTags.definitive
+    ),
+    EnvironmentInsert(
+        Environment.blackwood_forest,
+        BoxSet.CAULDRON
+    ),
+    EnvironmentInsert(
+        Environment.f_s_c_continuance_wanderer,
+        BoxSet.CAULDRON
+    ),
+    EnvironmentInsert(
+        Environment.halberd_experimental_research_center,
+        BoxSet.CAULDRON
+    ),
+    EnvironmentInsert(
+        Environment.northspar,
+        BoxSet.CAULDRON
+    ),
+    EnvironmentInsert(
+        Environment.st_simeons_catacombs,
+        BoxSet.CAULDRON
+    ),
+    EnvironmentInsert(
+        Environment.wandering_isle,
+        BoxSet.CAULDRON
+    ),
+    EnvironmentInsert(
+        Environment.superstorm_akela,
+        BoxSet.CAULDRON_STORMFALL
+    ),
+    EnvironmentInsert(
+        Environment.cybersphere,
+        BoxSet.CAULDRON_EXPERIMENTAL
+    ),
+    EnvironmentInsert(
+        Environment.catchwater_harbor_1929,
+        BoxSet.CAULDRON_ADRIFT
+    ),
+    EnvironmentInsert(
+        Environment.chasm_of_a_thousand_nights,
+        BoxSet.CAULDRON_ADRIFT
+    ),
+    EnvironmentInsert(
+        Environment.nightlore_citadel,
+        BoxSet.CAULDRON_ADRIFT
+    ),
+    EnvironmentInsert(
+        Environment.vault_5,
+        BoxSet.CAULDRON_ADRIFT
+    ),
+    EnvironmentInsert(
+        Environment.windmill_city,
+        BoxSet.CAULDRON_ADRIFT
     )
     
 ]

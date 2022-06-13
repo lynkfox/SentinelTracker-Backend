@@ -30,7 +30,7 @@ class Hero(Character):
     haka = "haka"
     harpy = "the_harpy"
     idealist = "idealist"
-    knyfe = "k.n.y.f.e."
+    knyfe = "knyfe"
     la_comodora = "la_comodora"
     legacy = "legacy"
     lifeline = "lifeline"
@@ -53,6 +53,28 @@ class Hero(Character):
     visionary = "the_visionary"
     wraith = "the_wraith"
     writhe = "writhe"
+    baccarat = "baccarat"
+    doc_havoc = "doc_havoc"
+    the_knight = "the_knight"
+    lady_of_the_wood = "lady_of_the_wood"
+    malichae = "malichae"
+    necro = "necro"
+    quicksilver = "quicksilver"
+    starlight = "starlight"
+    the_stranger = "the_stranger"
+    tango_one = "tango_one"
+    vanish = "vanish"
+    drift = "drift"
+    gargoyle = "gargoyle"
+    gyrosaur = "gyrosaur"
+    pyre = "pyre"
+    terminus = "terminus"
+    cricket = "cricket"
+    cypher = "cypher"
+    titan = "titan"
+    echelon = "echelon"
+    impact = "impact"
+    magnificent_mara = "magnificent_mara"
 
 
 class Villain(Character):
@@ -101,6 +123,23 @@ class Villain(Character):
     spite = "spite"
     voidsoul = "voidsoul"
     wager_master = "wager_master"
+    anathema = "anathema"
+    dendron = "dendron"
+    gray = "gray"
+    the_ram = "the_ram"
+    tiamat = "tiamat"
+    dynamo = "dynamo"
+    infernal_choir = "infernal_choir"
+    mistress_of_fate = "mistress_of_fate"
+    mythos = "mythos"
+    outlander = "outlander"
+    screamachine = "screamachine"
+    oriphel = "oriphel"
+    swarm_eater = "swarm_eater"
+    vector="vector"
+    phase = "phase"
+    celadroch = "celadroch"
+    menagerie = "menagerie"
 
 
 class Environment(Character):
@@ -131,6 +170,20 @@ class Environment(Character):
     time_cataclysm = "time_cataclysm"
     tomb_of_anubis = "the_tomb_of_anubis"
     wagner_mars_base = "wagner_mars_base"
+
+    blackwood_forest = "blackwood_forest"
+    f_s_c_continuance_wanderer = "f_s_c_continuance_wanderer"
+    halberd_experimental_research_center = "halberd_experimental_research_center"
+    northspar = "northspar"
+    st_simeons_catacombs = "st_simeons_catacombs"
+    wandering_isle = "wandering_isle"
+    catchwater_harbor_1929 = "catchwater_harbor_1929"
+    chasm_of_a_thousand_nights = "chasm_of_a_thousand_nights"
+    nightlore_citadel = "nightlore_citadel"
+    vault_5 = "vault_5"
+    windmill_city = "windmill_city"
+    cybersphere = "cybersphere"
+    superstorm_akela = "superstorm_akela"
 
 
 class AlternateTags(Character):
@@ -192,6 +245,37 @@ class AlternateTags(Character):
     censor = "censor" # Grand Warlord voss Definitive Edition
     sunrise = "sunrise" # Citizen Dawn Definitive Edition
 
+    first_response = "first_response"  # Cauldron team
+    alt_1929 = "1929" # NOTE TODO - Handle this in the api
+    alt_2199 = "2199" # NOTE TODO - Handle this in the api
+    ministry_of_strategic_science = "ministry_of_strategic_science"  # Cauldron team
+    renegade = "renegade"  # Cauldron team
+    wasteland_ronin = "wasteland_ronin"  # Cauldron team
+
+    ace_of_swords = "ace_of_swords"  # Cauldron baccarat
+    ace_of_sorrows = "ace_of_sorrows"  # Cauldron baccarat
+    the_fair = "the_fair"  # Cauldron the knight
+    the_beserker = "the_beserker"  # Cauldron the knight
+    season_of_change = "season_of_change"  # Cauldron lady
+    shardmaster = "shardmaster"  # Cauldron malichae
+    warden_of_chaos = "warden_of_chaos"  # Cauldron necor
+    the_uncanny = "the_uncanny"  # Cauldron quicksilver
+    genesis = "genesis"  # Cauldron starlight
+    nightlore_council = "nightlore_council"  # Cauldron starlight
+    the_rune_carved = "the_rune_carved"  # Cauldron stranger
+    ghost_ops = "ghost_ops"  # Cauldron tango one
+    through_the_breach = "through_the_breach"  # Cauldron drift
+    alt_1929_2199 = "1929/2199" # Cauldron drift
+    speed_demon = "speed_demon" # Cauldron Gyrosaur
+    the_unstable = "the_unstable"  # Cauldron Pyre
+    swarming_protocol = "swarming_protocol"  # Cauldron Cypher
+
+    evolved = "evolved"  # Cauldron Anathema
+    hydra = "hydra"  # Cauldron tiamat
+    windcolor = "windcolor"   # Cauldron dendron
+    hivemind = "hivemind"  # Cauldron hivemind
+
+
 ALTERNATE_TAG_DISPLAY_MAPPING = {
     AlternateTags.freedom_five: ", Freedom Five",
     AlternateTags.freedom_six: ", Freedom Six",
@@ -225,11 +309,11 @@ ALTERNATE_TAG_DISPLAY_MAPPING = {
     AlternateTags.heroic: ", Heroic",  # heroic luminary - and infinitor
     AlternateTags.road_warrior: ": Road Warrior",  # Mainstay
     AlternateTags.the_hunted: ", The Hunted",  # Naturalist
-    AlternateTags.u: "- Omnitron-U",  # omnitron-u
+    AlternateTags.u: " - Omnitron-U",  # omnitron-u
     AlternateTags.fugue_state: ": Fugue State",  # parse
     AlternateTags.horus_of_the_two_horizon: ": Horus Of The Two Horizon",  # Ra
     AlternateTags.setting_sun: ": Setting Sun",  # Ra
-    AlternateTags.of_the_infinite: " Of The_Infinite",  # Scholar
+    AlternateTags.of_the_infinite: " Of The Infinite",  # Scholar
     AlternateTags.extremist: ", Extremist",  # Sky-Scraper
     AlternateTags.action_hero: ", Action Hero",  # Stuntman
     AlternateTags.super_scientific: ", Super Scientific",  # Tachyon
@@ -248,6 +332,33 @@ ALTERNATE_TAG_DISPLAY_MAPPING = {
     AlternateTags.definitive_cosmic: ", Cosmic: Critcal Event! ", # Omnitron Definitive Edition
     AlternateTags.censor: ": Critcal Event! Censor", # Grand Warlord voss Definitive Edition
     AlternateTags.sunrise: ", Sunrise: Critcal Event! ", # Citizen Dawn Definitive Edition
+    AlternateTags.first_response: ", First_Response",  # Cauldron team
+    AlternateTags.alt_1929: ": 1929", # NOTE TODO - Handle this in the api
+    AlternateTags.alt_2199: ": 2199", # NOTE TODO - Handle this in the api
+    AlternateTags.ministry_of_strategic_science: ": Ministry of Strategic Science",  # Cauldron team
+    AlternateTags.renegade: ": Renegade",  # Cauldron team
+    AlternateTags.wasteland_ronin: ": Wasteland Ronin",  # Cauldron team
+    AlternateTags.ace_of_swords: ": Ace of Swords",  # Cauldron baccarat
+    AlternateTags.ace_of_sorrows: ": Ace of Sorrows",  # Cauldron baccarat
+    AlternateTags.the_fair: ", Fair",  # Cauldron the knight
+    AlternateTags.the_beserker: ", Beserker",  # Cauldron the knight
+    AlternateTags.season_of_change: ": Season of Change",  # Cauldron lady
+    AlternateTags.shardmaster: ": Shardmaster",  # Cauldron malichae
+    AlternateTags.warden_of_chaos: ": Warden of chaos",  # Cauldron necor
+    AlternateTags.the_uncanny: ": The Uncanny",  # Cauldron quicksilver
+    AlternateTags.genesis: ": Genesis",  # Cauldron starlight
+    AlternateTags.nightlore_council: ": Nightlore Council",  # Cauldron starlight
+    AlternateTags.the_rune_carved: ", The Rune Carved",  # Cauldron stranger
+    AlternateTags.ghost_ops: ": Ghost Ops",  # Cauldron tango one
+    AlternateTags.through_the_breach: ": Through the Breach",  # Cauldron drift
+    AlternateTags.alt_1929_2199: ": 1929/2199",  # Cauldron drift
+    AlternateTags.speed_demon: ", Speed demon",  # Cauldron Gyrosaur
+    AlternateTags.the_unstable: ", The Unstable",  # Cauldron Pyre
+    AlternateTags.evolved: ": Evolved",  # Cauldron Anathema
+    AlternateTags.hydra: ", Hydra",  # Cauldron tiamat
+    AlternateTags.windcolor: ", Windcolor",   # Cauldron dendron
+    AlternateTags.hivemind: ", Hivemind",  # Cauldron Swarm Eater
+    AlternateTags.swarming_protocol: ": Swarming Protocool" # Cypher
 }
 
 HERO_DISPLAY_MAPPING = {
@@ -288,6 +399,29 @@ HERO_DISPLAY_MAPPING = {
     Hero.visionary: "The Visionary",
     Hero.wraith: "The Wraith",
     Hero.writhe: "Writhe",
+    Hero.baccarat: "Baccarat",
+    Hero.doc_havoc: "Doc Havoc",
+    Hero.the_knight: "The Knight",
+    Hero.lady_of_the_wood: "Lady of the Wood",
+    Hero.malichae: "Malichae",
+    Hero.necro: "Necro",
+    Hero.quicksilver: "Quicksilver",
+    Hero.starlight: "Starlight",
+    Hero.the_stranger: "The Stranger",
+    Hero.tango_one: "Tango One",
+    Hero.vanish: "Vanish",
+    Hero.drift: "Drift",
+    Hero.gargoyle: "Gargoyle",
+    Hero.gyrosaur: "Gyrosaur",
+    Hero.pyre: "Pyre",
+    Hero.terminus: "Terminus",
+    Hero.cricket: "Cricket",
+    Hero.cypher: "Cypher",
+    Hero.titan: "Titan",
+    Hero.terminus: "Terminus",
+    Hero.echelon: "Echelon",
+    Hero.impact: "Impact",
+    Hero.magnificent_mara: "Magnificent Mara"
 }
 
 VILLAIN_DISPLAY_MAPPING = {
@@ -336,6 +470,23 @@ VILLAIN_DISPLAY_MAPPING = {
     Villain.spite: "Spite",
     Villain.voidsoul: "Voidsoul",
     Villain.wager_master: "Wager Master",
+    Villain.anathema: "Anathema",
+    Villain.dendron: "Dendron",
+    Villain.gray: "Gray",
+    Villain.the_ram: "Ram, The",
+    Villain.tiamat: "Tiamat",
+    Villain.dynamo: "Dynamo",
+    Villain.infernal_choir: "Infernal Choir, The",
+    Villain.mistress_of_fate: "Mistress of Fate",
+    Villain.mythos: "Mythos",
+    Villain.outlander: "Outlander",
+    Villain.screamachine: "Screamachine",
+    Villain.oriphel: "Oriphel",
+    Villain.swarm_eater: "Swarm Eater",
+    Villain.vector: "Vector",
+    Villain.phase: "Phase",
+    Villain.celadroch: "Celadroch",
+    Villain.menagerie: "Menagerie"
 }
 
 ENVIRONMENT_DISPLAY_MAPPING= {
@@ -366,4 +517,19 @@ ENVIRONMENT_DISPLAY_MAPPING= {
     Environment.time_cataclysm: "Time Cataclysm",
     Environment.tomb_of_anubis: "The Tomb of Anubis",
     Environment.wagner_mars_base: "Wagner Mars Base",
+    Environment.blackwood_forest: "Blackwood Forest",
+    Environment.f_s_c_continuance_wanderer: "F.S.C Continuance Wanderer",
+    Environment.halberd_experimental_research_center: "Halberd Experimental Research Center",
+    Environment.northspar: "Northspar",
+    Environment.st_simeons_catacombs: "St. Simeons Catacombs",
+    Environment.wandering_isle: "Wandering Isle",
+    Environment.catchwater_harbor_1929: "Catchwater Harbor: 1929",
+    Environment.chasm_of_a_thousand_nights: "Chasm of a Thousand Nights",
+    Environment.nightlore_citadel: "Nightlore Citadel",
+    Environment.vault_5: "Vault 5",
+    Environment.windmill_city: "Windmill City",
+    Environment.cybersphere: "Cybersphere",
+    Environment.superstorm_akela: "Superstorm Akela"
 }
+
+

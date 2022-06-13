@@ -26,6 +26,10 @@ class BoxSet(Enum):
     SILVER_GULCH = "Mini: Silver Gulch 1883"
     OMNITRON_IV = "Mini: Omnitron-IV"
     CELESTIAL_TRIBUNAL = "Mini: The Celestial Tribunal"
+    CAULDRON = "Cauldron"
+    CAULDRON_EXPERIMENTAL = "Cauldron: Experimental"
+    CAULDRON_STORMFALL = "Cauldron: Stormfall"
+    CAULDRON_ADRIFT = "Cauldron: Adrift"
 
 
 class Type(Enum):
