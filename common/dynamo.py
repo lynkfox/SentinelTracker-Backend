@@ -36,11 +36,9 @@ def build_pk(
     """
 
     type = type.value.upper()
+    definitive_box_sets = [BoxSet.DEFINITIVE_EDITION, BoxSet.ROOK_CITY_RENEGADES]
 
-    if (
-        alternate_name == AlternateTags.definitive
-        or box_set == BoxSet.DEFINITIVE_EDITION
-    ):
+    if alternate_name == AlternateTags.definitive or box_set in definitive_box_sets:
         pk = f"{primary_name.value}_{AlternateTags.definitive.value}#{type}"
     else:
         pk = f"{primary_name.value}#{type}"

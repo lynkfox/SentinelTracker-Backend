@@ -75,6 +75,7 @@ class Hero(Character):
     echelon = "echelon"
     impact = "impact"
     magnificent_mara = "magnificent_mara"
+    alpha = "alpha"
 
 
 class Villain(Character):
@@ -140,6 +141,10 @@ class Villain(Character):
     phase = "phase"
     celadroch = "celadroch"
     menagerie = "menagerie"
+    the_organization = "the_organization"
+    apex = "apex"
+    fey_court = "fey_court"
+    terraform = "terraform"
 
 
 class Environment(Character):
@@ -184,9 +189,11 @@ class Environment(Character):
     windmill_city = "windmill_city"
     cybersphere = "cybersphere"
     superstorm_akela = "superstorm_akela"
+    diamond_manor = "diamond_manor"
 
 
 class AlternateTags(Character):
+    # teams
     freedom_five = "freedom_five"
     freedom_six = "freedom_six"
     termi_nation = "termi_nation"
@@ -199,6 +206,7 @@ class AlternateTags(Character):
     definitive = "definitive"  # definitive edition
     first_appearance = "first_appearance"  # definitive edition
 
+    # heroes
     spirit_of_the_void = "spirit_of_the_void"  # Akash hero
     dark_conductor = "dark_conductor"  # Argent
     supply_and_demand = "supply_and_demand"  # Benchmark
@@ -233,6 +241,7 @@ class AlternateTags(Character):
     rook_city = "rook_city"  # wraith
     cosmic_inventor = "cosmic_inventor"  # writhe
 
+    # villains
     mad_bomber = "mad_bomber"  # baron blade
     skinwalker = "skinwalker"  # gloomweaver
     trickster = "trickster"  # kismet
@@ -245,6 +254,7 @@ class AlternateTags(Character):
     censor = "censor"  # Grand Warlord voss Definitive Edition
     sunrise = "sunrise"  # Citizen Dawn Definitive Edition
 
+    # Cauldron teams
     first_response = "first_response"  # Cauldron team
     alt_1929 = "1929"  # NOTE TODO - Handle this in the api
     alt_2199 = "2199"  # NOTE TODO - Handle this in the api
@@ -252,6 +262,7 @@ class AlternateTags(Character):
     renegade = "renegade"  # Cauldron team
     wasteland_ronin = "wasteland_ronin"  # Cauldron team
 
+    # Cauldron heroes
     ace_of_swords = "ace_of_swords"  # Cauldron baccarat
     ace_of_sorrows = "ace_of_sorrows"  # Cauldron baccarat
     the_fair = "the_fair"  # Cauldron the knight
@@ -270,10 +281,37 @@ class AlternateTags(Character):
     the_unstable = "the_unstable"  # Cauldron Pyre
     swarming_protocol = "swarming_protocol"  # Cauldron Cypher
 
+    # Cauldron villains
     evolved = "evolved"  # Cauldron Anathema
     hydra = "hydra"  # Cauldron tiamat
     windcolor = "windcolor"  # Cauldron dendron
     hivemind = "hivemind"  # Cauldron hivemind
+
+    # rook city renegades heroes
+    eclipse = "eclipse"  # expat
+    fey_cursed = "fey_cursed"  # setback
+    blackfist = "blackfist"
+    mentor = "mentor"  # nightmist
+    blood_raven = "blood_raven"  # harpy
+    reporter = "reporter"  # alpha
+    alt_2000 = "2000"  # alpha
+    detective = "detective"  # wraith
+    scavanger = "scavanger"  # unity
+    stealth_suit = "stealth_suit"  # bunker
+    haunted = "haunted"  # fanatic
+    backdraft = "backdraft"  # ra
+    werewolf = "werewolf"  # haka
+
+    # rcr villains
+    bear = "bear"  # Organization
+    doctor_toxica = "doctor_toxica"  # Plague rat
+    abomination = "abomination"  # spite
+    soultaker = "soultaker"  # gloomweaver
+    empowered = "empowered"  # kismet
+    vainglorious = "vainglorious"  # ambuscade
+    blood_leashed = "blood_leashed"  # apex
+    war_girded = "war_girded"  # dagda & morrigan
+    mark_iii = "mark_iii"  # terraform
 
 
 ALTERNATE_TAG_DISPLAY_MAPPING = {
@@ -359,6 +397,29 @@ ALTERNATE_TAG_DISPLAY_MAPPING = {
     AlternateTags.windcolor: ", Windcolor",  # Cauldron dendron
     AlternateTags.hivemind: ", Hivemind",  # Cauldron Swarm Eater
     AlternateTags.swarming_protocol: ": Swarming Protocool",  # Cypher
+    # rook city renegades heroes
+    AlternateTags.eclipse: ": Eclipse",  # expat
+    AlternateTags.fey_cursed: ", Fey-Cursed",  # setback
+    AlternateTags.blackfist: ": Blackfist",  # mr fixer
+    AlternateTags.mentor: ", Mentor",  # nightmist
+    AlternateTags.blood_raven: ": Blood Raven",  # harpy
+    AlternateTags.reporter: ", Reporter",  # alpha
+    AlternateTags.alt_2000: ": 2000",  # alpha
+    AlternateTags.detective: ", Detective",  # wraith
+    AlternateTags.scavanger: ", Scavanger",  # unity
+    AlternateTags.stealth_suit: ", Stealth Suit",  # bunker
+    AlternateTags.haunted: ", Haunted",  # fanatic
+    AlternateTags.backdraft: ", Backdraft",  # ra
+    AlternateTags.werewolf: ", Berewolf",  # haka
+    AlternateTags.bear: ": Critical Event! The Bear",  # Organization
+    AlternateTags.doctor_toxica: ": Critical Event! Doctor Toxica",  # Plague rat
+    AlternateTags.abomination: ", Abomination: Critical Event!",  # spite
+    AlternateTags.soultaker: ", Soultaker: Critical Event!",  # gloomweaver
+    AlternateTags.empowered: ", Empowered: : Critical Event!",  # kismet
+    AlternateTags.vainglorious: ", Vainglorious: Critical Event! ",  # ambuscade
+    AlternateTags.blood_leashed: ", Blood Leashed: Critical Event!",  # apex
+    AlternateTags.war_girded: ", War Girded Dagada & Morrigan: Critical Event!",  # dagda & morrigan
+    AlternateTags.mark_iii: ": Critical Event! Mark III",  # terraform
 }
 
 HERO_DISPLAY_MAPPING = {
@@ -422,6 +483,7 @@ HERO_DISPLAY_MAPPING = {
     Hero.echelon: "Echelon",
     Hero.impact: "Impact",
     Hero.magnificent_mara: "Magnificent Mara",
+    Hero.alpha: "Alpha",
 }
 
 VILLAIN_DISPLAY_MAPPING = {
@@ -449,7 +511,7 @@ VILLAIN_DISPLAY_MAPPING = {
     Villain.glamour: "Glamour",
     Villain.gloomweaver: "Gloomweaver",
     Villain.grand_warlord_voss: "Grand Warlord Voss",
-    Villain.greazer_clutch: "Greezer Clutch",
+    Villain.greazer_clutch: "Greazer Clutch",
     Villain.infinitor: "Infinitor",
     Villain.iron_legacy: "Iron Legacy",
     Villain.kaargra: "Kaargra Warfang",
@@ -487,6 +549,10 @@ VILLAIN_DISPLAY_MAPPING = {
     Villain.phase: "Phase",
     Villain.celadroch: "Celadroch",
     Villain.menagerie: "Menagerie",
+    Villain.apex: "Apex",
+    Villain.fey_court: "The Fey Court",
+    Villain.terraform: "Terraform",
+    Villain.the_organization: "The Organization",
 }
 
 ENVIRONMENT_DISPLAY_MAPPING = {
@@ -530,4 +596,5 @@ ENVIRONMENT_DISPLAY_MAPPING = {
     Environment.windmill_city: "Windmill City",
     Environment.cybersphere: "Cybersphere",
     Environment.superstorm_akela: "Superstorm Akela",
+    Environment.diamond_manor: "Diamond Manor",
 }

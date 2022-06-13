@@ -32,6 +32,7 @@ class BoxSet(Enum):
     CAULDRON_EXPERIMENTAL = "Cauldron: Experimental"
     CAULDRON_STORMFALL = "Cauldron: Stormfall"
     CAULDRON_ADRIFT = "Cauldron: Adrift"
+    ROOK_CITY_RENEGADES = "Rook City: Renegades"
 
 
 class Type(Enum):
