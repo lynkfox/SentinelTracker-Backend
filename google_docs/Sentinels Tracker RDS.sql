@@ -17,7 +17,6 @@ CREATE TABLE `heroes` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `full_name` varchar(255) UNIQUE,
   `box_set` varchar(255),
-  `nemesis` varchar(255),
   `dynamo_meta_query` varchar(255),
   `total_wins` int DEFAULT 0,
   `total_games` int DEFAULT 0
@@ -98,8 +97,6 @@ CREATE TABLE `gameDetails` (
 ALTER TABLE `villains` ADD FOREIGN KEY (`box_set`) REFERENCES `boxSets` (`full_name`);
 
 ALTER TABLE `heroes` ADD FOREIGN KEY (`box_set`) REFERENCES `boxSets` (`full_name`);
-
-ALTER TABLE `heroes` ADD FOREIGN KEY (`nemesis`) REFERENCES `villains` (`full_name`);
 
 ALTER TABLE `environments` ADD FOREIGN KEY (`box_set`) REFERENCES `boxSets` (`full_name`);
 

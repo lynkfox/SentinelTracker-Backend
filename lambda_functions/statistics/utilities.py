@@ -242,7 +242,7 @@ class LookUp:
         raise ValueError("Unable to determine call")
 
     def _determine_entity_by_attached_part(self, next_part) -> Tuple[Selector, Enum]:
-        if next_part == Hero.akash_bhuta or next_part == Villain.akash_bhuta:
+        if next_part == Hero.akash_thriya or next_part == Villain.akash_bhuta:
             return self._deal_with_duplicate_type(next_part)
 
         if Hero.has_member(next_part):

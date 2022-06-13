@@ -17,7 +17,7 @@ class Character(Enum):
 
 class Hero(Character):
     absolute_zero = "absolute_zero"
-    akash_bhuta = "akash_bhuta"
+    akash_thriya = "akash_thriya"
     argent_adept = "the_argent_adept"
     bench_mark = "benchmark"
     bunker = "bunker"
@@ -25,7 +25,7 @@ class Hero(Character):
     chrono_ranger = "chrono_ranger"
     doctor_medico = "doctor_medico"
     expatriette = "expatriette"
-    fanataic = "fanatic"
+    fanatic = "fanatic"
     guise = "guise"
     haka = "haka"
     harpy = "the_harpy"
@@ -36,6 +36,7 @@ class Hero(Character):
     lifeline = "lifeline"
     luminary = "luminary"
     mainstay = "mainstay"
+    mr_fixer = "mr_fixer"
     naturalist = "the_naturalist"
     nightmist = "nightmist"
     ominitron_x = "omnitron_x"
@@ -48,6 +49,7 @@ class Hero(Character):
     stuntman = "stuntman"
     tachyon = "tachyon"
     tempest = "tempest"
+    unity = "unity"
     visionary = "the_visionary"
     wraith = "the_wraith"
     writhe = "writhe"
@@ -72,7 +74,8 @@ class Villain(Character):
     empyreon = "empyreon"
     the_ennead = "the_ennead"
     ermine = "ermine"
-    faultess = "faultless"
+    faultless = "faultless"
+    friction = "friction"
     fright_train = "fright_train"
     glamour = "glamour"
     gloomweaver = "gloomweaver"
@@ -135,12 +138,13 @@ class AlternateTags(Character):
     freedom_six = "freedom_six"
     termi_nation = "termi_nation"
     prime_wardens = "prime_wardens"
-    xtreme_prime_wardens = "xtream_prime_wardens"
+    xtreme_prime_wardens = "xtreme_prime_wardens"
     adamant = "adamant"
     dark_watch = "dark_watch"
     scion = "scion"
     team_villain = "team_villain"
     definitive = "definitive"  # definitive edition
+    first_appearance = "first_appearance" # definitive edition
 
     spirit_of_the_void = "spirit_of_the_void"  # Akash hero
     dark_conductor = "dark_conductor"  # Argent
@@ -151,14 +155,14 @@ class AlternateTags(Character):
     malpractice = "malpractice"  # Dr Medico
     redeemer = "redeemer"  # Fanatic
     santa = "santa"  # Guise
-    complitionist = "complitionist"  # Guise
+    completionist = "complitionist"  # Guise
     eternal = "eternal"  # Haka
     super_sentai = "super_sentai"  # Idealist
     rogue_agent = "rogue_agent"  # KNYFE
     curse_of_the_black_spot = "curse_of_the_black_spot"  # La Coodora
     americas_greatest = "americas_greatest"  # Legacy
     americas_newest = "americas_newest"  # young legacy
-    americas_cleverist = "americas_cleverist"  # Legacy
+    americas_cleverest = "americas_cleverest"  # Legacy
     bloodmage = "bloodmage"  # Lifeline
     heroic = "heroic"  # heroic luminary - and infinitor
     road_warrior = "road_warrior"  # Mainstay
@@ -168,6 +172,7 @@ class AlternateTags(Character):
     horus_of_the_two_horizon = "horus_of_the_two_horizon"  # Ra
     setting_sun = "setting_sun"  # Ra
     of_the_infinite = "of_the_infinite"  # Scholar
+    extremist = "extremist" # Sky-scrapper
     action_hero = "action_hero"  # Stuntman
     super_scientific = "super_scientific"  # Tachyon
     dark = "dark"  # visionary
@@ -180,29 +185,93 @@ class AlternateTags(Character):
     trickster = "trickster"  # kismet
     cosmic = "cosmic"  # omnitron
     agent_of_gloom = "agent_of_gloom"  # spite
+    definitive_mad_bomber = "definitive_mad_bomber"
+    mecha = "mecha" # Akash Bhuta Definitive Edition
+    mocktriarch = "mocktriarch" # Matriarch Definitive Edition
+    definitive_cosmic = "definitive_cosmic" # Omnitron Definitive Edition
+    censor = "censor" # Grand Warlord voss Definitive Edition
+    sunrise = "sunrise" # Citizen Dawn Definitive Edition
 
+ALTERNATE_TAG_DISPLAY_MAPPING = {
+    AlternateTags.freedom_five: ", Freedom Five",
+    AlternateTags.freedom_six: ", Freedom Six",
+    AlternateTags.termi_nation: ", Termi-Nation",
+    AlternateTags.prime_wardens: ", Prime Wardens",
+    AlternateTags.xtreme_prime_wardens: ", XTREME Prime Wardens",
+    AlternateTags.adamant: ", Adamant",
+    AlternateTags.dark_watch: ", Dark Watch",
+    AlternateTags.scion: ": Scion of OblivAeon",
+    AlternateTags.team_villain: ": Team Villain",
+    AlternateTags.definitive: ", Definitive",  # definitive edition
+    AlternateTags.first_appearance: ", First Appearance of",
+    AlternateTags.spirit_of_the_void: ": The Spirit Of The Void",  # Akash hero
+    AlternateTags.dark_conductor: ": Dark Conductor",  # Argent
+    AlternateTags.supply_and_demand: ": Supply And Demand",  # Benchmark
+    AlternateTags.gi: ", GI",  # bunker
+    AlternateTags.requital: ": Requital",  # Captain Cosmic
+    AlternateTags.best_of_times: ", Best Of Times",  # Chrono Ranger
+    AlternateTags.malpractice: ": Malpractice",  # Dr Medico
+    AlternateTags.redeemer: ", Redeemer",  # Fanatic
+    AlternateTags.santa: ", Santa",  # Guise
+    AlternateTags.completionist: ", Completionist",  # Guise
+    AlternateTags.eternal: ", Eternal",  # Haka
+    AlternateTags.super_sentai: ", Super Sentai",  # Idealist
+    AlternateTags.rogue_agent: ": Rogue Agent",  # KNYFE
+    AlternateTags.curse_of_the_black_spot: "and The Curse Of The Black Spot",  # La Coodora
+    AlternateTags.americas_greatest: ", Americas Greatest",  # Legacy
+    AlternateTags.americas_newest: ", Americas Newest",  # young legacy
+    AlternateTags.americas_cleverest: ", Americas Cleverest",  # Legacy
+    AlternateTags.bloodmage: ": Bloodmage",  # Lifeline
+    AlternateTags.heroic: ", Heroic",  # heroic luminary - and infinitor
+    AlternateTags.road_warrior: ": Road Warrior",  # Mainstay
+    AlternateTags.the_hunted: ", The Hunted",  # Naturalist
+    AlternateTags.u: "- Omnitron-U",  # omnitron-u
+    AlternateTags.fugue_state: ": Fugue State",  # parse
+    AlternateTags.horus_of_the_two_horizon: ": Horus Of The Two Horizon",  # Ra
+    AlternateTags.setting_sun: ": Setting Sun",  # Ra
+    AlternateTags.of_the_infinite: " Of The_Infinite",  # Scholar
+    AlternateTags.extremist: ", Extremist",  # Sky-Scraper
+    AlternateTags.action_hero: ", Action Hero",  # Stuntman
+    AlternateTags.super_scientific: ", Super Scientific",  # Tachyon
+    AlternateTags.dark: ", Dark",  # visionary
+    AlternateTags.unleashed: ": Unleashed",  # visionary
+    AlternateTags.rook_city: ", Rook City",  # wraith
+    AlternateTags.cosmic_inventor: ", Cosmic Inventor",  # writhe
+    AlternateTags.mad_bomber: ", Mad Bomber",  # baron blade
+    AlternateTags.skinwalker: ", Skinwalker",  # gloomweaver
+    AlternateTags.trickster: ", Trickster",  # kismet
+    AlternateTags.cosmic: ", Cosmic",  # omnitron
+    AlternateTags.agent_of_gloom: ", Agent Of Gloom",  # spite
+    AlternateTags.definitive_mad_bomber: ", Mad Bomber: Critcal Event!",
+    AlternateTags.mecha: ": Critcal Event! Akash'Mecha", # Akash Bhuta Definitive Edition
+    AlternateTags.mocktriarch: ": Critcal Event! MOCKtriarch", # Matriarch Definitive Edition
+    AlternateTags.definitive_cosmic: ", Cosmic: Critcal Event! ", # Omnitron Definitive Edition
+    AlternateTags.censor: ": Critcal Event! Censor", # Grand Warlord voss Definitive Edition
+    AlternateTags.sunrise: ", Sunrise: Critcal Event! ", # Citizen Dawn Definitive Edition
+}
 
 HERO_DISPLAY_MAPPING = {
-    Hero.akash_bhuta: "Akash'Bhuta(Hero)",
+    Hero.akash_thriya: "Akash'Thriya",
     Hero.absolute_zero: "Absolute Zero",
     Hero.argent_adept: "The Argent Adept",
     Hero.bench_mark: "Benchmark",
     Hero.bunker: "Bunker",
     Hero.captain_cosmic: "Captain Cosmic",
     Hero.chrono_ranger: "Chrono Ranger",
-    Hero.doctor_medico: "Doctor Medico(Void Guard)",
+    Hero.doctor_medico: "Doctor Medico",
     Hero.expatriette: "Expatriette",
-    Hero.fanataic: "Fanatic",
+    Hero.fanatic: "Fanatic",
     Hero.guise: "Guise",
     Hero.haka: "Haka",
     Hero.harpy: "The Harpy",
-    Hero.idealist: "Idealist(Void Guard)",
+    Hero.idealist: "Idealist",
     Hero.knyfe: "K.N.Y.F.E.",
     Hero.la_comodora: "La Comodora",
     Hero.legacy: "Legacy",
     Hero.lifeline: "Lifeline",
     Hero.luminary: "Luminary",
-    Hero.mainstay: "Mainstay(Void Guard)",
+    Hero.mainstay: "Mainstay",
+    Hero.mr_fixer: "Mr. Fixer",
     Hero.naturalist: "The Naturalist",
     Hero.nightmist: "NightMist",
     Hero.ominitron_x: "Omnitron-X",
@@ -215,9 +284,10 @@ HERO_DISPLAY_MAPPING = {
     Hero.stuntman: "Stuntman",
     Hero.tachyon: "Tachyon",
     Hero.tempest: "Tempest",
+    Hero.unity: "Unity",
     Hero.visionary: "The Visionary",
     Hero.wraith: "The Wraith",
-    Hero.writhe: "Writhe(Void Guard)",
+    Hero.writhe: "Writhe",
 }
 
 VILLAIN_DISPLAY_MAPPING = {
@@ -239,7 +309,8 @@ VILLAIN_DISPLAY_MAPPING = {
     Villain.empyreon: "Empyreon",
     Villain.the_ennead: "The Ennead",
     Villain.ermine: "Ermine",
-    Villain.faultess: "Faultless",
+    Villain.faultless: "Faultless",
+    Villain.friction: "Friction",
     Villain.fright_train: "Fright Train",
     Villain.glamour: "Glamour",
     Villain.gloomweaver: "Gloomweaver",
@@ -267,7 +338,7 @@ VILLAIN_DISPLAY_MAPPING = {
     Villain.wager_master: "Wager Master",
 }
 
-ENVIRONMENT_DISPLAY_MAPPING: {
+ENVIRONMENT_DISPLAY_MAPPING= {
     Environment.the_block: "The Block",
     Environment.celestial_tribunal: "The Celestial Tribunal",
     Environment.champion_studios: "Champion Studios",

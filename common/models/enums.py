@@ -10,8 +10,22 @@ class BoxSet(Enum):
     SHATTERED_TIMELINES = "Shattered Timelines"
     VENGEANCE = "Vengeance"
     WRATH_OF_THE_COSMOS = "Wrath of the Cosmos"
-    VILLAINS = "Villians of the Multiverse"
+    VILLAINS = "Villains of the Multiverse"
     OBLIVAEON = "OblivAeon"
+    UNITY = "Mini: Unity"
+    SCHOLAR = "Mini: Scholar"
+    GUISE = "Mini: Guise"
+    STUNTMAN = "Mini: Stuntman"
+    BENCHMARK = "Mini: Benchmark"
+    VOID_GUARD = "Mini: The Void Guard"
+    AMBUSCADE = "Mini: Ambuscade"
+    MISS_INFORMATION = "Mini: Miss Information"
+    WAGER_MASTER  = "Mini: Wager Master"
+    CHOKEPOINT = "Mini: Chokepoint"
+    FINAL_WASTELAND = "Mini: The Final Wasteland"
+    SILVER_GULCH = "Mini: Silver Gulch 1883"
+    OMNITRON_IV = "Mini: Omnitron-IV"
+    CELESTIAL_TRIBUNAL = "Mini: The Celestial Tribunal"
 
 
 class Type(Enum):
