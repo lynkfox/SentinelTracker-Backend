@@ -4,7 +4,8 @@ from typing import ClassVar
 
 @dataclass(frozen=True)
 class ResourceNames:
-    ITEM_DYNAMODB: ClassVar[str] = field(init=False, default="statistics")
+    ITEM_DYNAMODB: ClassVar[str] = field(init=False, default="statistics-cache")
+    STATISTICS_RDS: ClassVar[str] = field(init=False, default="statistics-rds")
     BACKEND_API: ClassVar[str] = field(init=False, default="SentinelTrackerAPI")
     STATISTICS: ClassVar[str] = field(init=False, default="Get-Sentinels-Statistics")
     USER: ClassVar[str] = field(init=False, default="Get-Sentinels-Statistics-User")

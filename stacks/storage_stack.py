@@ -38,11 +38,17 @@ class StorageStack(NestedStack):
             removal_policy=core.RemovalPolicy.DESTROY,
         )
 
-        instance = rds.DatabaseInstance(
+        self.statistics = rds.DatabaseInstance(
             self,
-            "Instance",
+            ResourceNames.STATISTICS_RDS,
+            allocated_storage=25,
+            database_name="",
+            delete_automated_backups=True,
+            max_allocated_storage=50,
+            instance_type=ec2.InstanceType.of(ec2.InstanceClass.BURSTABLE4_GRAVITON, ec2.InstanceSize.SMALL),
+            instance_identifier=props.prefix_name(ResourceNames.STATISTICS_RDS, lower=True),
             engine=rds.DatabaseInstanceEngine.mysql(
-                version=rds.MysqlEngineVersion.VER_8_0_28
+                version=rds.MysqlEngineVersion.VER_8_0_28,
             ),
             vpc=props.vpc,
             vpc_subnets=ec2.SubnetSelection(subnet_type=ec2.SubnetType.PUBLIC),

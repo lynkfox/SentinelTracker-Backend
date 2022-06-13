@@ -24,8 +24,6 @@ i.e. querying or insert/updating, they will expect to be passed a dynamodb resou
 
 """
 
-
-
 def build_pk(primary_name: Character, alternate_name: Union[Character, Default], box_set: BoxSet, type:Type) ->str:
     """
         builds the PK
