@@ -136,7 +136,7 @@ class Villain(Character):
     screamachine = "screamachine"
     oriphel = "oriphel"
     swarm_eater = "swarm_eater"
-    vector="vector"
+    vector = "vector"
     phase = "phase"
     celadroch = "celadroch"
     menagerie = "menagerie"
@@ -197,7 +197,7 @@ class AlternateTags(Character):
     scion = "scion"
     team_villain = "team_villain"
     definitive = "definitive"  # definitive edition
-    first_appearance = "first_appearance" # definitive edition
+    first_appearance = "first_appearance"  # definitive edition
 
     spirit_of_the_void = "spirit_of_the_void"  # Akash hero
     dark_conductor = "dark_conductor"  # Argent
@@ -225,7 +225,7 @@ class AlternateTags(Character):
     horus_of_the_two_horizon = "horus_of_the_two_horizon"  # Ra
     setting_sun = "setting_sun"  # Ra
     of_the_infinite = "of_the_infinite"  # Scholar
-    extremist = "extremist" # Sky-scrapper
+    extremist = "extremist"  # Sky-scrapper
     action_hero = "action_hero"  # Stuntman
     super_scientific = "super_scientific"  # Tachyon
     dark = "dark"  # visionary
@@ -239,15 +239,15 @@ class AlternateTags(Character):
     cosmic = "cosmic"  # omnitron
     agent_of_gloom = "agent_of_gloom"  # spite
     definitive_mad_bomber = "definitive_mad_bomber"
-    mecha = "mecha" # Akash Bhuta Definitive Edition
-    mocktriarch = "mocktriarch" # Matriarch Definitive Edition
-    definitive_cosmic = "definitive_cosmic" # Omnitron Definitive Edition
-    censor = "censor" # Grand Warlord voss Definitive Edition
-    sunrise = "sunrise" # Citizen Dawn Definitive Edition
+    mecha = "mecha"  # Akash Bhuta Definitive Edition
+    mocktriarch = "mocktriarch"  # Matriarch Definitive Edition
+    definitive_cosmic = "definitive_cosmic"  # Omnitron Definitive Edition
+    censor = "censor"  # Grand Warlord voss Definitive Edition
+    sunrise = "sunrise"  # Citizen Dawn Definitive Edition
 
     first_response = "first_response"  # Cauldron team
-    alt_1929 = "1929" # NOTE TODO - Handle this in the api
-    alt_2199 = "2199" # NOTE TODO - Handle this in the api
+    alt_1929 = "1929"  # NOTE TODO - Handle this in the api
+    alt_2199 = "2199"  # NOTE TODO - Handle this in the api
     ministry_of_strategic_science = "ministry_of_strategic_science"  # Cauldron team
     renegade = "renegade"  # Cauldron team
     wasteland_ronin = "wasteland_ronin"  # Cauldron team
@@ -265,14 +265,14 @@ class AlternateTags(Character):
     the_rune_carved = "the_rune_carved"  # Cauldron stranger
     ghost_ops = "ghost_ops"  # Cauldron tango one
     through_the_breach = "through_the_breach"  # Cauldron drift
-    alt_1929_2199 = "1929/2199" # Cauldron drift
-    speed_demon = "speed_demon" # Cauldron Gyrosaur
+    alt_1929_2199 = "1929/2199"  # Cauldron drift
+    speed_demon = "speed_demon"  # Cauldron Gyrosaur
     the_unstable = "the_unstable"  # Cauldron Pyre
     swarming_protocol = "swarming_protocol"  # Cauldron Cypher
 
     evolved = "evolved"  # Cauldron Anathema
     hydra = "hydra"  # Cauldron tiamat
-    windcolor = "windcolor"   # Cauldron dendron
+    windcolor = "windcolor"  # Cauldron dendron
     hivemind = "hivemind"  # Cauldron hivemind
 
 
@@ -327,14 +327,14 @@ ALTERNATE_TAG_DISPLAY_MAPPING = {
     AlternateTags.cosmic: ", Cosmic",  # omnitron
     AlternateTags.agent_of_gloom: ", Agent of Gloom",  # spite
     AlternateTags.definitive_mad_bomber: ", Mad Bomber: Critical Event!",
-    AlternateTags.mecha: ": Critical Event! Akash'Mecha", # Akash Bhuta Definitive Edition
-    AlternateTags.mocktriarch: ": Critical Event! MOCKtriarch", # Matriarch Definitive Edition
-    AlternateTags.definitive_cosmic: ", Cosmic: Critical Event! ", # Omnitron Definitive Edition
-    AlternateTags.censor: ": Critical Event! Censor", # Grand Warlord voss Definitive Edition
-    AlternateTags.sunrise: ", Sunrise: Critical Event! ", # Citizen Dawn Definitive Edition
+    AlternateTags.mecha: ": Critical Event! Akash'Mecha",  # Akash Bhuta Definitive Edition
+    AlternateTags.mocktriarch: ": Critical Event! MOCKtriarch",  # Matriarch Definitive Edition
+    AlternateTags.definitive_cosmic: ", Cosmic: Critical Event! ",  # Omnitron Definitive Edition
+    AlternateTags.censor: ": Critical Event! Censor",  # Grand Warlord voss Definitive Edition
+    AlternateTags.sunrise: ", Sunrise: Critical Event! ",  # Citizen Dawn Definitive Edition
     AlternateTags.first_response: ", First Response",  # Cauldron team
-    AlternateTags.alt_1929: ": 1929", # NOTE TODO - Handle this in the api
-    AlternateTags.alt_2199: ": 2199", # NOTE TODO - Handle this in the api
+    AlternateTags.alt_1929: ": 1929",  # NOTE TODO - Handle this in the api
+    AlternateTags.alt_2199: ": 2199",  # NOTE TODO - Handle this in the api
     AlternateTags.ministry_of_strategic_science: ": Ministry of Strategic Science",  # Cauldron team
     AlternateTags.renegade: ": Renegade",  # Cauldron team
     AlternateTags.wasteland_ronin: ": Wasteland Ronin",  # Cauldron team
@@ -356,9 +356,9 @@ ALTERNATE_TAG_DISPLAY_MAPPING = {
     AlternateTags.the_unstable: ", The Unstable",  # Cauldron Pyre
     AlternateTags.evolved: ": Evolved",  # Cauldron Anathema
     AlternateTags.hydra: ", Hydra",  # Cauldron tiamat
-    AlternateTags.windcolor: ", Windcolor",   # Cauldron dendron
+    AlternateTags.windcolor: ", Windcolor",  # Cauldron dendron
     AlternateTags.hivemind: ", Hivemind",  # Cauldron Swarm Eater
-    AlternateTags.swarming_protocol: ": Swarming Protocool" # Cypher
+    AlternateTags.swarming_protocol: ": Swarming Protocool",  # Cypher
 }
 
 HERO_DISPLAY_MAPPING = {
@@ -421,7 +421,7 @@ HERO_DISPLAY_MAPPING = {
     Hero.terminus: "Terminus",
     Hero.echelon: "Echelon",
     Hero.impact: "Impact",
-    Hero.magnificent_mara: "Magnificent Mara"
+    Hero.magnificent_mara: "Magnificent Mara",
 }
 
 VILLAIN_DISPLAY_MAPPING = {
@@ -486,10 +486,10 @@ VILLAIN_DISPLAY_MAPPING = {
     Villain.vector: "Vector",
     Villain.phase: "Phase",
     Villain.celadroch: "Celadroch",
-    Villain.menagerie: "Menagerie"
+    Villain.menagerie: "Menagerie",
 }
 
-ENVIRONMENT_DISPLAY_MAPPING= {
+ENVIRONMENT_DISPLAY_MAPPING = {
     Environment.the_block: "The Block",
     Environment.celestial_tribunal: "The Celestial Tribunal",
     Environment.champion_studios: "Champion Studios",
@@ -529,7 +529,5 @@ ENVIRONMENT_DISPLAY_MAPPING= {
     Environment.vault_5: "Vault 5",
     Environment.windmill_city: "Windmill City",
     Environment.cybersphere: "Cybersphere",
-    Environment.superstorm_akela: "Superstorm Akela"
+    Environment.superstorm_akela: "Superstorm Akela",
 }
-
-

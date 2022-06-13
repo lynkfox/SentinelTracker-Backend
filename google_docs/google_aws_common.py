@@ -1,10 +1,11 @@
 from dataclasses import dataclass
 from typing import ClassVar
 
+
 @dataclass(frozen=True)
-class SqlTables():
+class SqlTables:
     STATISTICS_DB_NAME: ClassVar[str] = "sentinel_statistics"
-    
+
     # table names
     BOX_SETS: ClassVar[str] = "boxSets"
     ENVIRONMENTS: ClassVar[str] = "environments"
@@ -17,7 +18,7 @@ class SqlTables():
     OBLIVAEON_SETUPS: ClassVar[str] = "oblivaeonSetups"
 
 
-class SqlColumns():
+class SqlColumns:
     ID = "id"
     ID_HASH = "id_hash"
     FULL_NAME = "full_name"
@@ -65,5 +66,3 @@ class SqlColumns():
     V3_INCAP = "villain_three_incapped"
     V4_INCAP = "villain_four_incapped"
     V5_INCAP = "villain_five_incapped"
-
-    

@@ -8,7 +8,8 @@ import mysql.connector
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
-from google_aws_common import SqlTables 
+from google_aws_common import SqlTables
+
 # If modifying these scopes, delete the file token.json.
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets.readonly"]
 
@@ -37,12 +38,13 @@ def get_mysql_client():
 
     client = boto3.client("secretsmanager")
 
-    response = client.get_secret_value(
-        SecretId="InstanceSecret478E0A47-adqUOEATZRYd"
-    )
+    response = client.get_secret_value(SecretId="InstanceSecret478E0A47-adqUOEATZRYd")
 
-    secrets = json.loads(response['SecretString'])
+    secrets = json.loads(response["SecretString"])
 
     return mysql.connector.connect(
-        host=secrets['host'], user=secrets['username'], password=secrets['password'], database=SqlTables.STATISTICS_DB_NAME
+        host=secrets["host"],
+        user=secrets["username"],
+        password=secrets["password"],
+        database=SqlTables.STATISTICS_DB_NAME,
     )

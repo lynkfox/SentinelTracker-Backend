@@ -45,8 +45,12 @@ class StorageStack(NestedStack):
             database_name="",
             delete_automated_backups=True,
             max_allocated_storage=50,
-            instance_type=ec2.InstanceType.of(ec2.InstanceClass.BURSTABLE4_GRAVITON, ec2.InstanceSize.SMALL),
-            instance_identifier=props.prefix_name(ResourceNames.STATISTICS_RDS, lower=True),
+            instance_type=ec2.InstanceType.of(
+                ec2.InstanceClass.BURSTABLE4_GRAVITON, ec2.InstanceSize.SMALL
+            ),
+            instance_identifier=props.prefix_name(
+                ResourceNames.STATISTICS_RDS, lower=True
+            ),
             engine=rds.DatabaseInstanceEngine.mysql(
                 version=rds.MysqlEngineVersion.VER_8_0_28,
             ),

@@ -20,7 +20,7 @@ class BoxSet(Enum):
     VOID_GUARD = "Mini: The Void Guard"
     AMBUSCADE = "Mini: Ambuscade"
     MISS_INFORMATION = "Mini: Miss Information"
-    WAGER_MASTER  = "Mini: Wager Master"
+    WAGER_MASTER = "Mini: Wager Master"
     CHOKEPOINT = "Mini: Chokepoint"
     FINAL_WASTELAND = "Mini: The Final Wasteland"
     SILVER_GULCH = "Mini: Silver Gulch 1883"
