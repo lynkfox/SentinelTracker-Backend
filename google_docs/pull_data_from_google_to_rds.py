@@ -18,7 +18,7 @@ from time import perf_counter
 
 # The ID of a sample document.
 DOCUMENT_ID = "1bVppJL4rC5lWULLGZ7AP5xH6YZLYsv86Wme1SpU6agE"
-RANGE = "Form Responses 4!A2:AL"
+RANGE = "Form Responses 4!A2:AL5"
 
 
 def main():
@@ -58,10 +58,41 @@ def main():
         )
     )
 
-    # need to remove Nones and duplicates from above list.
+    hero_team_sql_statement = f"INSERT INTO {SqlTables.HERO_TEAMS} ({SqlColumns.ID_HASH}, {SqlColumns.HERO_ONE}, {SqlColumns.HERO_TWO}, {SqlColumns.HERO_THREE}, {SqlColumns.HERO_FOUR}, {SqlColumns.HERO_FIVE}) VALUES (%s, %s, %s, %s, %s, %s)"
+    hero_team_values = list(
+        set([create_values_for_hero_insert(detail.hero_team) for detail in details])
+    )
+
+    villain_team_sql_statement = f"INSERT INTO {SqlTables.VILLAINS} ({SqlColumns.ID_HASH}, {SqlColumns.VILLAIN_ONE}, {SqlColumns.VILLAIN_TWO}, {SqlColumns.VILLAIN_THREE}, {SqlColumns.VILLAIN_FOUR}, {SqlColumns.VILLAIN_FIVE}) VALUES (%s, %s, %s, %s, %s, %s)"
+    villain_team_values = list(
+        set(
+            [
+                create_values_for_opponent_team_insert(detail.villain)
+                for detail in details
+            ]
+        )
+    )
+
+    game_details_sql_statement = f"INSERT INTO {SqlTables.GAME_DETAILS} ({SqlColumns.USERNAME},{SqlColumns.ENTER_DATE},{SqlColumns.GAME_MODE},{SqlColumns.SELECTION_METHOD},{SqlColumns.PLATFORM},{SqlColumns.END_RESULT},{SqlColumns.ESTIMATED_TIME},{SqlColumns.HOUSE_RULES},{SqlColumns.NUMBER_OF_PLAYERS},{SqlColumns.NUMBER_OF_HEROES},{SqlColumns.PERCEIVED_DIFFICULTY},{SqlColumns.ROUNDS},{SqlColumns.OBLIVAEON_DETAIL},{SqlColumns.HERO_TEAM},{SqlColumns.ENVIRONMENT},{SqlColumns.VILLAIN},{SqlColumns.H1_INCAP},{SqlColumns.H2_INCAP},{SqlColumns.H3_INCAP},{SqlColumns.H4_INCAP},{SqlColumns.H5_INCAP},{SqlColumns.V1_INCAP},{SqlColumns.V2_INCAP},{SqlColumns.V3_INCAP},{SqlColumns.V4_INCAP},{SqlColumns.V5_INCAP}) (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+    game_details_values = list(
+        set([create_values_for_game_details_insert(detail) for detail in details])
+    )
+
     end_statement = perf_counter()
 
     print("** Inserting into SQL DB ...")
+
+    client.cursor().execute(user_sql_statement, user_values)
+    client.commit()
+
+    client.cursor().execute(hero_team_sql_statement, hero_team_values)
+    client.commit()
+
+    client.cursor().execute(villain_team_sql_statement, villain_team_values)
+    client.commit()
+
+    client.cursor().execute(game_details_sql_statement, game_details_values)
+    client.commit()
 
     end_insert = perf_counter()
     print(
@@ -76,6 +107,59 @@ def main():
 def create_values_for_user_insert(user: Username) -> set:
     if user.username != "":
         return (user.username, user.dynamo_meta_query)
+
+
+def create_values_for_hero_insert(hero_team: HeroTeam) -> set:
+    return (
+        hero_team.id_hash,
+        hero_team.hero_one,
+        hero_team.hero_two,
+        hero_team.hero_three,
+        hero_team.hero_four,
+        hero_team.hero_five,
+    )
+
+
+def create_values_for_opponent_team_insert(villain: VillainOpponent) -> set:
+    return (
+        villain.id_hash,
+        villain.villain_one,
+        villain.villain_two,
+        villain.villain_three,
+        villain.villain_four,
+        villain.villain_five,
+    )
+
+
+def create_values_for_game_details_insert(game: GameDetail) -> set:
+    return (
+        game.username.username,
+        game.entered_on,
+        game.game_mode.value,
+        game.selection_method.value,
+        game.platform.value,
+        game.end_result.value,
+        game.estimated_time.value,
+        game.house_rules,
+        game.number_of_players,
+        game.number_of_heroes,
+        game.perceived_difficulty,
+        game.rounds,
+        game.oblivaeon_details,
+        game.hero_team.id_hash,
+        game.environment,
+        game.villain.id_hash,
+        game.hero_one_incapped,
+        game.hero_two_incapped,
+        game.hero_three_incapped,
+        game.hero_four_incapped,
+        game.hero_five_incapped,
+        game.villain_one_incapped,
+        game.villain_two_incapped,
+        game.villain_three_incapped,
+        game.villain_four_incapped,
+        game.villain_five_incapped,
+    )
 
 
 def determine_number_of_heroes(row: list) -> int:
@@ -97,6 +181,13 @@ def process_date(date_str) -> str:
     converts the date into a datetime object and adds tz (assumes it is UTC)
     """
     return parse(f"{date_str}+00:00")
+
+
+def is_true(value) -> bool:
+    """
+    converts Yes and No to True and False
+    """
+    return value.lower() == "yes"
 
 
 def map_row_to_game_details(row: list, row_count: int) -> GameDetail:
@@ -205,6 +296,8 @@ def map_villain_opponent_team(row: list) -> VillainOpponent:
         "villain_three": 6,
         "villain_four": 8,
         "villain_five": 10,
+        "advanced": (13, is_true),
+        "challenge": (14, is_true),
         "id_hash": None,
     }
 
@@ -213,9 +306,12 @@ def map_villain_opponent_team(row: list) -> VillainOpponent:
         if isinstance(index, int):
             value = VILLAIN_GOOGLE_TO_RDS_MAP.get(row[index])
         elif isinstance(index, tuple):
-            value = VILLAIN_GOOGLE_TO_RDS_MAP.get(row[index[0]])
-            if value == None:
-                value = VILLAIN_GOOGLE_TO_RDS_MAP.get(row[index[1]])
+            if isinstance(index[1], int):
+                value = VILLAIN_GOOGLE_TO_RDS_MAP.get(row[index[0]])
+                if value == None:
+                    value = VILLAIN_GOOGLE_TO_RDS_MAP.get(row[index[1]])
+            else:
+                value = index[1](row[index[0]])
         else:
             value = index
 

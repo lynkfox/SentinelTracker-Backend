@@ -84,15 +84,28 @@ class Username(BaseModel):
 
 
 class OblivAeonDetail(BaseModel):
-    scions: str = Field(...)
+    scions: str = Field(...)  # scion ID values concatted into id#-id#-id#-id#
     shield: str = Field(...)
-    rewards: Optional[str]
+    environments: Optional[str]  # id# concatted into id#-id#-id# ...
+    player_one_heroes: Optional[str]  # id# concatted into id#-id#-id# ...
+    player_two_heroes: Optional[str]  # id# concatted into id#-id#-id# ...
+    player_three_heroes: Optional[str]  # id# concatted into id#-id#-id# ...
+    player_four_heroes: Optional[str]  # id# concatted into id#-id#-id# ...
+    player_five_heroes: Optional[str]  # id# concatted into id#-id#-id# ...
+    rewards: Optional[str]  # reward ID values concatted into id#-id#-id#
     id_hash: Optional[str]
 
     def __init__(self, **data):
         super().__init__(**data)
+        env = self.environments if self.environments is not None else ""
+        p1 = self.player_one_heroes if self.player_one_heroes is not None else ""
+        p2 = self.player_two_heroes if self.player_two_heroes is not None else ""
+        p3 = self.player_three_heroes if self.player_three_heroes is not None else ""
+        p4 = self.player_four_heroes if self.player_four_heroes is not None else ""
+        p5 = self.player_five_heroes if self.player_five_heroes is not None else ""
+        reward = self.rewards if self.rewards is not None else ""
         self.id_hash = (
-            hash(f"{self.scions}{self.shield}{self.rewards}")
+            hash(f"{self.shield}{self.scions}{reward}{env}{p1}{p2}{p3}{p4}{p5}")
             if self.id_hash is None
             else self.id_hash
         )
@@ -123,15 +136,21 @@ class VillainOpponent(BaseModel):
     villain_three: Optional[str]
     villain_four: Optional[str]
     villain_five: Optional[str]
+    advanced: bool
+    challenge: bool
     id_hash: Optional[str]
 
     def __init__(self, **data):
         super().__init__(**data)
+        villain2 = self.villain_two if self.villain_two is not None else ""
+        villain3 = self.villain_three if self.villain_three is not None else ""
         villain4 = self.villain_four if self.villain_four is not None else ""
         villain5 = self.villain_five if self.villain_five is not None else ""
+        adv = "adv" if self.advanced else ""
+        chl = "chl" if self.challenge else ""
         self.id_hash = (
             hash(
-                f"{self.villain_one}{self.villain_two}{self.villain_three}{villain4}{villain5}"
+                f"{self.villain_one}{villain2}{villain3}{villain4}{villain5}{adv}{chl}"
             )
             if self.id_hash is None
             else self.id_hash

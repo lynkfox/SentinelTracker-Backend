@@ -2,6 +2,24 @@
 
 Repo containing the sentinels tracker back end setup, including AWS CDK deployment, lambdas, api gateway, and dynamodb setups.
 
+
+This backend controls all the analysis, loading, and retrieval of statistics data through an API.
+
+In general, users should never need to use this repo - this is around for developer access and backup.
+
+# Assumptions Made about data:
+
+The following assumptions are made when data is inputted into the dataset.
+
+1. Definitive Edition Heroes and Villains *can* mix in a game entry, but unless otherwise specified a given name is **always** considered to be Enhanced Edition
+    * i.e. Baron Blade is Enhanced. Baron Blade, Definitive is Definitive. Baron Blade, Mad Bomber is Enhanced. Baron Blade, Definitive Mad Bomber is Definitive.
+    * Removing GameMode.MIXED from the results will remove these mixed rule-set games.
+2. Advanced and/or Challenge mode applies to the entire Villain Team - not individually
+3. Adamant Sentinels are always considered "As a group" - Not tracking individually if a given Southwest Sentinel is Adamant or not.
+4. While the Scions, Shield, and Rewards are all recorded for OblivAeon games, only Shield is used as a sorting factor for statistics at this time
+    * likewise the order of environments destroyed, additional heroes played by player slot are recorded, but not taken into account (beyond the starting team of Heroes and starting Environment)
+
+
 # First time Setup:
 
 ## Requirements:
@@ -18,6 +36,7 @@ Repo containing the sentinels tracker back end setup, including AWS CDK deployme
 ## Common
 
 Common functionality that will be used between multiple lambda's. Also will be the basis for the SDK
+
 
 ## google_docs
 
