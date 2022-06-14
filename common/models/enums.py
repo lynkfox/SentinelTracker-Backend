@@ -35,6 +35,13 @@ class BoxSet(Enum):
     ROOK_CITY_RENEGADES = "Rook City: Renegades"
 
 
+#####################################################
+#
+#   Api End Point Enums
+#
+#####################################################
+
+
 class Type(Enum):
     HERO = "Hero"
     VILLAIN = "Villain"
@@ -91,6 +98,13 @@ class Default(Enum):
 
     BASE = "base"
     ALL = "all"
+
+
+###################################################
+#
+#   SQL Tables and Attribues
+#
+###################################################
 
 
 @dataclass(frozen=True)

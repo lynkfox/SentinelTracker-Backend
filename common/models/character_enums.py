@@ -106,7 +106,7 @@ class Villain(Character):
     greazer_clutch = "greezer_clutch"
     infinitor = "infinitor"
     iron_legacy = "iron_legacy"
-    kaargra = "kaargra_warfang"
+    kaargra_warfang = "kaargra_warfang"
     kismet = "kismet"
     la_capitan = "la_capitan"
     matriarch = "the_matriarch"
@@ -514,7 +514,7 @@ VILLAIN_DISPLAY_MAPPING = {
     Villain.greazer_clutch: "Greazer Clutch",
     Villain.infinitor: "Infinitor",
     Villain.iron_legacy: "Iron Legacy",
-    Villain.kaargra: "Kaargra Warfang",
+    Villain.kaargra_warfang: "Kaargra Warfang",
     Villain.kismet: "Kismet",
     Villain.la_capitan: "La Capitan",
     Villain.matriarch: "The Matriarch",

@@ -93,7 +93,7 @@ VILLAINS_TO_INSERT = [
     VillainInsert(Villain.infinitor, BoxSet.WRATH_OF_THE_COSMOS),
     VillainInsert(Villain.infinitor, BoxSet.WRATH_OF_THE_COSMOS, AlternateTags.heroic),
     VillainInsert(Villain.iron_legacy, BoxSet.SHATTERED_TIMELINES),
-    VillainInsert(Villain.kaargra, BoxSet.WRATH_OF_THE_COSMOS),
+    VillainInsert(Villain.kaargra_warfang, BoxSet.WRATH_OF_THE_COSMOS),
     VillainInsert(Villain.kismet, BoxSet.SHATTERED_TIMELINES),
     VillainInsert(Villain.kismet, BoxSet.SHATTERED_TIMELINES, AlternateTags.trickster),
     VillainInsert(Villain.la_capitan, BoxSet.SHATTERED_TIMELINES),

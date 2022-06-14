@@ -40,3 +40,5 @@ def create_rds_key(
     full_name = mapping.get(full_name)
     if alternate_name is not None:
         full_name = f"{full_name}{alternate_name}"
+
+    return full_name
