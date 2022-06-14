@@ -17,7 +17,7 @@ from dateutil.parser import parse
 
 # The ID of a sample document.
 DOCUMENT_ID = "1bVppJL4rC5lWULLGZ7AP5xH6YZLYsv86Wme1SpU6agE"
-RANGE = "Form Responses 4!A5000:AL5500"
+RANGE = "Form Responses 4!A:AL"
 
 
 def main():
