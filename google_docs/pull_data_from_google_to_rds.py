@@ -69,7 +69,7 @@ def map_row_to_game_details(row: list, row_count: int) -> GameDetail:
         "username": (34, USERNAME_CONSOLIDATION),
         "entered_on": (0, process_date),
         "game_mode": "",
-        "selection_method": 28,
+        "selection_method": (28, SELECTION_METHOD_GOOGLE_TO_RDS),
         "platform": (33, PLATFORM_GOOGLE_TO_RDS),
         "end_result": (16, WIN_CONDITION_GOOGLE_TO_RDS),
         "estimated_time": (30, GAME_LENGTH_GOOGLE_TO_RDS),
@@ -96,7 +96,7 @@ def map_row_to_game_details(row: list, row_count: int) -> GameDetail:
     details = {}
     for key, index in dispatch.items():
         if isinstance(index, int):
-            value = row[index]
+            value = row[index] if index < len(row) else ""
             if "incapped" in key:
                 value = value != ""
 
@@ -115,7 +115,7 @@ def map_row_to_game_details(row: list, row_count: int) -> GameDetail:
         elif isinstance(index, tuple):
 
             if isinstance(index[1], dict):
-                google_value = row[index[0]].strip()
+                google_value = row[index[0]].strip() if index[0] < len(row) else ""
                 value = index[1].get(google_value)
                 if key == "username":
 
