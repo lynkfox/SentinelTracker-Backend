@@ -17,7 +17,7 @@ from dateutil.parser import parse
 
 # The ID of a sample document.
 DOCUMENT_ID = "1bVppJL4rC5lWULLGZ7AP5xH6YZLYsv86Wme1SpU6agE"
-RANGE = "Form Responses 4!A2:AL25"
+RANGE = "Form Responses 4!A5000:AL5500"
 
 
 def main():
@@ -39,8 +39,6 @@ def main():
     for index, row in enumerate(values):
 
         details = map_row_to_game_details(row, index)
-
-        # print(details)
 
 
 def determine_number_of_heroes(row: list) -> int:
@@ -92,6 +90,7 @@ def map_row_to_game_details(row: list, row_count: int) -> GameDetail:
         "villain_three_incapped": 7,
         "villain_four_incapped": 9,
         "villain_five_incapped": 11,
+        "comment": 35,
     }
     details = {}
     for key, index in dispatch.items():
@@ -108,6 +107,9 @@ def map_row_to_game_details(row: list, row_count: int) -> GameDetail:
                     value = abs(int(value))
                 except Exception:
                     value = 0
+
+            if key in ["number_of_players", "perceived_difficulty"] and value == "":
+                value = -1
 
         elif index == "":
             value = GameMode.NORMAL.value

@@ -165,3 +165,4 @@ class GameDetail(BaseModel):
     villain_three_incapped: Optional[bool]
     villain_four_incapped: Optional[bool]
     villain_five_incapped: Optional[bool]
+    comment: Optional[str]
