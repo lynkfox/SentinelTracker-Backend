@@ -23,7 +23,11 @@ Common functionality that will be used between multiple lambda's. Also will be t
 
 Scripts and helpers for loading the RDS on first initialization, and pulling data from the old Google Sheets
 
-Nothing in here is Unit Tested. **use at your own risk.** Requires access to Google through Authentication (it wont work without notifying @lynkfox first), an aws account, and the CDK stacks deployed. **Use at your own risk.** Many of the files in here require some custom python pathing.
+Nothing in here is Unit Tested. **use at your own risk.** Requires access to Google through Authentication (it wont work without notifying @lynkfox first), an aws account, and the CDK stacks deployed. **Use at your own risk.** Many of the files in here require some custom python pathing in order to get to work.
+
+At the time of this writing, the script was the following stats:
+
+31297 entries retrieved in 2.5484685999999996 seconds, and parsed in 18.090468 seconds
 
 ## lambda_functions
 

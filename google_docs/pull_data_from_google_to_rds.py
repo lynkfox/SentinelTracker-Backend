@@ -1,5 +1,5 @@
 from __future__ import print_function
-from dataclasses import dataclass, field
+from google_docs.google_aws_common import SqlColumns, SqlTables
 from auth import get_google_credentials_through_oath2
 from common.models.schema_models import (
     GameDetail,
@@ -30,6 +30,7 @@ def main():
     start = perf_counter()
     service = build("sheets", "v4", credentials=creds)
 
+    print("** Pulling data from Google")
     sheet = service.spreadsheets()
     result = sheet.values().get(spreadsheetId=DOCUMENT_ID, range=RANGE).execute()
     values = result.get("values", [])
@@ -39,15 +40,40 @@ def main():
         return
     end_get = perf_counter()
 
-    for index, row in enumerate(values):
-
-        details = map_row_to_game_details(row, index)
+    print("** Parsing data")
+    details = [map_row_to_game_details(row, index) for index, row in enumerate(values)]
 
     end_parse = perf_counter()
 
-    print(
-        f"\n{len(values)} retrieved in {end_get-start} seconds, and parsed in {end_parse-end_get} seconds"
+    print("** Creating Insert Statements")
+    user_sql_statement = f"INSERT INTO {SqlTables.USERS} ({SqlColumns.USERNAME}, {SqlColumns.DYNAMO_META}) VALUES (%s, %s)"
+    user_values = list(
+        set(
+            [
+                create_values_for_user_insert(detail.username)
+                for detail in details
+                if detail is not None and detail.username is not None
+            ]
+        )
     )
+
+    # need to remove Nones and duplicates from above list.
+    end_statement = perf_counter()
+
+    print("** Inserting into SQL DB")
+
+    end_insert = perf_counter()
+    print(
+        f"\n{len(values)} entries retrieved in {end_get-start} seconds"
+        f"\n ..... parsed in {end_parse-end_get} seconds"
+        f"\n ..... insert statements created in {end_statement-end_parse} seconds"
+        f"\n ..... inserted in {end_statement-end_parse} seconds"
+    )
+
+
+def create_values_for_user_insert(user: Username) -> set:
+    if user.username != "":
+        return (user.username, user.dynamo_meta_query)
 
 
 def determine_number_of_heroes(row: list) -> int:
@@ -155,11 +181,9 @@ def map_row_to_game_details(row: list, row_count: int) -> GameDetail:
                 google_value = row[index[0]] if len(row) > index[0] else ""
             else:
                 google_value = row[index]
-            print(f"[Row {row_count}]: [{key}:{google_value}] evaluated to NONE ")
 
     details["hero_team"] = map_hero_team(row)
     if details["hero_team"] is None:
-        print(f"********* [Row {row_count}] - Only two heros. Skipping *********")
         return None
     details["villain"] = map_villain_opponent_team(row)
 

@@ -527,6 +527,7 @@ USERNAME_CONSOLIDATION = {
     "google +": "Google Plus Game",
     "Google game": "Google Plus Game",
     "GoogleGame": "Google Plus Game",
+    "Google Game": "Google Plus Game",
     "gossamerica": "Gossamerica",
     "Hankriyd": "Hankroyd",
     "Hanroyd": "Hankroyd",
