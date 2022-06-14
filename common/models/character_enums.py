@@ -14,6 +14,9 @@ class Character(Enum):
         else:
             return False
 
+    def __bool__(self):
+        return bool(self.value)
+
 
 class Hero(Character):
     absolute_zero = "absolute_zero"

@@ -1,6 +1,6 @@
-import boto3
 from common.models.character_enums import Character, AlternateTags
-from common.models.enums import BoxSet, Default, Type
+from common.models.enums import Default, Type
+from common.models.game_details_enums import BoxSet
 from typing import Union
 
 """

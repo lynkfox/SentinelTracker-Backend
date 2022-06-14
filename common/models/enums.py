@@ -2,39 +2,6 @@ from enum import Enum
 from dataclasses import dataclass, field
 from typing import ClassVar
 
-
-class BoxSet(Enum):
-    FIRST_EDITION = "First Edition"
-    ENHANCED_EDITION = "Enhanced Edition"
-    DEFINITIVE_EDITION = "Definitive Edition"
-    ROOK_CITY = "Rook City"
-    INFERNAL_RELICS = "Infernal Relics"
-    SHATTERED_TIMELINES = "Shattered Timelines"
-    VENGEANCE = "Vengeance"
-    WRATH_OF_THE_COSMOS = "Wrath of the Cosmos"
-    VILLAINS = "Villains of the Multiverse"
-    OBLIVAEON = "OblivAeon"
-    UNITY = "Mini: Unity"
-    SCHOLAR = "Mini: Scholar"
-    GUISE = "Mini: Guise"
-    STUNTMAN = "Mini: Stuntman"
-    BENCHMARK = "Mini: Benchmark"
-    VOID_GUARD = "Mini: The Void Guard"
-    AMBUSCADE = "Mini: Ambuscade"
-    MISS_INFORMATION = "Mini: Miss Information"
-    WAGER_MASTER = "Mini: Wager Master"
-    CHOKEPOINT = "Mini: Chokepoint"
-    FINAL_WASTELAND = "Mini: The Final Wasteland"
-    SILVER_GULCH = "Mini: Silver Gulch 1883"
-    OMNITRON_IV = "Mini: Omnitron-IV"
-    CELESTIAL_TRIBUNAL = "Mini: The Celestial Tribunal"
-    CAULDRON = "Cauldron"
-    CAULDRON_EXPERIMENTAL = "Cauldron: Experimental"
-    CAULDRON_STORMFALL = "Cauldron: Stormfall"
-    CAULDRON_ADRIFT = "Cauldron: Adrift"
-    ROOK_CITY_RENEGADES = "Rook City: Renegades"
-
-
 #####################################################
 #
 #   Api End Point Enums

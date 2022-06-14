@@ -8,7 +8,8 @@ from common.models.character_enums import (
     VILLAIN_DISPLAY_MAPPING,
     ALTERNATE_TAG_DISPLAY_MAPPING,
 )
-from common.models.enums import BoxSet, Type
+from common.models.game_details_enums import BoxSet
+from common.models.enums import Type
 from typing import Union
 
 

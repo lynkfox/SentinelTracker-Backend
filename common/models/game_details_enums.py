@@ -1,27 +1,75 @@
-from dataclasses import dataclass, field
-from typing import ClassVar
+from enum import Enum
 
 
-@dataclass(frozen=True)
-class SelectionMethod:
-    RANDOM: ClassVar[str] = (
-        "Random",
-    )  # any form of Randomizer - dice, app, eyes closed...
-    CHOICE: ClassVar[str] = "Player Choice"  #
-    REMATCH: ClassVar[
-        str
-    ] = "Rematch/Replay"  # Replaying or Rematch against the same villain
-    EVENT: ClassVar[str] = "Event"  # Event/Collection card (Definitive)
-    THEMATIC: ClassVar[
-        str
-    ] = "Themeatic"  # Game selection followed a theme: Team vs, all girls, all red hair ...
-    SPECIFIC_ATTEMPT: ClassVar[
-        str
-    ] = "Specific Attempt"  # Attempting for a specific goal, so selected team specifically for that
+class SQLEnum(Enum):
+    def __bool__(self):
+        return bool(self.value)
 
 
-@dataclass(frozen=True)
-class HeroLossCondition:
+class Platform(SQLEnum):
+    PHYSICAL = "Physical"
+    STEAM = "Steam"
+    APPLE = "Apple"
+    ANDROID = "Android"
+    OTHER = "Other"
+
+
+class BoxSet(SQLEnum):
+    FIRST_EDITION = "First Edition"
+    ENHANCED_EDITION = "Enhanced Edition"
+    DEFINITIVE_EDITION = "Definitive Edition"
+    ROOK_CITY = "Rook City"
+    INFERNAL_RELICS = "Infernal Relics"
+    SHATTERED_TIMELINES = "Shattered Timelines"
+    VENGEANCE = "Vengeance"
+    WRATH_OF_THE_COSMOS = "Wrath of the Cosmos"
+    VILLAINS = "Villains of the Multiverse"
+    OBLIVAEON = "OblivAeon"
+    UNITY = "Mini: Unity"
+    SCHOLAR = "Mini: Scholar"
+    GUISE = "Mini: Guise"
+    STUNTMAN = "Mini: Stuntman"
+    BENCHMARK = "Mini: Benchmark"
+    VOID_GUARD = "Mini: The Void Guard"
+    AMBUSCADE = "Mini: Ambuscade"
+    MISS_INFORMATION = "Mini: Miss Information"
+    WAGER_MASTER = "Mini: Wager Master"
+    CHOKEPOINT = "Mini: Chokepoint"
+    FINAL_WASTELAND = "Mini: The Final Wasteland"
+    SILVER_GULCH = "Mini: Silver Gulch 1883"
+    OMNITRON_IV = "Mini: Omnitron-IV"
+    CELESTIAL_TRIBUNAL = "Mini: The Celestial Tribunal"
+    CAULDRON = "Cauldron"
+    CAULDRON_EXPERIMENTAL = "Cauldron: Experimental"
+    CAULDRON_STORMFALL = "Cauldron: Stormfall"
+    CAULDRON_ADRIFT = "Cauldron: Adrift"
+    ROOK_CITY_RENEGADES = "Rook City: Renegades"
+
+
+class SelectionMethod(SQLEnum):
+    RANDOM = "Random"
+    # any form of Randomizer - dice, app, eyes closed...
+    CHOICE = "Player Choice"
+    REMATCH = "Rematch/Replay"
+    # Replaying or Rematch against the same villain
+    EVENT = "Event"
+    # Event/Collection card (Definitive)
+    THEMATIC = "Thematic"
+    # Game selection followed a theme: Team vs, all girls, all red hair ...
+    SPECIFIC_ATTEMPT = "Specific Attempt"
+    # Attempting for a specific goal, so selected team specifically for that
+
+
+class GameMode(SQLEnum):
+    NORMAL = "Normal"
+    VILLAINS = "Team Villains"
+    OBLIVAEON = "OblivAeon"
+    DEFINITIVE = "Definitive"
+    MIXED = "Mixed"
+    # Definitive and normal characters mixed
+
+
+class HeroLossCondition(SQLEnum):
     VILLAINS_WIN = "Heroes Defeated by the Villains"
     SKINWALKER = "Consumed! (Gloomweaver, Skinwalker)"
     DREAMER = "Fell to her Dreams (The Dreamer)"
@@ -38,8 +86,7 @@ class HeroLossCondition:
     OBILVAEON = "Only the Void Left (OblivAeon)"
 
 
-@dataclass(frozen=True)
-class HeroWinCondition:
+class HeroWinCondition(SQLEnum):
     GLOOMWEAVER = "Destroy His Anchors (Gloomweaver Relics Destroyed)"
     ENVIRONMENT = "The House always Wins (Environment ends the Villain)"
     INCAPACITATED = "Down, but not Out! (Incapacitated Ability ends the Villain)"

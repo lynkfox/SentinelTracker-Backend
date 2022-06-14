@@ -1,5 +1,3 @@
-from typing import Union
-from common.models.enums import BoxSet
 from common.models.game_details_enums import (
     HeroWinCondition,
     HeroLossCondition,
@@ -428,38 +426,38 @@ HERO_GOOGLE_TO_RDS_MAPPING = {
 }
 
 WIN_CONDITION_GOOGLE_TO_RDS = {
-    "Ate Himself (Skinwalker Gloomweaver)": HeroLossCondition.SKINWALKER,
-    "Did Not Protect Her (The Dreamer)": HeroLossCondition.DREAMER,
-    "Engines Failed (Mobile Defense Platform)": HeroLossCondition.MOBILE_DEFENSE_PLATFORM,
-    "Environment Card Killed Villain": HeroWinCondition.ENVIRONMENT,
-    "Environment Target Killed Villain": HeroWinCondition.ENVIRONMENT,
-    "HP Incapacitation (Heroes)": HeroLossCondition.VILLAINS_WIN,
-    "Incapacitated Hero Ability": HeroWinCondition.INCAPACITATED,
-    "Mars Base Explosion (Wagner)": HeroLossCondition.MARS_BASE_WAGNER,
-    "Minion Overrun (Voss)": HeroLossCondition.GRAND_WARLORD_VOSS,
-    "Omnitron's Devices After Omnitron died": HeroLossCondition.OMINTRON,
-    "Relic Victory (Gloomweaver)": HeroWinCondition.GLOOMWEAVER,
-    "Sentenced to Destruction (Celestial Tribunal)": HeroLossCondition.CELESTIAL_TRIBUNAl,
+    "Ate Himself (Skinwalker Gloomweaver)": HeroLossCondition.SKINWALKER.value,
+    "Did Not Protect Her (The Dreamer)": HeroLossCondition.DREAMER.value,
+    "Engines Failed (Mobile Defense Platform)": HeroLossCondition.MOBILE_DEFENSE_PLATFORM.value,
+    "Environment Card Killed Villain": HeroWinCondition.ENVIRONMENT.value,
+    "Environment Target Killed Villain": HeroWinCondition.ENVIRONMENT.value,
+    "HP Incapacitation (Heroes)": HeroLossCondition.VILLAINS_WIN.value,
+    "Incapacitated Hero Ability": HeroWinCondition.INCAPACITATED.value,
+    "Mars Base Explosion (Wagner)": HeroLossCondition.MARS_BASE_WAGNER.value,
+    "Minion Overrun (Voss)": HeroLossCondition.GRAND_WARLORD_VOSS.value,
+    "Omnitron's Devices After Omnitron died": HeroLossCondition.OMINTRON.value,
+    "Relic Victory (Gloomweaver)": HeroWinCondition.GLOOMWEAVER.value,
+    "Sentenced to Destruction (Celestial Tribunal)": HeroLossCondition.CELESTIAL_TRIBUNAl.value,
     "Sucker Punch, Final Dive, and other Destroy Cards": None,
-    "Terra Lunar Impulsion Beam (Baron Blade)": HeroLossCondition.BARON_BLADE,
-    "The Crowd Turned Against the Heroes (Kaargra Warfang)": HeroLossCondition.KAARGRA_WARGANG,
-    "The Environment was Destroyed (Deadline)": HeroLossCondition.DEADLINE,
-    "Time Portal Closed (Silver Gulch 1883 )": HeroLossCondition.SILVER_GULCH,
-    "Wager Master Alternate Loose Condition": HeroLossCondition.WAGER_MASTER,
-    "Wager Master Alternate Loss Condition": HeroLossCondition.WAGER_MASTER,
-    "Wager Master Alternate Win Condition": HeroWinCondition.WAGER_MASTER,
+    "Terra Lunar Impulsion Beam (Baron Blade)": HeroLossCondition.BARON_BLADE.value,
+    "The Crowd Turned Against the Heroes (Kaargra Warfang)": HeroLossCondition.KAARGRA_WARGANG.value,
+    "The Environment was Destroyed (Deadline)": HeroLossCondition.DEADLINE.value,
+    "Time Portal Closed (Silver Gulch 1883 )": HeroLossCondition.SILVER_GULCH.value,
+    "Wager Master Alternate Loose Condition": HeroLossCondition.WAGER_MASTER.value,
+    "Wager Master Alternate Loss Condition": HeroLossCondition.WAGER_MASTER.value,
+    "Wager Master Alternate Win Condition": HeroWinCondition.WAGER_MASTER.value,
 }
 
 SELECTION_METHOD_GOOGLE_TO_RDS = {
-    "Achievement Attempt": SelectionMethod.SPECIFIC_ATTEMPT,
-    "Dice": SelectionMethod.RANDOM,
-    "Player Choice": SelectionMethod.CHOICE,
-    "Random Draw": SelectionMethod.RANDOM,
-    "Randomizer Program": SelectionMethod.RANDOM,
-    "Rematch": SelectionMethod.REMATCH,
-    "Scenario": SelectionMethod.SPECIFIC_ATTEMPT,
-    "SotM Video Game Random Button": SelectionMethod.RANDOM,
-    "Thematic Team, Villain, Environment": SelectionMethod.SPECIFIC_ATTEMPT,
+    "Achievement Attempt": SelectionMethod.SPECIFIC_ATTEMPT.value,
+    "Dice": SelectionMethod.RANDOM.value,
+    "Player Choice": SelectionMethod.CHOICE.value,
+    "Random Draw": SelectionMethod.RANDOM.value,
+    "Randomizer Program": SelectionMethod.RANDOM.value,
+    "Rematch": SelectionMethod.REMATCH.value,
+    "Scenario": SelectionMethod.SPECIFIC_ATTEMPT.value,
+    "SotM Video Game Random Button": SelectionMethod.RANDOM.value,
+    "Thematic Team, Villain, Environment": SelectionMethod.SPECIFIC_ATTEMPT.value,
 }
 
 

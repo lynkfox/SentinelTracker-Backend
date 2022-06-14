@@ -3,7 +3,7 @@ from google_docs.inserts.insert_heroes import HeroInsert
 from google_docs.inserts.insert_villains import VillainInsert
 
 from common.models.character_enums import AlternateTags, Hero, Villain, Environment
-from common.models.enums import BoxSet
+from common.models.game_details_enums import BoxSet
 
 
 RENEGADE_HERO_INSERTS = [

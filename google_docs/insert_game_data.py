@@ -1,6 +1,6 @@
 from common.rds import get_mysql_client
 from google_docs.google_aws_common import SqlColumns, SqlTables
-from common.models.enums import BoxSet
+from common.models.game_details_enums import BoxSet
 from inserts.insert_environments import ENVIRONMENTS_TO_INSERT
 from inserts.insert_heroes import HEROES_TO_INSERT
 from inserts.insert_villains import VILLAINS_TO_INSERT

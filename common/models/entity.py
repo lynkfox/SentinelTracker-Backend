@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from typing import Optional
-from common.models.enums import BoxSet, Type, ApiEventTypes
+from common.models.enums import ApiEventTypes
 
 
 @dataclass
