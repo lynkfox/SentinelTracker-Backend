@@ -23,6 +23,7 @@ RANGE = "Form Responses 4!A2:AL"
 
 def main():
 
+    print("** Establishing Connections ...")
     client = get_mysql_client()
 
     creds = get_google_credentials_through_oath2()
@@ -30,7 +31,7 @@ def main():
     start = perf_counter()
     service = build("sheets", "v4", credentials=creds)
 
-    print("** Pulling data from Google")
+    print("** Pulling data from Google ...")
     sheet = service.spreadsheets()
     result = sheet.values().get(spreadsheetId=DOCUMENT_ID, range=RANGE).execute()
     values = result.get("values", [])
@@ -40,12 +41,12 @@ def main():
         return
     end_get = perf_counter()
 
-    print("** Parsing data")
+    print("** Parsing data (each dot is 1000 entries parsed) ...")
     details = [map_row_to_game_details(row, index) for index, row in enumerate(values)]
 
     end_parse = perf_counter()
 
-    print("** Creating Insert Statements")
+    print("\n** Creating Insert Statements ...")
     user_sql_statement = f"INSERT INTO {SqlTables.USERS} ({SqlColumns.USERNAME}, {SqlColumns.DYNAMO_META}) VALUES (%s, %s)"
     user_values = list(
         set(
@@ -60,14 +61,15 @@ def main():
     # need to remove Nones and duplicates from above list.
     end_statement = perf_counter()
 
-    print("** Inserting into SQL DB")
+    print("** Inserting into SQL DB ...")
 
     end_insert = perf_counter()
     print(
         f"\n{len(values)} entries retrieved in {end_get-start} seconds"
         f"\n ..... parsed in {end_parse-end_get} seconds"
         f"\n ..... insert statements created in {end_statement-end_parse} seconds"
-        f"\n ..... inserted in {end_statement-end_parse} seconds"
+        f"\n ..... inserted in {end_insert-end_statement} seconds"
+        f"\n\n *Complete. {len(user_values)} Users and x Game data inserted in {end_insert-start} total seconds "
     )
 
 
@@ -187,6 +189,8 @@ def map_row_to_game_details(row: list, row_count: int) -> GameDetail:
         return None
     details["villain"] = map_villain_opponent_team(row)
 
+    if row_count % 1000 == 0:
+        print(".", end=" ")
     return GameDetail(**details)
 
 
