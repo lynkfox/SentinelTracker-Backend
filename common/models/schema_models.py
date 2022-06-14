@@ -1,5 +1,4 @@
-from telnetlib import GA
-from pydantic import BaseModel, Field, PrivateAttr
+from pydantic import BaseModel, Field, PrivateAttr, validator
 from common.models.enums import Type
 from common.models.character_enums import Environment, Hero, Villain
 from common.models.game_details_enums import BoxSet
@@ -9,7 +8,9 @@ from common.models.game_details_enums import (
     SelectionMethod,
     GameMode,
     Platform,
+    GameLength,
 )
+import json
 from typing import Optional, Union
 from datetime import datetime
 
@@ -66,18 +67,20 @@ class User(BaseModel):
 
     def __init__(self, **data):
         super().__init__(**data)
-        self._pk = self.user_id
-        self._sk = f"USER#{self.name}#META"
+        self._pk = f"{self.user_id}#USER"
+        self._sk = f"#META"
         self._url = f"/user/{self.user_id}".replace(" ", "_").lower()
 
 
 class Username(BaseModel):
-    username: str = Field(...)
+    username: str
     dynamo_meta_query: Optional[str]
     total_wins: Optional[int]
     total_games: Optional[int]
 
-    pass
+    @validator("dynamo_meta_query", always=True)
+    def create_dynamo_meta_query(cls, value, values):
+        return json.dumps({"pk": f"{values['username']}#USER", "sk": f"#META"})
 
 
 class OblivAeonDetail(BaseModel):
@@ -136,13 +139,13 @@ class VillainOpponent(BaseModel):
 
 
 class GameDetail(BaseModel):
-    username: Optional[User]
+    username: Optional[Username]
     entered_on: datetime
     game_mode: Optional[GameMode]
     selection_method: Optional[SelectionMethod]
     platform: Optional[Platform]
     end_result: Union[HeroLossCondition, HeroWinCondition, None]
-    estimated_time: Optional[int]
+    estimated_time: Optional[GameLength]
     house_rules: Optional[str]
     number_of_players: Optional[int]
     number_of_heroes: Optional[int]

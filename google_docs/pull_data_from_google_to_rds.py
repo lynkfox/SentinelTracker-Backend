@@ -12,7 +12,7 @@ from common.models.game_details_enums import GameMode
 from common.rds import get_mysql_client
 from google_docs.docs_to_enums.character_mapping import *
 from googleapiclient.discovery import build
-from datetime import datetime
+from dateutil.parser import parse
 
 
 # The ID of a sample document.
@@ -37,9 +37,8 @@ def main():
         return
 
     for index, row in enumerate(values):
-        villain_opponent = map_villain_opponent_team(row, index)
-        hero_team = map_hero_team(row, index)
-        details = map_row_to_game_details(row, villain_opponent, hero_team, index)
+
+        details = map_row_to_game_details(row, index)
 
         print(details)
 
@@ -61,21 +60,19 @@ def process_date(date_str) -> str:
     """
     converts the date into a datetime object and adds tz (assumes it is UTC)
     """
-    return datetime.strptime(f"{date_str}+00:00", "%d/%m/%Y %h:%m:%s%z")
+    return parse(f"{date_str}+00:00")
 
 
-def map_row_to_game_details(
-    row: list, villains: VillainOpponent, heroes: HeroTeam, row_count: int
-) -> GameDetail:
+def map_row_to_game_details(row: list, row_count: int) -> GameDetail:
 
     dispatch = {
         "username": (34, USERNAME_CONSOLIDATION),
         "entered_on": (0, process_date),
         "game_mode": "",
         "selection_method": 28,
-        "platform": 33,
+        "platform": (33, PLATFORM_GOOGLE_TO_RDS),
         "end_result": (16, WIN_CONDITION_GOOGLE_TO_RDS),
-        "estimated_time": 30,
+        "estimated_time": (30, GAME_LENGTH_GOOGLE_TO_RDS),
         "house_rules": None,
         "number_of_players": 31,
         "number_of_heroes": determine_number_of_heroes,
@@ -101,31 +98,53 @@ def map_row_to_game_details(
         if isinstance(index, int):
             value = row[index]
             if "incapped" in key:
-                value = value == "" or value is None
-            details[key] = value
+                value = value != ""
+
+            if key == "estimated_time" and value == "":
+                value = "Unknown"
+
+            if key == "rounds":
+                try:
+                    value = abs(int(value))
+                except Exception:
+                    value = 0
+
         elif index == "":
-            details[key] = GameMode.NORMAL.value
+            value = GameMode.NORMAL.value
 
         elif isinstance(index, tuple):
 
             if isinstance(index[1], dict):
-                details[key] = index[1].get(row[index[0]])
-            elif isinstance(index[1], function):
-                details[key] = index(row[index[0]])
+                google_value = row[index[0]].strip()
+                value = index[1].get(google_value)
+                if key == "username":
 
-        elif isinstance(index, function):
-            details[key] = index(row)
+                    value = Username(
+                        **{
+                            "username": google_value if value is None else value,
+                            "dynamo_meta_query": None,
+                            "total_wins": 0,
+                            "total_games": 0,
+                        }
+                    )
+
+            elif callable(index[1]):
+                value = index[1](row[index[0]])
+
+        elif callable(index):
+            value = index(row)
 
         else:
-            details[key] = index
+            value = index
 
+        details[key] = value
         if key not in ["house_rules", "oblivaeon_details"] and details[key] is None:
             print(
                 f"Row {row_count}: (kwarg key: row value) -> ({key}:{row[index]}) evaluated to NONE "
             )
 
-    details["hero_team"] = heroes
-    details["villain"] = villains
+    details["hero_team"] = map_hero_team(row, index)
+    details["villain"] = map_villain_opponent_team(row, index)
 
     return GameDetail(**details)
 
@@ -147,14 +166,15 @@ def map_villain_opponent_team(row: list, row_count: int) -> VillainOpponent:
     opponent_team = {}
     for key, index in dispatch.items():
         if isinstance(index, int):
-            opponent_team[key] = VILLAIN_GOOGLE_TO_RDS_MAP.get(row[index])
+            value = VILLAIN_GOOGLE_TO_RDS_MAP.get(row[index])
         elif isinstance(index, tuple):
-            opponent_team[key] = VILLAIN_GOOGLE_TO_RDS_MAP.get(row[index[0]])
-            if opponent_team[key] == None:
-                opponent_team[key] = VILLAIN_GOOGLE_TO_RDS_MAP.get(row[index[1]])
+            value = VILLAIN_GOOGLE_TO_RDS_MAP.get(row[index[0]])
+            if value == None:
+                value = VILLAIN_GOOGLE_TO_RDS_MAP.get(row[index[1]])
         else:
-            opponent_team[key] = index
+            value = index
 
+        opponent_team[key] = value
         if key != "id_hash" and opponent_team[key] is None and row[index] != "":
             print(f"Row {row_count}: key ({key}:{row[index]}) evaluated to NONE ")
 

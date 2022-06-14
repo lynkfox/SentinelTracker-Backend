@@ -8,10 +8,22 @@ class SQLEnum(Enum):
 
 class Platform(SQLEnum):
     PHYSICAL = "Physical"
+    TABLE_TOP_SIMULATOR = "Table Top Simulator"
     STEAM = "Steam"
     APPLE = "Apple"
     ANDROID = "Android"
     OTHER = "Other"
+    MOBILE_UNKNOWN = "Mobile (Unknown Brand)"
+    PLAYTESTING = "Playtesting"
+
+
+class GameLength(SQLEnum):
+    UNRECORDED = "Not Known / Not Recorded"
+    UNDER_THIRTY = "Less than 30 mins"
+    UNDER_FORTY_FIVE = "Less than 45 mins"
+    UNDER_ONE_HOUR = "Less than 1 hour"
+    UNDER_TWO_HOURS = "Less than 2 hours"
+    MORE_THAN_TWO_HOURS = "More than 2 hours"
 
 
 class BoxSet(SQLEnum):
@@ -87,6 +99,7 @@ class HeroLossCondition(SQLEnum):
 
 
 class HeroWinCondition(SQLEnum):
+    STANDARD = "The Hero's Triumph (Villain(s) Incapacitated)"
     GLOOMWEAVER = "Destroy His Anchors (Gloomweaver Relics Destroyed)"
     ENVIRONMENT = "The House always Wins (Environment ends the Villain)"
     INCAPACITATED = "Down, but not Out! (Incapacitated Ability ends the Villain)"

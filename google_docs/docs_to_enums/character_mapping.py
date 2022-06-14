@@ -2,6 +2,8 @@ from common.models.game_details_enums import (
     HeroWinCondition,
     HeroLossCondition,
     SelectionMethod,
+    Platform,
+    GameLength,
 )
 from common.models.character_enums import (
     Villain,
@@ -426,6 +428,7 @@ HERO_GOOGLE_TO_RDS_MAPPING = {
 }
 
 WIN_CONDITION_GOOGLE_TO_RDS = {
+    "": HeroWinCondition.STANDARD.value,
     "Ate Himself (Skinwalker Gloomweaver)": HeroLossCondition.SKINWALKER.value,
     "Did Not Protect Her (The Dreamer)": HeroLossCondition.DREAMER.value,
     "Engines Failed (Mobile Defense Platform)": HeroLossCondition.MOBILE_DEFENSE_PLATFORM.value,
@@ -460,6 +463,23 @@ SELECTION_METHOD_GOOGLE_TO_RDS = {
     "Thematic Team, Villain, Environment": SelectionMethod.SPECIFIC_ATTEMPT.value,
 }
 
+PLATFORM_GOOGLE_TO_RDS = {
+    "": Platform.PHYSICAL.value,
+    "Mobile Phone": Platform.MOBILE_UNKNOWN.value,
+    "Other Video Game platform": Platform.OTHER.value,
+    "Physical Cards": Platform.PHYSICAL.value,
+    "Steam": Platform.STEAM.value,
+    "Tablet (iPad or Android)": Platform.MOBILE_UNKNOWN.value,
+}
+
+GAME_LENGTH_GOOGLE_TO_RDS = {
+    "": GameLength.UNRECORDED,
+    "<30": GameLength.UNDER_THIRTY,
+    "30-44": GameLength.UNDER_FORTY_FIVE,
+    "45-59": GameLength.UNDER_ONE_HOUR,
+    "60-90": GameLength.UNDER_TWO_HOURS,
+    "90+": GameLength.MORE_THAN_TWO_HOURS,
+}
 
 # Remember to strip()
 USERNAME_CONSOLIDATION = {
