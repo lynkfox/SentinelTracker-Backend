@@ -17,6 +17,7 @@ CREATE TABLE `heroes` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `full_name` varchar(255) UNIQUE,
   `box_set` varchar(255),
+  `nemesis` varchar(255),
   `dynamo_meta_query` varchar(255),
   `total_wins` int DEFAULT 0,
   `total_games` int DEFAULT 0
@@ -32,7 +33,7 @@ CREATE TABLE `environments` (
 );
 
 CREATE TABLE `users` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
+  `id` int UNIQUE PRIMARY KEY AUTO_INCREMENT,
   `username` varchar(255) UNIQUE,
   `dynamo_meta_query` varchar(255),
   `total_wins` int DEFAULT 0,
@@ -40,7 +41,7 @@ CREATE TABLE `users` (
 );
 
 CREATE TABLE `heroTeams` (
-  `id_hash` varchar(255) PRIMARY KEY,
+  `id_hash` varchar(255) UNIQUE PRIMARY KEY,
   `hero_one` varchar(255),
   `hero_two` varchar(255),
   `hero_three` varchar(255),
@@ -49,7 +50,7 @@ CREATE TABLE `heroTeams` (
 );
 
 CREATE TABLE `opponents` (
-  `id_hash` varchar(255) PRIMARY KEY,
+  `id_hash` varchar(255) UNIQUE PRIMARY KEY,
   `villain_one` varchar(255),
   `villain_two` varchar(255),
   `villain_three` varchar(255),
@@ -58,10 +59,16 @@ CREATE TABLE `opponents` (
 );
 
 CREATE TABLE `oblivaeonSetups` (
-  `id_hash` varchar(255) PRIMARY KEY,
-  `scions` varchar(255),
+  `id_hash` varchar(255) UNIQUE PRIMARY KEY,
   `shield` varchar(255),
-  `rewards` varchar(255)
+  `scions` varchar(255),
+  `rewards` varchar(255),
+  `environments` varchar(255),
+  `player_one_heroes` varchar(255),
+  `player_two_heroes` varchar(255),
+  `player_three_heroes` varchar(255),
+  `player_four_heroes` varchar(255),
+  `player_five_heroes` varchar(255)
 );
 
 CREATE TABLE `gameDetails` (
@@ -97,6 +104,8 @@ CREATE TABLE `gameDetails` (
 ALTER TABLE `villains` ADD FOREIGN KEY (`box_set`) REFERENCES `boxSets` (`full_name`);
 
 ALTER TABLE `heroes` ADD FOREIGN KEY (`box_set`) REFERENCES `boxSets` (`full_name`);
+
+ALTER TABLE `heroes` ADD FOREIGN KEY (`nemesis`) REFERENCES `villains` (`full_name`);
 
 ALTER TABLE `environments` ADD FOREIGN KEY (`box_set`) REFERENCES `boxSets` (`full_name`);
 

@@ -18,7 +18,7 @@ from time import perf_counter
 
 # The ID of a sample document.
 DOCUMENT_ID = "1bVppJL4rC5lWULLGZ7AP5xH6YZLYsv86Wme1SpU6agE"
-RANGE = "Form Responses 4!A2:AL5"
+RANGE = "Form Responses 4!A2:AL250"
 
 
 def main():
@@ -49,22 +49,28 @@ def main():
     print("\n** Creating Insert Statements ...")
     user_sql_statement = f"INSERT INTO {SqlTables.USERS} ({SqlColumns.USERNAME}, {SqlColumns.DYNAMO_META}) VALUES (%s, %s)"
     user_values = list(
-        set(
-            [
-                create_values_for_user_insert(detail.username)
-                for detail in details
-                if detail is not None and detail.username is not None
-            ]
+        filter(
+            None,
+            list(
+                set(
+                    [
+                        create_values_for_user_insert(detail.username)
+                        for detail in details
+                        if detail is not None and detail.username is not None
+                    ]
+                )
+            ),
         )
     )
+    blank_user_sql = f"INSERT {SqlTables.USERS} ({SqlColumns.USERNAME}, {SqlColumns.DYNAMO_META}) VALUES ('', '')"
 
     hero_team_sql_statement = f"INSERT INTO {SqlTables.HERO_TEAMS} ({SqlColumns.ID_HASH}, {SqlColumns.HERO_ONE}, {SqlColumns.HERO_TWO}, {SqlColumns.HERO_THREE}, {SqlColumns.HERO_FOUR}, {SqlColumns.HERO_FIVE}) VALUES (%s, %s, %s, %s, %s, %s)"
     hero_team_values = list(
         set([create_values_for_hero_insert(detail.hero_team) for detail in details])
     )
 
-    villain_team_sql_statement = f"INSERT INTO {SqlTables.VILLAINS} ({SqlColumns.ID_HASH}, {SqlColumns.VILLAIN_ONE}, {SqlColumns.VILLAIN_TWO}, {SqlColumns.VILLAIN_THREE}, {SqlColumns.VILLAIN_FOUR}, {SqlColumns.VILLAIN_FIVE}) VALUES (%s, %s, %s, %s, %s, %s)"
-    villain_team_values = list(
+    opponents_sql_statement = f"INSERT INTO {SqlTables.OPPONENTS} ({SqlColumns.ID_HASH}, {SqlColumns.VILLAIN_ONE}, {SqlColumns.VILLAIN_TWO}, {SqlColumns.VILLAIN_THREE}, {SqlColumns.VILLAIN_FOUR}, {SqlColumns.VILLAIN_FIVE}) VALUES (%s, %s, %s, %s, %s, %s)"
+    opponent_team_values = list(
         set(
             [
                 create_values_for_opponent_team_insert(detail.villain)
@@ -73,7 +79,7 @@ def main():
         )
     )
 
-    game_details_sql_statement = f"INSERT INTO {SqlTables.GAME_DETAILS} ({SqlColumns.USERNAME},{SqlColumns.ENTER_DATE},{SqlColumns.GAME_MODE},{SqlColumns.SELECTION_METHOD},{SqlColumns.PLATFORM},{SqlColumns.END_RESULT},{SqlColumns.ESTIMATED_TIME},{SqlColumns.HOUSE_RULES},{SqlColumns.NUMBER_OF_PLAYERS},{SqlColumns.NUMBER_OF_HEROES},{SqlColumns.PERCEIVED_DIFFICULTY},{SqlColumns.ROUNDS},{SqlColumns.OBLIVAEON_DETAIL},{SqlColumns.HERO_TEAM},{SqlColumns.ENVIRONMENT},{SqlColumns.VILLAIN},{SqlColumns.H1_INCAP},{SqlColumns.H2_INCAP},{SqlColumns.H3_INCAP},{SqlColumns.H4_INCAP},{SqlColumns.H5_INCAP},{SqlColumns.V1_INCAP},{SqlColumns.V2_INCAP},{SqlColumns.V3_INCAP},{SqlColumns.V4_INCAP},{SqlColumns.V5_INCAP}) (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+    game_details_sql_statement = f"INSERT INTO {SqlTables.GAME_DETAILS} ({SqlColumns.USERNAME},{SqlColumns.ENTER_DATE},{SqlColumns.GAME_MODE},{SqlColumns.SELECTION_METHOD},{SqlColumns.PLATFORM},{SqlColumns.END_RESULT},{SqlColumns.ESTIMATED_TIME},{SqlColumns.HOUSE_RULES},{SqlColumns.NUMBER_OF_PLAYERS},{SqlColumns.NUMBER_OF_HEROES},{SqlColumns.PERCEIVED_DIFFICULTY},{SqlColumns.ROUNDS},{SqlColumns.OBLIVAEON_DETAIL},{SqlColumns.HERO_TEAM},{SqlColumns.ENVIRONMENT},{SqlColumns.VILLAIN},{SqlColumns.H1_INCAP},{SqlColumns.H2_INCAP},{SqlColumns.H3_INCAP},{SqlColumns.H4_INCAP},{SqlColumns.H5_INCAP},{SqlColumns.V1_INCAP},{SqlColumns.V2_INCAP},{SqlColumns.V3_INCAP},{SqlColumns.V4_INCAP},{SqlColumns.V5_INCAP}) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
     game_details_values = list(
         set([create_values_for_game_details_insert(detail) for detail in details])
     )
@@ -82,16 +88,19 @@ def main():
 
     print("** Inserting into SQL DB ...")
 
-    client.cursor().execute(user_sql_statement, user_values)
+    client.cursor().execute(blank_user_sql)
     client.commit()
 
-    client.cursor().execute(hero_team_sql_statement, hero_team_values)
+    client.cursor().executemany(user_sql_statement, user_values)
     client.commit()
 
-    client.cursor().execute(villain_team_sql_statement, villain_team_values)
+    client.cursor().executemany(hero_team_sql_statement, hero_team_values)
     client.commit()
 
-    client.cursor().execute(game_details_sql_statement, game_details_values)
+    client.cursor().executemany(opponents_sql_statement, opponent_team_values)
+    client.commit()
+
+    client.cursor().executemany(game_details_sql_statement, game_details_values)
     client.commit()
 
     end_insert = perf_counter()
@@ -100,7 +109,7 @@ def main():
         f"\n ..... parsed in {end_parse-end_get} seconds"
         f"\n ..... insert statements created in {end_statement-end_parse} seconds"
         f"\n ..... inserted in {end_insert-end_statement} seconds"
-        f"\n\n *Complete. {len(user_values)} Users and x Game data inserted in {end_insert-start} total seconds "
+        f"\n\n *Complete. {len(user_values)} Users and {len(game_details_values)} Game data inserted in {end_insert-start} total seconds "
     )
 
 
@@ -111,7 +120,7 @@ def create_values_for_user_insert(user: Username) -> set:
 
 def create_values_for_hero_insert(hero_team: HeroTeam) -> set:
     return (
-        hero_team.id_hash,
+        str(hero_team.id_hash),
         hero_team.hero_one,
         hero_team.hero_two,
         hero_team.hero_three,
@@ -122,7 +131,7 @@ def create_values_for_hero_insert(hero_team: HeroTeam) -> set:
 
 def create_values_for_opponent_team_insert(villain: VillainOpponent) -> set:
     return (
-        villain.id_hash,
+        str(villain.id_hash),
         villain.villain_one,
         villain.villain_two,
         villain.villain_three,
@@ -146,9 +155,9 @@ def create_values_for_game_details_insert(game: GameDetail) -> set:
         game.perceived_difficulty,
         game.rounds,
         game.oblivaeon_details,
-        game.hero_team.id_hash,
+        str(game.hero_team.id_hash),
         game.environment,
-        game.villain.id_hash,
+        str(game.villain.id_hash),
         game.hero_one_incapped,
         game.hero_two_incapped,
         game.hero_three_incapped,

@@ -8,7 +8,8 @@ from common.models.character_enums import (
     ENVIRONMENT_DISPLAY_MAPPING,
     ALTERNATE_TAG_DISPLAY_MAPPING,
 )
-from common.models.enums import BoxSet, Type
+from common.models.enums import Type
+from common.models.game_details_enums import BoxSet
 from typing import Union
 
 
