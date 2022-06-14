@@ -429,6 +429,7 @@ HERO_GOOGLE_TO_RDS_MAPPING = {
 
 WIN_CONDITION_GOOGLE_TO_RDS = {
     "": HeroWinCondition.STANDARD.value,
+    "Sucker Punch, Final Dive, and other Destroy Cards": HeroWinCondition.STANDARD.value,
     "Ate Himself (Skinwalker Gloomweaver)": HeroLossCondition.SKINWALKER.value,
     "Did Not Protect Her (The Dreamer)": HeroLossCondition.DREAMER.value,
     "Engines Failed (Mobile Defense Platform)": HeroLossCondition.MOBILE_DEFENSE_PLATFORM.value,
@@ -441,7 +442,6 @@ WIN_CONDITION_GOOGLE_TO_RDS = {
     "Omnitron's Devices After Omnitron died": HeroLossCondition.OMINTRON.value,
     "Relic Victory (Gloomweaver)": HeroWinCondition.GLOOMWEAVER.value,
     "Sentenced to Destruction (Celestial Tribunal)": HeroLossCondition.CELESTIAL_TRIBUNAl.value,
-    "Sucker Punch, Final Dive, and other Destroy Cards": None,
     "Terra Lunar Impulsion Beam (Baron Blade)": HeroLossCondition.BARON_BLADE.value,
     "The Crowd Turned Against the Heroes (Kaargra Warfang)": HeroLossCondition.KAARGRA_WARGANG.value,
     "The Environment was Destroyed (Deadline)": HeroLossCondition.DEADLINE.value,

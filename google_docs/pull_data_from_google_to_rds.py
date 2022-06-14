@@ -13,11 +13,12 @@ from common.rds import get_mysql_client
 from google_docs.docs_to_enums.character_mapping import *
 from googleapiclient.discovery import build
 from dateutil.parser import parse
+from time import perf_counter
 
 
 # The ID of a sample document.
 DOCUMENT_ID = "1bVppJL4rC5lWULLGZ7AP5xH6YZLYsv86Wme1SpU6agE"
-RANGE = "Form Responses 4!A:AL"
+RANGE = "Form Responses 4!A2:AL"
 
 
 def main():
@@ -26,6 +27,7 @@ def main():
 
     creds = get_google_credentials_through_oath2()
 
+    start = perf_counter()
     service = build("sheets", "v4", credentials=creds)
 
     sheet = service.spreadsheets()
@@ -35,10 +37,17 @@ def main():
     if not values:
         print("No data found.")
         return
+    end_get = perf_counter()
 
     for index, row in enumerate(values):
 
         details = map_row_to_game_details(row, index)
+
+    end_parse = perf_counter()
+
+    print(
+        f"\n{len(values)} retrieved in {end_get-start} seconds, and parsed in {end_parse-end_get} seconds"
+    )
 
 
 def determine_number_of_heroes(row: list) -> int:
@@ -49,7 +58,8 @@ def determine_number_of_heroes(row: list) -> int:
     hero_indexes = [17, 19, 21, 23, 25]
     total = 0
     for index in hero_indexes:
-        if HERO_GOOGLE_TO_RDS_MAPPING.get(row[index]) is not None:
+
+        if len(row) > index and HERO_GOOGLE_TO_RDS_MAPPING.get(row[index]) is not None:
             total += 1
     return total
 
@@ -142,7 +152,7 @@ def map_row_to_game_details(row: list, row_count: int) -> GameDetail:
         details[key] = value
         if key not in ["house_rules", "oblivaeon_details"] and details[key] is None:
             if isinstance(index, tuple):
-                google_value = row[index[0]]
+                google_value = row[index[0]] if len(row) > index[0] else ""
             else:
                 google_value = row[index]
             print(f"[Row {row_count}]: [{key}:{google_value}] evaluated to NONE ")
@@ -199,7 +209,9 @@ def map_hero_team(row: list) -> HeroTeam:
     hero_team = {}
     for key, index in dispatch.items():
         if isinstance(index, int):
-            hero_team[key] = HERO_GOOGLE_TO_RDS_MAPPING.get(row[index])
+            hero_team[key] = (
+                HERO_GOOGLE_TO_RDS_MAPPING.get(row[index]) if len(row) > index else None
+            )
         else:
             hero_team[key] = index
 
