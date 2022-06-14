@@ -59,6 +59,7 @@ class BoxSet(SQLEnum):
 
 
 class SelectionMethod(SQLEnum):
+    UNSPECIFIED = "Unspecified"
     RANDOM = "Random"
     # any form of Randomizer - dice, app, eyes closed...
     CHOICE = "Player Choice"

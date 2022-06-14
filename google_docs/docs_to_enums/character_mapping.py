@@ -452,6 +452,7 @@ WIN_CONDITION_GOOGLE_TO_RDS = {
 }
 
 SELECTION_METHOD_GOOGLE_TO_RDS = {
+    "": SelectionMethod.UNSPECIFIED.value,
     "Achievement Attempt": SelectionMethod.SPECIFIC_ATTEMPT.value,
     "Dice": SelectionMethod.RANDOM.value,
     "Player Choice": SelectionMethod.CHOICE.value,

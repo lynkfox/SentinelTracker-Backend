@@ -17,7 +17,7 @@ from dateutil.parser import parse
 
 # The ID of a sample document.
 DOCUMENT_ID = "1bVppJL4rC5lWULLGZ7AP5xH6YZLYsv86Wme1SpU6agE"
-RANGE = "Form Responses 4!A2:AL5"
+RANGE = "Form Responses 4!A2:AL25"
 
 
 def main():
@@ -40,7 +40,7 @@ def main():
 
         details = map_row_to_game_details(row, index)
 
-        print(details)
+        # print(details)
 
 
 def determine_number_of_heroes(row: list) -> int:
@@ -139,17 +139,22 @@ def map_row_to_game_details(row: list, row_count: int) -> GameDetail:
 
         details[key] = value
         if key not in ["house_rules", "oblivaeon_details"] and details[key] is None:
-            print(
-                f"Row {row_count}: (kwarg key: row value) -> ({key}:{row[index]}) evaluated to NONE "
-            )
+            if isinstance(index, tuple):
+                google_value = row[index[0]]
+            else:
+                google_value = row[index]
+            print(f"[Row {row_count}]: [{key}:{google_value}] evaluated to NONE ")
 
-    details["hero_team"] = map_hero_team(row, index)
-    details["villain"] = map_villain_opponent_team(row, index)
+    details["hero_team"] = map_hero_team(row)
+    if details["hero_team"] is None:
+        print(f"********* [Row {row_count}] - Only two heros. Skipping *********")
+        return None
+    details["villain"] = map_villain_opponent_team(row)
 
     return GameDetail(**details)
 
 
-def map_villain_opponent_team(row: list, row_count: int) -> VillainOpponent:
+def map_villain_opponent_team(row: list) -> VillainOpponent:
     """
     Maps rows to dictionaries and into VillainOpponent pydantic Base Model for use in Inserting into RDS
     """
@@ -175,13 +180,11 @@ def map_villain_opponent_team(row: list, row_count: int) -> VillainOpponent:
             value = index
 
         opponent_team[key] = value
-        if key != "id_hash" and opponent_team[key] is None and row[index] != "":
-            print(f"Row {row_count}: key ({key}:{row[index]}) evaluated to NONE ")
 
     return VillainOpponent(**opponent_team)
 
 
-def map_hero_team(row: list, row_count: int) -> HeroTeam:
+def map_hero_team(row: list) -> HeroTeam:
 
     dispatch = {
         "hero_one": 17,
@@ -198,10 +201,8 @@ def map_hero_team(row: list, row_count: int) -> HeroTeam:
         else:
             hero_team[key] = index
 
-        if key != "id_hash" and hero_team[key] is None and row[index] != "":
-            print(
-                f"Row {row_count}: (kwarg key: row value) -> ({key}:{row[index]}) evaluated to NONE "
-            )
+    if hero_team["hero_three"] is None:
+        return None
 
     return HeroTeam(**hero_team)
 
