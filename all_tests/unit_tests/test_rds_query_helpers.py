@@ -8,13 +8,13 @@ class Test_character_is:
         assert isinstance(character_is("Test"), str)
 
     def test_raises_value_error_on_not_type_hero(self):
-        with pytest.raises(ValueError, match="[prefix] Mismatch: must be HERO or VILLAIN") as e:
+        with pytest.raises(ValueError, match="prefix Mismatch: must be HERO or VILLAIN") as e:
             character_is("test", Type.ENVIRONMENT)
 
     def test_raises_value_error_on_type_villain_but__not_opponent_table(self):
         with pytest.raises(
             ValueError,
-            match="[table_name] Mismatch: table_name must be GAME_DETAILS, HERO_TEAMS, or OPPONENTS",
+            match="table_name Mismatch: table_name must be GAME_DETAILS, HERO_TEAMS, or OPPONENTS",
         ) as e:
             character_is("test", Type.VILLAIN, SqlTables.HEROES)
 
@@ -65,5 +65,5 @@ class Test_with_allies:
         assert test_response == "opponents.villain_one=`Baron Blade`, opponents.villain_two=`Ermine`"
 
     def test_raises_value_error_with_more_than_5_names(self):
-        with pytest.raises(ValueError, match="[names]: too many names for with_allies") as e:
+        with pytest.raises(ValueError, match="names: too many names for with_allies") as e:
             test_response = with_allies(["", "", "", "", "", ""], Type.VILLAIN)

@@ -42,12 +42,12 @@ class ColumnGroup:
         Error Handling for hero_[number] column names.
         """
         if prefix is not Type.HERO and prefix is not Type.VILLAIN:
-            raise ValueError("[prefix] Mismatch: must be HERO or VILLAIN")
+            raise ValueError("prefix Mismatch: must be HERO or VILLAIN")
 
     @classmethod
     def _is_hero_or_villain_team_table(cls, table_name: SqlTables):
         if table_name is not SqlTables.HERO_TEAMS and table_name is not SqlTables.GAME_DETAILS and table_name is not SqlTables.OPPONENTS:
-            raise ValueError("[table_name] Mismatch: table_name must be GAME_DETAILS, HERO_TEAMS, or OPPONENTS")
+            raise ValueError("table_name Mismatch: table_name must be GAME_DETAILS, HERO_TEAMS, or OPPONENTS")
 
 
 def character_is(
@@ -85,7 +85,7 @@ def with_allies(names: List[str], prefix: Type = Type.HERO, positional=False) ->
             OPPONENTS depending on Type
     """
     if len(names) > 5:
-        raise ValueError("[names]: too many names for with_allies")
+        raise ValueError("names: too many names for with_allies")
 
     if not positional:
         names.sort()
