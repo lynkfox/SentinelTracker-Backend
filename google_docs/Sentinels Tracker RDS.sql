@@ -17,7 +17,6 @@ CREATE TABLE `heroes` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `full_name` varchar(255) UNIQUE,
   `box_set` varchar(255),
-  `nemesis` varchar(255),
   `dynamo_meta_query` varchar(255),
   `total_wins` int DEFAULT 0,
   `total_games` int DEFAULT 0
@@ -46,7 +45,8 @@ CREATE TABLE `heroTeams` (
   `hero_two` varchar(255),
   `hero_three` varchar(255),
   `hero_four` varchar(255),
-  `hero_five` varchar(255)
+  `hero_five` varchar(255),
+  `valid_team` bool
 );
 
 CREATE TABLE `opponents` (
@@ -55,7 +55,8 @@ CREATE TABLE `opponents` (
   `villain_two` varchar(255),
   `villain_three` varchar(255),
   `villain_four` varchar(255),
-  `villain_five` varchar(255)
+  `villain_five` varchar(255),
+  `valid_team` bool
 );
 
 CREATE TABLE `oblivaeonSetups` (
@@ -89,23 +90,32 @@ CREATE TABLE `gameDetails` (
   `hero_team` varchar(255),
   `environment` varchar(255),
   `villain` varchar(255),
+  `hero_one` varchar(255),
   `hero_one_incapped` bool,
+  `hero_two` varchar(255),
   `hero_two_incapped` bool,
+  `hero_three` varchar(255),
   `hero_three_incapped` bool,
+  `hero_four` varchar(255),
   `hero_four_incapped` bool,
+  `hero_five` varchar(255),
   `hero_five_incapped` bool,
+  `villain_one` varchar(255),
   `villain_one_incapped` bool,
+  `villain_two` varchar(255),
   `villain_two_incapped` bool,
+  `villain_three` varchar(255),
   `villain_three_incapped` bool,
+  `villain_four` varchar(255),
   `villain_four_incapped` bool,
-  `villain_five_incapped` bool
+  `villain_five` varchar(255),
+  `villain_five_incapped` bool,
+  `entry_is_valid` bool DEFAULT false
 );
 
 ALTER TABLE `villains` ADD FOREIGN KEY (`box_set`) REFERENCES `boxSets` (`full_name`);
 
 ALTER TABLE `heroes` ADD FOREIGN KEY (`box_set`) REFERENCES `boxSets` (`full_name`);
-
-ALTER TABLE `heroes` ADD FOREIGN KEY (`nemesis`) REFERENCES `villains` (`full_name`);
 
 ALTER TABLE `environments` ADD FOREIGN KEY (`box_set`) REFERENCES `boxSets` (`full_name`);
 

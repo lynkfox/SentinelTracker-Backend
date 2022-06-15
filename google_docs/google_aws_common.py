@@ -16,11 +16,14 @@ class SqlTables:
     HERO_TEAMS: ClassVar[str] = "heroTeams"
     OPPONENTS: ClassVar[str] = "opponents"
     OBLIVAEON_SETUPS: ClassVar[str] = "oblivaeonSetups"
+    NON_POS_HERO_TEAMS: ClassVar[str] = "nonPositionalHeroTeams"
+    NON_POS_OPPONENTS: ClassVar[str] = "nonPositionalOpponents"
 
 
 class SqlColumns:
     ID = "id"
     ID_HASH = "id_hash"
+    NON_POSITIONAL_HASH = "non_positional_hash"
     FULL_NAME = "full_name"
     BOX_SET = "box_set"
     DYNAMO_META = "dynamo_meta_query"
@@ -41,7 +44,7 @@ class SqlColumns:
     SCIONS = "scions"
     SHIELD = "shield"
     REWARDS = "rewards"
-    ENTER_DATE = "entered_on "
+    ENTER_DATE = "entered_on"
     GAME_MODE = "game_mode"
     SELECTION_METHOD = "selection_method"
     PLATFORM = "platform"
@@ -66,3 +69,5 @@ class SqlColumns:
     V3_INCAP = "villain_three_incapped"
     V4_INCAP = "villain_four_incapped"
     V5_INCAP = "villain_five_incapped"
+    ENTRY_IS_VALID = "entry_is_valid"
+    VALID_TEAM = "valid_team"

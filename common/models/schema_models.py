@@ -1,4 +1,5 @@
 from pydantic import BaseModel, Field, PrivateAttr, validator
+from pydantic.fields import ModelField
 from common.models.enums import Type
 from common.models.character_enums import Environment, Hero, Villain
 from common.models.game_details_enums import BoxSet
@@ -117,6 +118,7 @@ class HeroTeam(BaseModel):
     hero_four: Optional[str]
     hero_five: Optional[str]
     id_hash: Optional[str]
+    valid_team: Optional[bool]
 
     class Config:
         use_enum_values = True
@@ -130,18 +132,41 @@ class HeroTeam(BaseModel):
         return hero_five
 
     @validator("id_hash", always=True)
-    def hash_team(cls, id_hash, values):
+    def hash_team_positions(cls, id_hash, values):
+
         if id_hash is None or id_hash == "":
             return hash(
                 "".join(
                     [
                         v if v is not None else "-"
                         for k, v in values.items()
-                        if k != "id_hash"
+                        if "hero" in k
                     ]
                 )
             )
         return id_hash
+
+    @validator("valid_team", always=True)
+    def validate_team(cls, validation, values):
+        # alphabetize heroes
+        members = [
+            value
+            for key, value in values.items()
+            if (key.startswith("hero")) and value is not None
+        ]
+        members.sort()
+        total_members = len(members)
+
+        values["hero_one"] = members[0]
+        values["hero_two"] = members[1] if total_members > 1 else None
+        values["hero_three"] = members[2] if total_members > 2 else None
+        values["hero_four"] = members[3] if total_members > 3 else None
+        values["hero_five"] = members[4] if total_members > 4 else None
+
+        if len(set(members)) != len(members):
+            return False
+
+        return True
 
 
 class VillainOpponent(BaseModel):
@@ -153,6 +178,7 @@ class VillainOpponent(BaseModel):
     advanced: bool
     challenge: bool
     id_hash: Optional[str]
+    valid_team: Optional[str]
 
     class Config:
         use_enum_values = True
@@ -174,7 +200,7 @@ class VillainOpponent(BaseModel):
         return villain
 
     @validator("id_hash", always=True)
-    def hash_team(cls, id_hash, values):
+    def hash_team_positions(cls, id_hash, values):
         if id_hash is None or id_hash == "":
             return hash(
                 "".join(
@@ -186,6 +212,28 @@ class VillainOpponent(BaseModel):
                 )
             )
         return id_hash
+
+    @validator("valid_team", always=True)
+    def validate_team(cls, validation, values):
+        # alphabetize heroes
+        members = [
+            value
+            for key, value in values.items()
+            if (key.startswith("villain")) and value is not None
+        ]
+        members.sort()
+        total_members = len(members)
+
+        values["villain_one"] = members[0]
+        values["villain_two"] = members[1] if total_members > 1 else None
+        values["villain_three"] = members[2] if total_members > 2 else None
+        values["villain_four"] = members[3] if total_members > 3 else None
+        values["villain_five"] = members[4] if total_members > 4 else None
+
+        if len(set(members)) != len(members):
+            return False
+
+        return True
 
 
 class GameDetail(BaseModel):
@@ -205,18 +253,61 @@ class GameDetail(BaseModel):
     hero_team: HeroTeam
     environment: str
     villain: VillainOpponent
-    hero_one_incapped: Optional[bool] = Field(False)
-    hero_two_incapped: Optional[bool] = Field(False)
-    hero_three_incapped: Optional[bool] = Field(False)
+    hero_one: Optional[str]
+    hero_one_incapped: Optional[bool]
+    hero_two: Optional[str]
+    hero_two_incapped: Optional[bool]
+    hero_three: Optional[str]
+    hero_three_incapped: Optional[bool]
+    hero_four: Optional[str]
     hero_four_incapped: Optional[bool]
+    hero_five: Optional[str]
     hero_five_incapped: Optional[bool]
-    villain_one_incapped: Optional[bool] = Field(True)
+    villain_one: Optional[str]
+    villain_one_incapped: Optional[bool]
+    villain_two: Optional[str]
     villain_two_incapped: Optional[bool]
+    villain_three: Optional[str]
     villain_three_incapped: Optional[bool]
+    villain_four: Optional[str]
     villain_four_incapped: Optional[bool]
+    villain_five: Optional[str]
     villain_five_incapped: Optional[bool]
     comment: Optional[str]
+    entry_is_valid: bool = Field(True)
 
     class Config:
         use_enum_values = True
         anystr_strip_whitespace = True
+
+    @validator("villain", always=True)
+    def update_game_type(cls, opponent: VillainOpponent, values):
+        if opponent.villain_two is not None:
+            values["game_mode"] = GameMode.VILLAINS
+        return opponent
+
+    @validator("entry_is_valid", always=True)
+    def validate_entry(cls, entry, values):
+        # validate that the number of villains, if not 1, is equal to the number of heroes.
+        villains = [
+            v
+            for k, v in values["villain"].__dict__.items()
+            if ("villain" in k and "incapped" not in k) and v is not None
+        ]
+        if len(villains) != 1 and len(villains) != values["number_of_heroes"]:
+            return False
+
+        # validate that the heroes are all unique
+        if not values["hero_team"].valid_team:
+            return False
+
+        incapped_heroes = [
+            v for k, v in values.items() if "hero" in k and "incapped" in k and v
+        ]
+
+        if len(incapped_heroes) == values["number_of_heroes"] and isinstance(
+            values["end_result"], HeroWinCondition
+        ):
+            return False
+
+        return True

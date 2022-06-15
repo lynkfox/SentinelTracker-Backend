@@ -14,7 +14,6 @@ from google_docs.docs_to_enums.character_mapping import *
 from googleapiclient.discovery import build
 from dateutil.parser import parse
 from time import perf_counter
-from typing import List
 
 
 # The ID of a sample document.
@@ -62,7 +61,9 @@ def main():
                     [
                         create_values_for_user_insert(detail.username)
                         for detail in details
-                        if detail is not None and detail.username is not None
+                        if detail is not None
+                        and detail.username is not None
+                        and detail.entry_is_valid
                     ]
                 )
             ),
@@ -70,42 +71,114 @@ def main():
     )
     blank_user_sql = f"INSERT {SqlTables.USERS} ({SqlColumns.USERNAME}, {SqlColumns.DYNAMO_META}) VALUES ('', '')"
 
-    hero_team_sql_statement = f"INSERT INTO {SqlTables.HERO_TEAMS} ({SqlColumns.ID_HASH}, {SqlColumns.HERO_ONE}, {SqlColumns.HERO_TWO}, {SqlColumns.HERO_THREE}, {SqlColumns.HERO_FOUR}, {SqlColumns.HERO_FIVE}) VALUES (%s, %s, %s, %s, %s, %s)"
+    hero_team_columns = [
+        SqlColumns.ID_HASH,
+        SqlColumns.HERO_ON,
+        SqlColumns.HERO_TWO,
+        SqlColumns.HERO_THREE,
+        SqlColumns.HERO_FOUR,
+        SqlColumns.HERO_FIVE,
+        SqlColumns.VALID_TEAM,
+    ]
+
+    hero_team_sql_statement = f"INSERT INTO {SqlTables.HERO_TEAMS} ({','.join(hero_team_columns)}) VALUES ({insert_value_shortcut(hero_team_columns)})"
     hero_team_values = list(
         set([create_values_for_hero_insert(detail.hero_team) for detail in details])
     )
 
-    opponents_sql_statement = f"INSERT INTO {SqlTables.OPPONENTS} ({SqlColumns.ID_HASH}, {SqlColumns.VILLAIN_ONE}, {SqlColumns.VILLAIN_TWO}, {SqlColumns.VILLAIN_THREE}, {SqlColumns.VILLAIN_FOUR}, {SqlColumns.VILLAIN_FIVE}) VALUES (%s, %s, %s, %s, %s, %s)"
+    opponent_columns = [
+        SqlColumns.ID_HASH,
+        SqlColumns.VILLAIN_ONE,
+        SqlColumns.VILLAIN_TWO,
+        SqlColumns.VILLAIN_THREE,
+        SqlColumns.VILLAIN_FOUR,
+        SqlColumns.VILLAIN_FIVE,
+        SqlColumns.VALID_TEAM,
+    ]
+
+    opponents_sql_statement = f"INSERT INTO {SqlTables.OPPONENTS} ({','.join(opponent_columns)}) VALUES ({insert_value_shortcut(opponent_columns)})"
     opponent_team_values = list(
         set(
             [
                 create_values_for_opponent_team_insert(detail.villain)
                 for detail in details
+                if detail.entry_is_valid
             ]
         )
     )
 
-    game_details_sql_statement = f"INSERT INTO {SqlTables.GAME_DETAILS} ({SqlColumns.USERNAME},{SqlColumns.ENTER_DATE},{SqlColumns.GAME_MODE},{SqlColumns.SELECTION_METHOD},{SqlColumns.PLATFORM},{SqlColumns.END_RESULT},{SqlColumns.ESTIMATED_TIME},{SqlColumns.HOUSE_RULES},{SqlColumns.NUMBER_OF_PLAYERS},{SqlColumns.NUMBER_OF_HEROES},{SqlColumns.PERCEIVED_DIFFICULTY},{SqlColumns.ROUNDS},{SqlColumns.OBLIVAEON_DETAIL},{SqlColumns.HERO_TEAM},{SqlColumns.ENVIRONMENT},{SqlColumns.VILLAIN},{SqlColumns.H1_INCAP},{SqlColumns.H2_INCAP},{SqlColumns.H3_INCAP},{SqlColumns.H4_INCAP},{SqlColumns.H5_INCAP},{SqlColumns.V1_INCAP},{SqlColumns.V2_INCAP},{SqlColumns.V3_INCAP},{SqlColumns.V4_INCAP},{SqlColumns.V5_INCAP}) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-    game_details_values = list(
-        set([create_values_for_game_details_insert(detail) for detail in details])
-    )
+    game_details_column_names = [
+        SqlColumns.USERNAME,
+        SqlColumns.ENTER_DATE,
+        SqlColumns.GAME_MODE,
+        SqlColumns.SELECTION_METHOD,
+        SqlColumns.PLATFORM,
+        SqlColumns.END_RESULT,
+        SqlColumns.ESTIMATED_TIME,
+        SqlColumns.HOUSE_RULES,
+        SqlColumns.NUMBER_OF_PLAYERS,
+        SqlColumns.NUMBER_OF_HEROES,
+        SqlColumns.PERCEIVED_DIFFICULTY,
+        SqlColumns.ROUNDS,
+        SqlColumns.OBLIVAEON_DETAIL,
+        SqlColumns.HERO_TEAM,
+        SqlColumns.ENVIRONMENT,
+        SqlColumns.VILLAIN,
+        SqlColumns.HERO_ONE,
+        SqlColumns.H1_INCAP,
+        SqlColumns.HERO_TWO,
+        SqlColumns.H2_INCAP,
+        SqlColumns.HERO_THREE,
+        SqlColumns.H3_INCAP,
+        SqlColumns.HERO_FOUR,
+        SqlColumns.H4_INCAP,
+        SqlColumns.HERO_FIVE,
+        SqlColumns.H5_INCAP,
+        SqlColumns.VILLAIN_ONE,
+        SqlColumns.V1_INCAP,
+        SqlColumns.VILLAIN_TWO,
+        SqlColumns.V2_INCAP,
+        SqlColumns.VILLAIN_THREE,
+        SqlColumns.V3_INCAP,
+        SqlColumns.VILLAIN_FOUR,
+        SqlColumns.V4_INCAP,
+        SqlColumns.VILLAIN_FIVE,
+        SqlColumns.V5_INCAP,
+        SqlColumns.ENTRY_IS_VALID,
+    ]
 
-    # validate_test_throway_method(opponent_team_values)
+    game_details_sql_statement = f"INSERT INTO {SqlTables.GAME_DETAILS} ({', '.join(game_details_column_names)}) VALUES ({insert_value_shortcut(game_details_column_names)})"
+    game_details_values = list(
+        set(
+            [
+                create_values_for_game_details_insert(detail)
+                for detail in details
+                if detail.entry_is_valid
+            ]
+        )
+    )
 
     end_statement = perf_counter()
 
-    print("** Inserting into SQL DB ...")
+    print("*** Inserting into SQL DB ...")
 
+    print("  * Inserting Users")
     client.cursor().execute(blank_user_sql)
 
     client.cursor().executemany(user_sql_statement, user_values)
     client.commit()
 
+    print("  * Inserting Positionally Unique Hero Teams")
+
     client.cursor().executemany(hero_team_sql_statement, hero_team_values)
     client.commit()
 
+    print("  * Inserting Positionally Unique Opponent Teams")
+
     client.cursor().executemany(opponents_sql_statement, opponent_team_values)
     client.commit()
+
+    print("  * Inserting all game details")
 
     client.cursor().executemany(game_details_sql_statement, game_details_values)
     client.commit()
@@ -125,6 +198,13 @@ def main():
     )
 
 
+def insert_value_shortcut(columns):
+    string_of_percents = ""
+    for i in range(len(columns)):
+        string_of_percents += "%s, "
+    return string_of_percents[:-2]
+
+
 def create_values_for_user_insert(user: Username) -> set:
     if user.username != "":
         return (user.username, user.dynamo_meta_query)
@@ -138,10 +218,34 @@ def create_values_for_hero_insert(hero_team: HeroTeam) -> set:
         hero_team.hero_three,
         hero_team.hero_four,
         hero_team.hero_five,
+        hero_team.valid_team,
     )
 
 
 def create_values_for_opponent_team_insert(villain: VillainOpponent) -> set:
+    return (
+        str(villain.id_hash),
+        villain.villain_one,
+        villain.villain_two,
+        villain.villain_three,
+        villain.villain_four,
+        villain.villain_five,
+        villain.valid_team,
+    )
+
+
+def create_values_for_non_pos_hero_insert(hero_team: HeroTeam) -> set:
+    return (
+        str(hero_team.id_hash),
+        hero_team.hero_one,
+        hero_team.hero_two,
+        hero_team.hero_three,
+        hero_team.hero_four,
+        hero_team.hero_five,
+    )
+
+
+def create_values_for_non_pos_opponent_team_insert(villain: VillainOpponent) -> set:
     return (
         str(villain.id_hash),
         villain.villain_one,
@@ -180,6 +284,7 @@ def create_values_for_game_details_insert(game: GameDetail) -> set:
         game.villain_three_incapped,
         game.villain_four_incapped,
         game.villain_five_incapped,
+        game.entry_is_valid,
     )
 
 
@@ -262,7 +367,7 @@ def map_row_to_game_details(row: list, row_count: int) -> GameDetail:
                 value = -1
 
         elif index == "":
-            value = GameMode.NORMAL.value
+            value = GameMode.NORMAL
 
         elif isinstance(index, tuple):
 
@@ -296,10 +401,23 @@ def map_row_to_game_details(row: list, row_count: int) -> GameDetail:
             else:
                 google_value = row[index]
 
-    details["hero_team"] = map_hero_team(row)
+    details["hero_team"], heroes = map_hero_team(row)
     if details["hero_team"] is None:
         return None
-    details["villain"] = map_villain_opponent_team(row)
+
+    details["hero_one"] = heroes["hero_one"]
+    details["hero_two"] = heroes["hero_two"]
+    details["hero_three"] = heroes["hero_three"]
+    details["hero_four"] = heroes["hero_four"]
+    details["hero_five"] = heroes["hero_five"]
+
+    details["villain"], villains = map_villain_opponent_team(row)
+
+    details["villain_one"] = villains["villain_one"]
+    details["villain_two"] = villains["villain_two"]
+    details["villain_three"] = villains["villain_three"]
+    details["villain_four"] = villains["villain_four"]
+    details["villain_five"] = villains["villain_five"]
 
     if row_count % 1000 == 0:
         print(".", end=" ")
@@ -338,7 +456,8 @@ def map_villain_opponent_team(row: list) -> VillainOpponent:
 
         opponent_team[key] = value
 
-    return VillainOpponent(**opponent_team)
+    opponent = VillainOpponent(**opponent_team)
+    return opponent, opponent_team
 
 
 def map_hero_team(row: list) -> HeroTeam:
@@ -361,109 +480,10 @@ def map_hero_team(row: list) -> HeroTeam:
             hero_team[key] = index
 
     if hero_team["hero_three"] is None:
-        return None
+        return None, None
 
-    return HeroTeam(**hero_team)
-
-
-def validate_test_throway_method(values: List[VillainOpponent]):
-
-    things = [
-        "Aeon Master",
-        "Akash'Bhuta",
-        "Akash'Bhuta, Definitive",
-        "Akash'Bhuta: Critical Event! Akash'Mecha",
-        "Ambuscade",
-        "Ambuscade: Team Villain",
-        "Anathema",
-        "Anathema: Evolved",
-        "Apostate",
-        "Baron Blade",
-        "Baron Blade, Definitive",
-        "Baron Blade, Mad Bomber",
-        "Baron Blade, Mad Bomber: Critical Event!",
-        "Baron Blade: Team Villain",
-        "Biomancer",
-        "Borr the Unstable",
-        "Bugbear",
-        "Celadroch",
-        "Chokepoint",
-        "Citizen Dawn",
-        "Citizen Dawn, Definitive",
-        "Citizen Dawn, Sunrise: Critical Event!",
-        "Citizens Hammer and Anvil",
-        "Dark Mind",
-        "Deadline",
-        "Dendron",
-        "Dendron, Windcolor",
-        "Empyreon",
-        "Ermine",
-        "Faultless",
-        "Friction",
-        "Fright Train",
-        "Gloomweaver",
-        "Gloomweaver, Skinwalker",
-        "Grand Warlord Voss",
-        "Grand Warlord Voss, Definitive",
-        "Grand Warlord Voss: Critical Event! Censor",
-        "Grand Warlord Voss: Scion of OblivAeon",
-        "Gray",
-        "Greazer Clutch",
-        "Infernal Choir, The",
-        "Infinitor",
-        "Infinitor, Heroic",
-        "Iron Legacy",
-        "Kaargra Warfang",
-        "Kismet",
-        "Kismet, Trickster",
-        "La Capitan",
-        "La Capitan: Team Villain",
-        "Menagerie",
-        "Miss Information",
-        "Miss Information: Team Villain",
-        "Mistress of Fate",
-        "Mythos",
-        "Nixious The Chosen",
-        "OblivAeon",
-        "Omnitron",
-        "Omnitron, Cosmic",
-        "Omnitron, Cosmic: Critical Event!",
-        "Omnitron, Definitive",
-        "Oriphel",
-        "Outlander",
-        "Phase",
-        "Plague Rat",
-        "Plague Rat: Team Villain",
-        "Progeny",
-        "Progeny: Scion of OblivAeon",
-        "Proletariat",
-        "Ram, The",
-        "Ram, The: 1929",
-        "Sanction",
-        "Screamachine",
-        "Sergeant Steel",
-        "Spite",
-        "Spite, Agent of Gloom",
-        "Swarm Eater",
-        "Swarm Eater, Hivemind",
-        "The Chairman",
-        "The Dreamer",
-        "The Ennead",
-        "The Matriarch",
-        "The Matriarch, Definitive",
-        "The Matriarch: Critical Event! MOCKtriarch",
-        "The Operative",
-        "Tiamat",
-        "Tiamat, Hydra",
-        "Vector",
-        "Voidsoul",
-        "Wager Master",
-    ]
-
-    all_hash_keys = [item[0] for item in values]
-    for item in values:
-        if all_hash_keys.count(item[0]) > 1:
-            print(item)
+    heroes = HeroTeam(**hero_team)
+    return heroes, hero_team
 
 
 if __name__ == "__main__":
