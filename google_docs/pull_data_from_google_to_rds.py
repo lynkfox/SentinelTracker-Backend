@@ -61,9 +61,7 @@ def main():
                     [
                         create_values_for_user_insert(detail.username)
                         for detail in details
-                        if detail is not None
-                        and detail.username is not None
-                        and detail.entry_is_valid
+                        if detail is not None and detail.username is not None
                     ]
                 )
             ),
@@ -73,7 +71,7 @@ def main():
 
     hero_team_columns = [
         SqlColumns.ID_HASH,
-        SqlColumns.HERO_ON,
+        SqlColumns.HERO_ONE,
         SqlColumns.HERO_TWO,
         SqlColumns.HERO_THREE,
         SqlColumns.HERO_FOUR,
@@ -102,7 +100,6 @@ def main():
             [
                 create_values_for_opponent_team_insert(detail.villain)
                 for detail in details
-                if detail.entry_is_valid
             ]
         )
     )
@@ -149,13 +146,7 @@ def main():
 
     game_details_sql_statement = f"INSERT INTO {SqlTables.GAME_DETAILS} ({', '.join(game_details_column_names)}) VALUES ({insert_value_shortcut(game_details_column_names)})"
     game_details_values = list(
-        set(
-            [
-                create_values_for_game_details_insert(detail)
-                for detail in details
-                if detail.entry_is_valid
-            ]
-        )
+        set([create_values_for_game_details_insert(detail) for detail in details])
     )
 
     end_statement = perf_counter()
@@ -234,28 +225,6 @@ def create_values_for_opponent_team_insert(villain: VillainOpponent) -> set:
     )
 
 
-def create_values_for_non_pos_hero_insert(hero_team: HeroTeam) -> set:
-    return (
-        str(hero_team.id_hash),
-        hero_team.hero_one,
-        hero_team.hero_two,
-        hero_team.hero_three,
-        hero_team.hero_four,
-        hero_team.hero_five,
-    )
-
-
-def create_values_for_non_pos_opponent_team_insert(villain: VillainOpponent) -> set:
-    return (
-        str(villain.id_hash),
-        villain.villain_one,
-        villain.villain_two,
-        villain.villain_three,
-        villain.villain_four,
-        villain.villain_five,
-    )
-
-
 def create_values_for_game_details_insert(game: GameDetail) -> set:
     return (
         game.username.username,
@@ -274,15 +243,25 @@ def create_values_for_game_details_insert(game: GameDetail) -> set:
         str(game.hero_team.id_hash),
         game.environment,
         str(game.villain.id_hash),
+        game.hero_one,
         game.hero_one_incapped,
+        game.hero_two,
         game.hero_two_incapped,
+        game.hero_three,
         game.hero_three_incapped,
+        game.hero_four,
         game.hero_four_incapped,
+        game.hero_five,
         game.hero_five_incapped,
+        game.villain_one,
         game.villain_one_incapped,
+        game.villain_two,
         game.villain_two_incapped,
+        game.villain_three,
         game.villain_three_incapped,
+        game.villain_four,
         game.villain_four_incapped,
+        game.villain_five,
         game.villain_five_incapped,
         game.entry_is_valid,
     )

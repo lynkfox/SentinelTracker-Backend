@@ -283,7 +283,7 @@ class GameDetail(BaseModel):
     @validator("villain", always=True)
     def update_game_type(cls, opponent: VillainOpponent, values):
         if opponent.villain_two is not None:
-            values["game_mode"] = GameMode.VILLAINS
+            values["game_mode"] = GameMode.VILLAINS.value
         return opponent
 
     @validator("entry_is_valid", always=True)
