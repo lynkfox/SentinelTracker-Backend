@@ -4,7 +4,7 @@ from auth import get_google_credentials_through_oath2
 from common.models.schema_models import (
     GameDetail,
     OblivAeonDetail,
-    Username,
+    User,
     HeroTeam,
     VillainOpponent,
 )
@@ -181,7 +181,7 @@ def insert_value_shortcut(columns):
     return string_of_percents[:-2]
 
 
-def create_values_for_user_insert(user: Username) -> set:
+def create_values_for_user_insert(user: User) -> set:
     if user.username != "":
         return (user.username, user.dynamo_meta_query)
 
@@ -340,7 +340,7 @@ def map_row_to_game_details(row: list, row_count: int) -> GameDetail:
                 value = index[1].get(google_value)
                 if key == "username":
 
-                    value = Username(
+                    value = User(
                         **{
                             "username": google_value if value is None else value,
                             "dynamo_meta_query": None,

@@ -5,7 +5,7 @@ from common.models.enums import ApiEventTypes
 
 @dataclass
 class ApiEvent:
-    event: {}
+    event: dict
     path: str = field(init=False)
     path_parts: list = field(init=False)
     IS_OPTIONS: bool = field(init=False)

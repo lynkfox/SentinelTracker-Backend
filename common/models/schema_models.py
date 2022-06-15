@@ -16,60 +16,11 @@ from typing import Optional, Union
 from datetime import datetime
 
 
-class Entity(BaseModel):
-    name: str = Field(...)
-    set: Optional[BoxSet] = Field(..., description="Box Set this version of the entity came from")
-    type: Optional[Type] = Field(..., dscription="Type of Entity")
-    total_games: Optional[int] = Field(0, ge=0)
-    total_wins: Optional[int] = Field(0, ge=0)
-    _pk: str = PrivateAttr()
-    _sk: str = PrivateAttr()
-    _url: str = PrivateAttr()
-
-    class Config:
-        title = "An Entity"
-        underscore_attrs_are_private = True
-        description = "A singular Representative of an Entity, either a Hero, Villain, or Environment."
-
-    def __init__(self, **data):
-        super().__init__(**data)
-        self._pk = self.name.upper().replace(" ", "_")
-        self._sk = f"{self.type.name}#{self._pk}#META"
-        self._url = f"/entity/{self.type.name.lower()}/{self.name}".replace(" ", "_").lower()
-
-
-class EntityComparison(BaseModel):
-    character: str = Field(...)
-    compared_against: str = Field(...)
-    total_games: Optional[int] = Field(0, ge=0)
-    total_wins: Optional[int] = Field(0, ge=0)
-    _pk: str = PrivateAttr()
-    _sk: str = PrivateAttr()
-    _url: str = PrivateAttr()
-
-
 class User(BaseModel):
-    user_id: str = Field(...)
-    name: str = Field(...)
-    total_games: Optional[int] = Field(0, ge=0)
-    total_wins: Optional[int] = Field(0, ge=0)
-    _pk: str = PrivateAttr()
-    _sk: str = PrivateAttr()
-    _url: str = PrivateAttr()
+    """
+    Model of a row in the Users Table.
+    """
 
-    class Config:
-        title = "An Entity"
-        underscore_attrs_are_private = True
-        description = "A singular Representative of a User"
-
-    def __init__(self, **data):
-        super().__init__(**data)
-        self._pk = f"{self.user_id}#USER"
-        self._sk = f"#META"
-        self._url = f"/user/{self.user_id}".replace(" ", "_").lower()
-
-
-class Username(BaseModel):
     username: str
     dynamo_meta_query: Optional[str]
     total_wins: Optional[int]
@@ -81,6 +32,10 @@ class Username(BaseModel):
 
 
 class OblivAeonDetail(BaseModel):
+    """
+    Model of a row in t he OblivAeonDetails table
+    """
+
     scions: str = Field(...)  # scion ID values concatted into id#-id#-id#-id#
     shield: str = Field(...)
     environments: Optional[str]  # id# concatted into id#-id#-id# ...
@@ -100,6 +55,10 @@ class OblivAeonDetail(BaseModel):
 
 
 class HeroTeam(BaseModel):
+    """
+    Model of a row in the HeroTeams table
+    """
+
     hero_one: str = Field(...)
     hero_two: str = Field(...)
     hero_three: str = Field(...)
@@ -146,6 +105,10 @@ class HeroTeam(BaseModel):
 
 
 class VillainOpponent(BaseModel):
+    """
+    Model of a row in the Opponents Table
+    """
+
     villain_one: str = Field(...)
     villain_two: Optional[str]
     villain_three: Optional[str]
@@ -199,7 +162,11 @@ class VillainOpponent(BaseModel):
 
 
 class GameDetail(BaseModel):
-    username: Optional[Username]
+    """
+    Model of a row in the Game Details table
+    """
+
+    username: Optional[User]
     entered_on: datetime
     game_mode: Optional[GameMode]
     selection_method: Optional[SelectionMethod]

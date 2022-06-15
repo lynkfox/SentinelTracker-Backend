@@ -6,7 +6,7 @@ from common.models.character_enums import (
 )
 import boto3
 import json
-from common.models.enums import SqlTables
+from common.sql_attributes import SqlTables
 import mysql.connector
 
 
