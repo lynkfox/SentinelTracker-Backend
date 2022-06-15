@@ -370,9 +370,9 @@ ALTERNATE_TAG_DISPLAY_MAPPING = {
     AlternateTags.definitive_mad_bomber: ", Mad Bomber: Critical Event!",
     AlternateTags.mecha: ": Critical Event! Akash'Mecha",  # Akash Bhuta Definitive Edition
     AlternateTags.mocktriarch: ": Critical Event! MOCKtriarch",  # Matriarch Definitive Edition
-    AlternateTags.definitive_cosmic: ", Cosmic: Critical Event! ",  # Omnitron Definitive Edition
+    AlternateTags.definitive_cosmic: ", Cosmic: Critical Event!",  # Omnitron Definitive Edition
     AlternateTags.censor: ": Critical Event! Censor",  # Grand Warlord voss Definitive Edition
-    AlternateTags.sunrise: ", Sunrise: Critical Event! ",  # Citizen Dawn Definitive Edition
+    AlternateTags.sunrise: ", Sunrise: Critical Event!",  # Citizen Dawn Definitive Edition
     AlternateTags.first_response: ", First Response",  # Cauldron team
     AlternateTags.alt_1929: ": 1929",  # NOTE TODO - Handle this in the api
     AlternateTags.alt_2199: ": 2199",  # NOTE TODO - Handle this in the api

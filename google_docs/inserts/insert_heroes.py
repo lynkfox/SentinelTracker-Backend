@@ -130,6 +130,7 @@ HEROES_TO_INSERT = [
     HeroInsert(Hero.legacy, BoxSet.ENHANCED_EDITION, AlternateTags.americas_greatest),
     HeroInsert(Hero.legacy, BoxSet.ENHANCED_EDITION, AlternateTags.americas_newest),
     HeroInsert(Hero.legacy, BoxSet.ENHANCED_EDITION, AlternateTags.americas_cleverest),
+    HeroInsert(Hero.legacy, BoxSet.ENHANCED_EDITION, AlternateTags.freedom_five),
     HeroInsert(Hero.legacy, BoxSet.DEFINITIVE_EDITION, AlternateTags.definitive),
     HeroInsert(Hero.legacy, BoxSet.DEFINITIVE_EDITION, AlternateTags.first_appearance),
     HeroInsert(Hero.lifeline, BoxSet.OBLIVAEON),

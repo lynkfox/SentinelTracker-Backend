@@ -14,11 +14,12 @@ from google_docs.docs_to_enums.character_mapping import *
 from googleapiclient.discovery import build
 from dateutil.parser import parse
 from time import perf_counter
+from typing import List
 
 
 # The ID of a sample document.
 DOCUMENT_ID = "1bVppJL4rC5lWULLGZ7AP5xH6YZLYsv86Wme1SpU6agE"
-RANGE = "Form Responses 4!A2:AL250"
+RANGE = "Form Responses 4!A2:AL"
 
 
 def main():
@@ -42,7 +43,12 @@ def main():
     end_get = perf_counter()
 
     print("** Parsing data (each dot is 1000 entries parsed) ...")
-    details = [map_row_to_game_details(row, index) for index, row in enumerate(values)]
+    details = list(
+        filter(
+            None,
+            [map_row_to_game_details(row, index) for index, row in enumerate(values)],
+        )
+    )
 
     end_parse = perf_counter()
 
@@ -84,12 +90,13 @@ def main():
         set([create_values_for_game_details_insert(detail) for detail in details])
     )
 
+    validate_test_throway_method(opponent_team_values)
+
     end_statement = perf_counter()
 
     print("** Inserting into SQL DB ...")
 
     client.cursor().execute(blank_user_sql)
-    client.commit()
 
     client.cursor().executemany(user_sql_statement, user_values)
     client.commit()
@@ -109,7 +116,12 @@ def main():
         f"\n ..... parsed in {end_parse-end_get} seconds"
         f"\n ..... insert statements created in {end_statement-end_parse} seconds"
         f"\n ..... inserted in {end_insert-end_statement} seconds"
-        f"\n\n *Complete. {len(user_values)} Users and {len(game_details_values)} Game data inserted in {end_insert-start} total seconds "
+        f"\n\n *Complete."
+        f"\n   - {len(user_values)} Users added."
+        f"\n   - {len(hero_team_values)} Unique Hero Team setups added."
+        f"\n   - {len(opponent_team_values)} Unique Opponent Team setups added."
+        f"\n   - {len(game_details_values)} Game data inserted."
+        f"\n in {end_insert-start} total seconds "
     )
 
 
@@ -352,6 +364,106 @@ def map_hero_team(row: list) -> HeroTeam:
         return None
 
     return HeroTeam(**hero_team)
+
+
+def validate_test_throway_method(values: List[VillainOpponent]):
+
+    things = [
+        "Aeon Master",
+        "Akash'Bhuta",
+        "Akash'Bhuta, Definitive",
+        "Akash'Bhuta: Critical Event! Akash'Mecha",
+        "Ambuscade",
+        "Ambuscade: Team Villain",
+        "Anathema",
+        "Anathema: Evolved",
+        "Apostate",
+        "Baron Blade",
+        "Baron Blade, Definitive",
+        "Baron Blade, Mad Bomber",
+        "Baron Blade, Mad Bomber: Critical Event!",
+        "Baron Blade: Team Villain",
+        "Biomancer",
+        "Borr the Unstable",
+        "Bugbear",
+        "Celadroch",
+        "Chokepoint",
+        "Citizen Dawn",
+        "Citizen Dawn, Definitive",
+        "Citizen Dawn, Sunrise: Critical Event!",
+        "Citizens Hammer and Anvil",
+        "Dark Mind",
+        "Deadline",
+        "Dendron",
+        "Dendron, Windcolor",
+        "Empyreon",
+        "Ermine",
+        "Faultless",
+        "Friction",
+        "Fright Train",
+        "Gloomweaver",
+        "Gloomweaver, Skinwalker",
+        "Grand Warlord Voss",
+        "Grand Warlord Voss, Definitive",
+        "Grand Warlord Voss: Critical Event! Censor",
+        "Grand Warlord Voss: Scion of OblivAeon",
+        "Gray",
+        "Greazer Clutch",
+        "Infernal Choir, The",
+        "Infinitor",
+        "Infinitor, Heroic",
+        "Iron Legacy",
+        "Kaargra Warfang",
+        "Kismet",
+        "Kismet, Trickster",
+        "La Capitan",
+        "La Capitan: Team Villain",
+        "Menagerie",
+        "Miss Information",
+        "Miss Information: Team Villain",
+        "Mistress of Fate",
+        "Mythos",
+        "Nixious The Chosen",
+        "OblivAeon",
+        "Omnitron",
+        "Omnitron, Cosmic",
+        "Omnitron, Cosmic: Critical Event!",
+        "Omnitron, Definitive",
+        "Oriphel",
+        "Outlander",
+        "Phase",
+        "Plague Rat",
+        "Plague Rat: Team Villain",
+        "Progeny",
+        "Progeny: Scion of OblivAeon",
+        "Proletariat",
+        "Ram, The",
+        "Ram, The: 1929",
+        "Sanction",
+        "Screamachine",
+        "Sergeant Steel",
+        "Spite",
+        "Spite, Agent of Gloom",
+        "Swarm Eater",
+        "Swarm Eater, Hivemind",
+        "The Chairman",
+        "The Dreamer",
+        "The Ennead",
+        "The Matriarch",
+        "The Matriarch, Definitive",
+        "The Matriarch: Critical Event! MOCKtriarch",
+        "The Operative",
+        "Tiamat",
+        "Tiamat, Hydra",
+        "Vector",
+        "Voidsoul",
+        "Wager Master",
+    ]
+
+    all_hash_keys = [item[0] for item in values]
+    for item in values:
+        if all_hash_keys.count(item[0]) > 1:
+            print(item)
 
 
 if __name__ == "__main__":

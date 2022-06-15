@@ -95,20 +95,19 @@ class OblivAeonDetail(BaseModel):
     rewards: Optional[str]  # reward ID values concatted into id#-id#-id#
     id_hash: Optional[str]
 
-    def __init__(self, **data):
-        super().__init__(**data)
-        env = self.environments if self.environments is not None else ""
-        p1 = self.player_one_heroes if self.player_one_heroes is not None else ""
-        p2 = self.player_two_heroes if self.player_two_heroes is not None else ""
-        p3 = self.player_three_heroes if self.player_three_heroes is not None else ""
-        p4 = self.player_four_heroes if self.player_four_heroes is not None else ""
-        p5 = self.player_five_heroes if self.player_five_heroes is not None else ""
-        reward = self.rewards if self.rewards is not None else ""
-        self.id_hash = (
-            hash(f"{self.shield}{self.scions}{reward}{env}{p1}{p2}{p3}{p4}{p5}")
-            if self.id_hash is None
-            else self.id_hash
-        )
+    @validator("id_hash", always=True)
+    def hash_team(cls, id_hash, values):
+        if id_hash is None or id_hash == "":
+            return hash(
+                "".join(
+                    [
+                        v if v is not None else "-"
+                        for k, v in values.items()
+                        if k != "id_hash"
+                    ]
+                )
+            )
+        return id_hash
 
 
 class HeroTeam(BaseModel):
@@ -119,15 +118,30 @@ class HeroTeam(BaseModel):
     hero_five: Optional[str]
     id_hash: Optional[str]
 
-    def __init__(self, **data):
-        super().__init__(**data)
-        hero4 = self.hero_four if self.hero_four is not None else ""
-        hero5 = self.hero_five if self.hero_five is not None else ""
-        self.id_hash = (
-            hash(f"{self.hero_one}{self.hero_two}{self.hero_three}{hero4}{hero5}")
-            if self.id_hash is None
-            else self.id_hash
-        )
+    class Config:
+        use_enum_values = True
+        anystr_strip_whitespace = True
+
+    @validator("hero_five", always=True)
+    def collapse_team(cls, hero_five, values):
+        if hero_five is not None and values["hero_four"] is None:
+            values["hero_four"] = hero_five
+            hero_five = None
+        return hero_five
+
+    @validator("id_hash", always=True)
+    def hash_team(cls, id_hash, values):
+        if id_hash is None or id_hash == "":
+            return hash(
+                "".join(
+                    [
+                        v if v is not None else "-"
+                        for k, v in values.items()
+                        if k != "id_hash"
+                    ]
+                )
+            )
+        return id_hash
 
 
 class VillainOpponent(BaseModel):
@@ -140,21 +154,38 @@ class VillainOpponent(BaseModel):
     challenge: bool
     id_hash: Optional[str]
 
-    def __init__(self, **data):
-        super().__init__(**data)
-        villain2 = self.villain_two if self.villain_two is not None else ""
-        villain3 = self.villain_three if self.villain_three is not None else ""
-        villain4 = self.villain_four if self.villain_four is not None else ""
-        villain5 = self.villain_five if self.villain_five is not None else ""
-        adv = "adv" if self.advanced else ""
-        chl = "chl" if self.challenge else ""
-        self.id_hash = (
-            hash(
-                f"{self.villain_one}{villain2}{villain3}{villain4}{villain5}{adv}{chl}"
+    class Config:
+        use_enum_values = True
+        anystr_strip_whitespace = True
+
+    @validator(
+        "villain_two", "villain_three", "villain_four", "villain_five", always=True
+    )
+    def collapse_team(cls, villain, values):
+        """
+        takes advantage of the fact that in validation on pydantic, values is only going to contain the attributes
+        that are listed ahead of it (ie: the above order!) so with villain_four, values will only include
+        villain_one, villain_two, villain_three.
+        """
+        latest_key = [key for key in values.keys()][-1]
+        if villain is not None and values[latest_key] is None:
+            values[latest_key] = villain
+            return None
+        return villain
+
+    @validator("id_hash", always=True)
+    def hash_team(cls, id_hash, values):
+        if id_hash is None or id_hash == "":
+            return hash(
+                "".join(
+                    [
+                        str(v) if v is not None else "-"
+                        for k, v in values.items()
+                        if k != "id_hash"
+                    ]
+                )
             )
-            if self.id_hash is None
-            else self.id_hash
-        )
+        return id_hash
 
 
 class GameDetail(BaseModel):
@@ -185,3 +216,7 @@ class GameDetail(BaseModel):
     villain_four_incapped: Optional[bool]
     villain_five_incapped: Optional[bool]
     comment: Optional[str]
+
+    class Config:
+        use_enum_values = True
+        anystr_strip_whitespace = True

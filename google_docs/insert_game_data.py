@@ -12,32 +12,33 @@ def main():
     First time script after tables are created, run this to insert the base game data
     """
     client = get_mysql_client()
+    # Uncomment a particular block to insert the base values into the table for the first time.
 
-    print("Inserting Box Sets...")
-    cursor = client.cursor()
-    insert_box_sets(cursor)
-    client.commit()
-    print(f"{cursor.rowcount} BoxSet records inserted.")
+    # print("Inserting Box Sets...")
+    # cursor = client.cursor()
+    # insert_box_sets(cursor)
+    # client.commit()
+    # print(f"{cursor.rowcount} BoxSet records inserted.")
 
-    print("Inserting Villains")
-    cursor = client.cursor()
-    insert_entities(cursor, SqlTables.VILLAINS, create_values(VILLAINS_TO_INSERT))
-    client.commit()
-    print(f"{cursor.rowcount} Villain records inserted.")
+    # print("Inserting Villains")
+    # cursor = client.cursor()
+    # insert_entities(cursor, SqlTables.VILLAINS, create_values(VILLAINS_TO_INSERT))
+    # client.commit()
+    # print(f"{cursor.rowcount} Villain records inserted.")
 
-    print("Inserting Heroes")
-    cursor = client.cursor()
-    insert_entities(cursor, SqlTables.HEROES, create_values(HEROES_TO_INSERT))
-    client.commit()
-    print(f"{cursor.rowcount} Hero records inserted.")
+    # print("Inserting Heroes")
+    # cursor = client.cursor()
+    # insert_entities(cursor, SqlTables.HEROES, create_values(HEROES_TO_INSERT))
+    # client.commit()
+    # print(f"{cursor.rowcount} Hero records inserted.")
 
-    print("Inserting Environments")
-    cursor = client.cursor()
-    insert_entities(
-        cursor, SqlTables.ENVIRONMENTS, create_values(ENVIRONMENTS_TO_INSERT)
-    )
-    client.commit()
-    print(f"{cursor.rowcount} Environment records inserted.")
+    # print("Inserting Environments")
+    # cursor = client.cursor()
+    # insert_entities(
+    #     cursor, SqlTables.ENVIRONMENTS, create_values(ENVIRONMENTS_TO_INSERT)
+    # )
+    # client.commit()
+    # print(f"{cursor.rowcount} Environment records inserted.")
 
     print("All Done")
 

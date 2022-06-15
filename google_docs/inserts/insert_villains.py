@@ -43,6 +43,8 @@ VILLAINS_TO_INSERT = [
     ),
     VillainInsert(Villain.akash_bhuta, BoxSet.DEFINITIVE_EDITION, AlternateTags.mecha),
     VillainInsert(Villain.ambuscade, BoxSet.AMBUSCADE),
+    VillainInsert(Villain.ambuscade, BoxSet.AMBUSCADE, AlternateTags.team_villain),
+    VillainInsert(Villain.apostate, BoxSet.INFERNAL_RELICS),
     VillainInsert(Villain.baron_blade, BoxSet.ENHANCED_EDITION),
     VillainInsert(
         Villain.baron_blade, BoxSet.ENHANCED_EDITION, AlternateTags.mad_bomber
@@ -96,7 +98,9 @@ VILLAINS_TO_INSERT = [
     VillainInsert(Villain.iron_legacy, BoxSet.SHATTERED_TIMELINES),
     VillainInsert(Villain.kaargra_warfang, BoxSet.WRATH_OF_THE_COSMOS),
     VillainInsert(Villain.kismet, BoxSet.SHATTERED_TIMELINES),
-    VillainInsert(Villain.kismet, BoxSet.SHATTERED_TIMELINES, AlternateTags.trickster),
+    VillainInsert(
+        Villain.kismet, BoxSet.SHATTERED_TIMELINES, AlternateTags.the_unstable
+    ),
     VillainInsert(Villain.la_capitan, BoxSet.SHATTERED_TIMELINES),
     VillainInsert(Villain.la_capitan, BoxSet.VILLAINS, AlternateTags.team_villain),
     VillainInsert(
