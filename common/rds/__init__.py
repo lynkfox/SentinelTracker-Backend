@@ -14,9 +14,7 @@ def get_mysql_client():
 
     client = boto3.client("secretsmanager")
 
-    response = client.get_secret_value(
-        SecretId="statisticsrdsSecret27E3DF08-7PVhSz2tbcfc"
-    )
+    response = client.get_secret_value(SecretId="statisticsrdsSecret27E3DF08-7PVhSz2tbcfc")
 
     secrets = json.loads(response["SecretString"])
 

@@ -37,9 +37,7 @@ class ApiStack(NestedStack):
 
         self.backend_api.apply_removal_policy(core.RemovalPolicy.DESTROY)
 
-        lambda_mapping[ResourceNames.STATISTICS].grant_invoke(
-            iam.ServicePrincipal("apigateway.amazonaws.com")
-        )
+        lambda_mapping[ResourceNames.STATISTICS].grant_invoke(iam.ServicePrincipal("apigateway.amazonaws.com"))
 
         # Not paying for a domain name on this free account :)
         #
@@ -69,13 +67,9 @@ class ApiStack(NestedStack):
         #     record_name=domain_name
         # )
 
-        version_one = apigateway.Resource(
-            self, "version_one", parent=self.backend_api.root, path_part="v1"
-        )
+        version_one = apigateway.Resource(self, "version_one", parent=self.backend_api.root, path_part="v1")
 
-        statistics = apigateway.Resource(
-            self, "statistics", parent=version_one, path_part="statistics"
-        )
+        statistics = apigateway.Resource(self, "statistics", parent=version_one, path_part="statistics")
 
         user = apigateway.Resource(self, "user", parent=version_one, path_part="user")
 
@@ -105,9 +99,7 @@ class ApiStack(NestedStack):
             integration_responses=[json_200_integration_response],
         )
 
-        statistics_method = apigateway.MethodOptions(
-            api_key_required=False, method_responses=[json_200_method_response]
-        )
+        statistics_method = apigateway.MethodOptions(api_key_required=False, method_responses=[json_200_method_response])
 
         statistics.add_proxy(
             default_integration=statistics_integration,

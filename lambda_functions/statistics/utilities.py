@@ -65,12 +65,8 @@ class LookUp:
         Checks entities to see if there are more than maximum amount
         (5 heroes, 5 villains, 1 environment)
         """
-        self.hero_count += self._increment_to_maximum(
-            operation.entity_type, Selector.HERO, self.hero_count, 5
-        )
-        self.villain_count += self._increment_to_maximum(
-            operation.entity_type, Selector.VILLAIN, self.villain_count, 5
-        )
+        self.hero_count += self._increment_to_maximum(operation.entity_type, Selector.HERO, self.hero_count, 5)
+        self.villain_count += self._increment_to_maximum(operation.entity_type, Selector.VILLAIN, self.villain_count, 5)
         self.environment_count += self._increment_to_maximum(
             operation.entity_type,
             Selector.ENVIRONMENT,
@@ -82,12 +78,8 @@ class LookUp:
         """
         Checks comparison operations (versus and in) if there is more than 1
         """
-        self.versus_count += self._increment_to_maximum(
-            operation.instruction, Comparator.VERSUS, self.versus_count, 1
-        )
-        self.in_count += self._increment_to_maximum(
-            operation.instruction, Comparator.IN, self.in_count, 1
-        )
+        self.versus_count += self._increment_to_maximum(operation.instruction, Comparator.VERSUS, self.versus_count, 1)
+        self.in_count += self._increment_to_maximum(operation.instruction, Comparator.IN, self.in_count, 1)
 
     def _increment_to_maximum(self, left: Enum, right: Enum, current: int, max: int):
         """
@@ -97,9 +89,7 @@ class LookUp:
         """
         if left == right:
             if current >= max:
-                raise ValueError(
-                    f"Cannot have more than {max} {left.value} in a single call"
-                )
+                raise ValueError(f"Cannot have more than {max} {left.value} in a single call")
             return 1
         return 0
 
@@ -110,25 +100,13 @@ class LookUp:
         try:
             instruction = self._determine_instruction(self.path_parts[current_index])
 
-            next_part = (
-                self.path_parts[current_index + 1]
-                if self.total_parts > current_index + 1
-                else Default.ALL
-            )
+            next_part = self.path_parts[current_index + 1] if self.total_parts > current_index + 1 else Default.ALL
 
-            follow_up_part = (
-                self.path_parts[current_index + 2]
-                if self.total_parts > current_index + 2
-                else None
-            )
+            follow_up_part = self.path_parts[current_index + 2] if self.total_parts > current_index + 2 else None
 
-            entity_type, character_enum = self._determine_entity_type(
-                self.path_parts[current_index], next_part, instruction
-            )
+            entity_type, character_enum = self._determine_entity_type(self.path_parts[current_index], next_part, instruction)
 
-            name_selection = (
-                character_enum(next_part) if next_part != Default.ALL else Default.ALL
-            )
+            name_selection = character_enum(next_part) if next_part != Default.ALL else Default.ALL
 
             if follow_up_part is not None and "definitive_" in follow_up_part:
                 definitive = True
@@ -137,10 +115,7 @@ class LookUp:
             else:
                 definitive = False
 
-            if follow_up_part is not None and (
-                not Selector.has_member(follow_up_part)
-                and not Comparator.has_member(follow_up_part)
-            ):
+            if follow_up_part is not None and (not Selector.has_member(follow_up_part) and not Comparator.has_member(follow_up_part)):
                 alternate_selection = AlternateTags(follow_up_part)
             else:
                 alternate_selection = Default.BASE
@@ -192,9 +167,7 @@ class LookUp:
         else:
             return Comparator(path_part)
 
-    def _determine_entity_type(
-        self, path_part, next_part, current_instruction
-    ) -> Tuple[Selector, Enum]:
+    def _determine_entity_type(self, path_part, next_part, current_instruction) -> Tuple[Selector, Enum]:
         """
         Sets the Entity_Type to the one passed if the first instruction,
             else checks the Enums for determining the type (and dealing)

@@ -33,15 +33,9 @@ class MainStack(Stack):
             "VPC",
             nat_gateways=1,
             subnet_configuration=[
-                ec2.SubnetConfiguration(
-                    name="tracker-public", subnet_type=ec2.SubnetType.PUBLIC
-                ),
-                ec2.SubnetConfiguration(
-                    name="tracker-private", subnet_type=ec2.SubnetType.PRIVATE_WITH_NAT
-                ),
-                ec2.SubnetConfiguration(
-                    name="tracker-isolated", subnet_type=ec2.SubnetType.PRIVATE_ISOLATED
-                ),
+                ec2.SubnetConfiguration(name="tracker-public", subnet_type=ec2.SubnetType.PUBLIC),
+                ec2.SubnetConfiguration(name="tracker-private", subnet_type=ec2.SubnetType.PRIVATE_WITH_NAT),
+                ec2.SubnetConfiguration(name="tracker-isolated", subnet_type=ec2.SubnetType.PRIVATE_ISOLATED),
             ],
         )
         vpc.apply_removal_policy(core.RemovalPolicy.DESTROY)

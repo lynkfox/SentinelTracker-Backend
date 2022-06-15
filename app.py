@@ -7,9 +7,7 @@ from configurations.common import DeploymentProperties
 from stacks.sentine_tracker_backend import MainStack
 
 app = cdk.App()
-default_environment = cdk.Environment(
-    account=os.getenv("CDK_DEFAULT_ACCOUNT"), region=os.getenv("CDK_DEFAULT_REGION")
-)
+default_environment = cdk.Environment(account=os.getenv("CDK_DEFAULT_ACCOUNT"), region=os.getenv("CDK_DEFAULT_REGION"))
 deployment_props = DeploymentProperties()
 MainStack(
     app,

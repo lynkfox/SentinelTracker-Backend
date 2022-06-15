@@ -22,9 +22,7 @@ class VillainInsert:
 
     def __post_init__(self):
         query = {
-            "pk": build_pk(
-                self.full_name, self.alternate_name, self.box_set, Type.VILLAIN
-            ),
+            "pk": build_pk(self.full_name, self.alternate_name, self.box_set, Type.VILLAIN),
             "sk": build_meta_sk(self.alternate_name),
         }
         self.box_set = self.box_set.value
@@ -38,21 +36,15 @@ class VillainInsert:
 VILLAINS_TO_INSERT = [
     VillainInsert(Villain.aeon_master, BoxSet.OBLIVAEON),
     VillainInsert(Villain.akash_bhuta, BoxSet.INFERNAL_RELICS),
-    VillainInsert(
-        Villain.akash_bhuta, BoxSet.DEFINITIVE_EDITION, AlternateTags.definitive
-    ),
+    VillainInsert(Villain.akash_bhuta, BoxSet.DEFINITIVE_EDITION, AlternateTags.definitive),
     VillainInsert(Villain.akash_bhuta, BoxSet.DEFINITIVE_EDITION, AlternateTags.mecha),
     VillainInsert(Villain.ambuscade, BoxSet.AMBUSCADE),
     VillainInsert(Villain.ambuscade, BoxSet.AMBUSCADE, AlternateTags.team_villain),
     VillainInsert(Villain.apostate, BoxSet.INFERNAL_RELICS),
     VillainInsert(Villain.baron_blade, BoxSet.ENHANCED_EDITION),
-    VillainInsert(
-        Villain.baron_blade, BoxSet.ENHANCED_EDITION, AlternateTags.mad_bomber
-    ),
+    VillainInsert(Villain.baron_blade, BoxSet.ENHANCED_EDITION, AlternateTags.mad_bomber),
     VillainInsert(Villain.baron_blade, BoxSet.VENGEANCE, AlternateTags.team_villain),
-    VillainInsert(
-        Villain.baron_blade, BoxSet.DEFINITIVE_EDITION, AlternateTags.definitive
-    ),
+    VillainInsert(Villain.baron_blade, BoxSet.DEFINITIVE_EDITION, AlternateTags.definitive),
     VillainInsert(
         Villain.baron_blade,
         BoxSet.DEFINITIVE_EDITION,
@@ -64,12 +56,8 @@ VILLAINS_TO_INSERT = [
     VillainInsert(Villain.chairman, BoxSet.ROOK_CITY),
     VillainInsert(Villain.chokepoint, BoxSet.CHOKEPOINT),
     VillainInsert(Villain.citizen_dawn, BoxSet.ENHANCED_EDITION),
-    VillainInsert(
-        Villain.citizen_dawn, BoxSet.DEFINITIVE_EDITION, AlternateTags.definitive
-    ),
-    VillainInsert(
-        Villain.citizen_dawn, BoxSet.DEFINITIVE_EDITION, AlternateTags.sunrise
-    ),
+    VillainInsert(Villain.citizen_dawn, BoxSet.DEFINITIVE_EDITION, AlternateTags.definitive),
+    VillainInsert(Villain.citizen_dawn, BoxSet.DEFINITIVE_EDITION, AlternateTags.sunrise),
     VillainInsert(Villain.citizens_hammer_and_anvil, BoxSet.VILLAINS),
     VillainInsert(Villain.dark_mind, BoxSet.OBLIVAEON),
     VillainInsert(Villain.deadline, BoxSet.WRATH_OF_THE_COSMOS),
@@ -81,42 +69,28 @@ VILLAINS_TO_INSERT = [
     VillainInsert(Villain.friction, BoxSet.VENGEANCE),
     VillainInsert(Villain.fright_train, BoxSet.VENGEANCE),
     VillainInsert(Villain.gloomweaver, BoxSet.INFERNAL_RELICS),
-    VillainInsert(
-        Villain.gloomweaver, BoxSet.INFERNAL_RELICS, AlternateTags.skinwalker
-    ),
+    VillainInsert(Villain.gloomweaver, BoxSet.INFERNAL_RELICS, AlternateTags.skinwalker),
     VillainInsert(Villain.grand_warlord_voss, BoxSet.ENHANCED_EDITION),
     VillainInsert(Villain.grand_warlord_voss, BoxSet.OBLIVAEON, AlternateTags.scion),
-    VillainInsert(
-        Villain.grand_warlord_voss, BoxSet.DEFINITIVE_EDITION, AlternateTags.definitive
-    ),
-    VillainInsert(
-        Villain.grand_warlord_voss, BoxSet.DEFINITIVE_EDITION, AlternateTags.censor
-    ),
+    VillainInsert(Villain.grand_warlord_voss, BoxSet.DEFINITIVE_EDITION, AlternateTags.definitive),
+    VillainInsert(Villain.grand_warlord_voss, BoxSet.DEFINITIVE_EDITION, AlternateTags.censor),
     VillainInsert(Villain.greazer_clutch, BoxSet.VILLAINS),
     VillainInsert(Villain.infinitor, BoxSet.WRATH_OF_THE_COSMOS),
     VillainInsert(Villain.infinitor, BoxSet.WRATH_OF_THE_COSMOS, AlternateTags.heroic),
     VillainInsert(Villain.iron_legacy, BoxSet.SHATTERED_TIMELINES),
     VillainInsert(Villain.kaargra_warfang, BoxSet.WRATH_OF_THE_COSMOS),
     VillainInsert(Villain.kismet, BoxSet.SHATTERED_TIMELINES),
-    VillainInsert(
-        Villain.kismet, BoxSet.SHATTERED_TIMELINES, AlternateTags.the_unstable
-    ),
+    VillainInsert(Villain.kismet, BoxSet.SHATTERED_TIMELINES, AlternateTags.the_unstable),
     VillainInsert(Villain.la_capitan, BoxSet.SHATTERED_TIMELINES),
     VillainInsert(Villain.la_capitan, BoxSet.VILLAINS, AlternateTags.team_villain),
     VillainInsert(
         Villain.matriarch,
         BoxSet.ROOK_CITY,
     ),
-    VillainInsert(
-        Villain.matriarch, BoxSet.DEFINITIVE_EDITION, AlternateTags.definitive
-    ),
-    VillainInsert(
-        Villain.matriarch, BoxSet.DEFINITIVE_EDITION, AlternateTags.mocktriarch
-    ),
+    VillainInsert(Villain.matriarch, BoxSet.DEFINITIVE_EDITION, AlternateTags.definitive),
+    VillainInsert(Villain.matriarch, BoxSet.DEFINITIVE_EDITION, AlternateTags.mocktriarch),
     VillainInsert(Villain.miss_information, BoxSet.MISS_INFORMATION),
-    VillainInsert(
-        Villain.miss_information, BoxSet.MISS_INFORMATION, AlternateTags.team_villain
-    ),
+    VillainInsert(Villain.miss_information, BoxSet.MISS_INFORMATION, AlternateTags.team_villain),
     VillainInsert(Villain.nixious_the_chosen, BoxSet.OBLIVAEON),
     VillainInsert(Villain.oblivaeon, BoxSet.OBLIVAEON),
     VillainInsert(Villain.omnitron, BoxSet.ENHANCED_EDITION),
@@ -125,12 +99,8 @@ VILLAINS_TO_INSERT = [
         BoxSet.ENHANCED_EDITION,
         AlternateTags.cosmic,
     ),
-    VillainInsert(
-        Villain.omnitron, BoxSet.DEFINITIVE_EDITION, AlternateTags.definitive
-    ),
-    VillainInsert(
-        Villain.omnitron, BoxSet.DEFINITIVE_EDITION, AlternateTags.definitive_cosmic
-    ),
+    VillainInsert(Villain.omnitron, BoxSet.DEFINITIVE_EDITION, AlternateTags.definitive),
+    VillainInsert(Villain.omnitron, BoxSet.DEFINITIVE_EDITION, AlternateTags.definitive_cosmic),
     VillainInsert(Villain.the_operative, BoxSet.VILLAINS),
     VillainInsert(Villain.plague_rat, BoxSet.ROOK_CITY),
     VillainInsert(Villain.plague_rat, BoxSet.VILLAINS, AlternateTags.team_villain),
@@ -163,9 +133,7 @@ VILLAINS_TO_INSERT = [
     VillainInsert(Villain.tiamat, BoxSet.CAULDRON, AlternateTags.hydra),
     VillainInsert(Villain.oriphel, BoxSet.CAULDRON_EXPERIMENTAL),
     VillainInsert(Villain.swarm_eater, BoxSet.CAULDRON_EXPERIMENTAL),
-    VillainInsert(
-        Villain.swarm_eater, BoxSet.CAULDRON_EXPERIMENTAL, AlternateTags.hivemind
-    ),
+    VillainInsert(Villain.swarm_eater, BoxSet.CAULDRON_EXPERIMENTAL, AlternateTags.hivemind),
     VillainInsert(Villain.vector, BoxSet.CAULDRON_EXPERIMENTAL),
     VillainInsert(Villain.phase, BoxSet.CAULDRON_STORMFALL),
     VillainInsert(Villain.celadroch, BoxSet.CAULDRON_STORMFALL),

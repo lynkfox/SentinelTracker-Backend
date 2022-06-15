@@ -19,12 +19,7 @@ root_directory = Path(__file__).parents[1]
 
 class LambdaStack(NestedStack):
     def __init__(
-        self,
-        scope: Construct,
-        construct_id: str,
-        deployment_properties: DeploymentProperties,
-        dynamo_table: dynamodb.ITable,
-        **kwargs
+        self, scope: Construct, construct_id: str, deployment_properties: DeploymentProperties, dynamo_table: dynamodb.ITable, **kwargs
     ) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
@@ -33,9 +28,7 @@ class LambdaStack(NestedStack):
         layer = aws_lambda.LayerVersion(
             self,
             ResourceNames.COMMON_LAYER,
-            code=aws_lambda.Code.from_asset(
-                os.path.join(root_directory, DirectoryLocations.COMMON_LAYER)
-            ),
+            code=aws_lambda.Code.from_asset(os.path.join(root_directory, DirectoryLocations.COMMON_LAYER)),
             layer_version_name=props.prefix_name(ResourceNames.COMMON_LAYER),
         )
 
@@ -45,12 +38,8 @@ class LambdaStack(NestedStack):
             self,
             ResourceNames.STATISTICS,
             function_name=props.prefix_name(ResourceNames.STATISTICS),
-            code=aws_lambda.Code.from_asset(
-                os.path.join(root_directory, DirectoryLocations.STATISTICS)
-            ),
-            environment=LambdaEnvironmentVariables(
-                {}, ResourceNames.STATISTICS, dynamo_table.table_name
-            ).as_dict(),
+            code=aws_lambda.Code.from_asset(os.path.join(root_directory, DirectoryLocations.STATISTICS)),
+            environment=LambdaEnvironmentVariables({}, ResourceNames.STATISTICS, dynamo_table.table_name).as_dict(),
             runtime=aws_lambda.Runtime.PYTHON_3_9,
             handler="index.lambda_handler",
             layers=[layer],

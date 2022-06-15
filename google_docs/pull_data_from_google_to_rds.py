@@ -56,15 +56,7 @@ def main():
     user_values = list(
         filter(
             None,
-            list(
-                set(
-                    [
-                        create_values_for_user_insert(detail.username)
-                        for detail in details
-                        if detail is not None and detail.username is not None
-                    ]
-                )
-            ),
+            list(set([create_values_for_user_insert(detail.username) for detail in details if detail is not None and detail.username is not None])),
         )
     )
     blank_user_sql = f"INSERT {SqlTables.USERS} ({SqlColumns.USERNAME}, {SqlColumns.DYNAMO_META}) VALUES ('', '')"
@@ -79,10 +71,10 @@ def main():
         SqlColumns.VALID_TEAM,
     ]
 
-    hero_team_sql_statement = f"INSERT INTO {SqlTables.HERO_TEAMS} ({','.join(hero_team_columns)}) VALUES ({insert_value_shortcut(hero_team_columns)})"
-    hero_team_values = list(
-        set([create_values_for_hero_insert(detail.hero_team) for detail in details])
+    hero_team_sql_statement = (
+        f"INSERT INTO {SqlTables.HERO_TEAMS} ({','.join(hero_team_columns)}) VALUES ({insert_value_shortcut(hero_team_columns)})"
     )
+    hero_team_values = list(set([create_values_for_hero_insert(detail.hero_team) for detail in details]))
 
     opponent_columns = [
         SqlColumns.ID_HASH,
@@ -95,14 +87,7 @@ def main():
     ]
 
     opponents_sql_statement = f"INSERT INTO {SqlTables.OPPONENTS} ({','.join(opponent_columns)}) VALUES ({insert_value_shortcut(opponent_columns)})"
-    opponent_team_values = list(
-        set(
-            [
-                create_values_for_opponent_team_insert(detail.villain)
-                for detail in details
-            ]
-        )
-    )
+    opponent_team_values = list(set([create_values_for_opponent_team_insert(detail.villain) for detail in details]))
 
     game_details_column_names = [
         SqlColumns.USERNAME,
@@ -144,10 +129,10 @@ def main():
         SqlColumns.ENTRY_IS_VALID,
     ]
 
-    game_details_sql_statement = f"INSERT INTO {SqlTables.GAME_DETAILS} ({', '.join(game_details_column_names)}) VALUES ({insert_value_shortcut(game_details_column_names)})"
-    game_details_values = list(
-        set([create_values_for_game_details_insert(detail) for detail in details])
+    game_details_sql_statement = (
+        f"INSERT INTO {SqlTables.GAME_DETAILS} ({', '.join(game_details_column_names)}) VALUES ({insert_value_shortcut(game_details_column_names)})"
     )
+    game_details_values = list(set([create_values_for_game_details_insert(detail) for detail in details]))
 
     end_statement = perf_counter()
 
@@ -452,9 +437,7 @@ def map_hero_team(row: list) -> HeroTeam:
     hero_team = {}
     for key, index in dispatch.items():
         if isinstance(index, int):
-            hero_team[key] = (
-                HERO_GOOGLE_TO_RDS_MAPPING.get(row[index]) if len(row) > index else None
-            )
+            hero_team[key] = HERO_GOOGLE_TO_RDS_MAPPING.get(row[index]) if len(row) > index else None
         else:
             hero_team[key] = index
 

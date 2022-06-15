@@ -23,9 +23,7 @@ class HeroInsert:
     def __post_init__(self):
 
         query = {
-            "pk": build_pk(
-                self.full_name, self.alternate_name, self.box_set, Type.HERO
-            ),
+            "pk": build_pk(self.full_name, self.alternate_name, self.box_set, Type.HERO),
             "sk": build_meta_sk(self.alternate_name),
         }
         self.box_set = self.box_set.value
@@ -51,21 +49,15 @@ HEROES_TO_INSERT = [
     HeroInsert(Hero.absolute_zero, BoxSet.ENHANCED_EDITION, AlternateTags.freedom_six),
     HeroInsert(Hero.absolute_zero, BoxSet.ENHANCED_EDITION, AlternateTags.termi_nation),
     HeroInsert(Hero.absolute_zero, BoxSet.DEFINITIVE_EDITION, AlternateTags.definitive),
-    HeroInsert(
-        Hero.absolute_zero, BoxSet.DEFINITIVE_EDITION, AlternateTags.first_appearance
-    ),
+    HeroInsert(Hero.absolute_zero, BoxSet.DEFINITIVE_EDITION, AlternateTags.first_appearance),
     HeroInsert(Hero.akash_thriya, BoxSet.OBLIVAEON),
     HeroInsert(Hero.akash_thriya, BoxSet.OBLIVAEON, AlternateTags.spirit_of_the_void),
     HeroInsert(Hero.argent_adept, BoxSet.INFERNAL_RELICS),
     HeroInsert(Hero.argent_adept, BoxSet.INFERNAL_RELICS, AlternateTags.prime_wardens),
     HeroInsert(Hero.argent_adept, BoxSet.INFERNAL_RELICS, AlternateTags.dark_conductor),
-    HeroInsert(
-        Hero.argent_adept, BoxSet.INFERNAL_RELICS, AlternateTags.xtreme_prime_wardens
-    ),
+    HeroInsert(Hero.argent_adept, BoxSet.INFERNAL_RELICS, AlternateTags.xtreme_prime_wardens),
     HeroInsert(Hero.argent_adept, BoxSet.DEFINITIVE_EDITION, AlternateTags.definitive),
-    HeroInsert(
-        Hero.argent_adept, BoxSet.DEFINITIVE_EDITION, AlternateTags.first_appearance
-    ),
+    HeroInsert(Hero.argent_adept, BoxSet.DEFINITIVE_EDITION, AlternateTags.first_appearance),
     HeroInsert(Hero.bench_mark, BoxSet.BENCHMARK),
     HeroInsert(Hero.bench_mark, BoxSet.BENCHMARK, AlternateTags.supply_and_demand),
     HeroInsert(Hero.bunker, BoxSet.ENHANCED_EDITION),
@@ -76,25 +68,17 @@ HEROES_TO_INSERT = [
     HeroInsert(Hero.bunker, BoxSet.DEFINITIVE_EDITION, AlternateTags.definitive),
     HeroInsert(Hero.bunker, BoxSet.DEFINITIVE_EDITION, AlternateTags.first_appearance),
     HeroInsert(Hero.captain_cosmic, BoxSet.WRATH_OF_THE_COSMOS),
-    HeroInsert(
-        Hero.captain_cosmic, BoxSet.WRATH_OF_THE_COSMOS, AlternateTags.prime_wardens
-    ),
+    HeroInsert(Hero.captain_cosmic, BoxSet.WRATH_OF_THE_COSMOS, AlternateTags.prime_wardens),
     HeroInsert(
         Hero.captain_cosmic,
         BoxSet.WRATH_OF_THE_COSMOS,
         AlternateTags.xtreme_prime_wardens,
     ),
     HeroInsert(Hero.captain_cosmic, BoxSet.WRATH_OF_THE_COSMOS, AlternateTags.requital),
-    HeroInsert(
-        Hero.captain_cosmic, BoxSet.DEFINITIVE_EDITION, AlternateTags.definitive
-    ),
-    HeroInsert(
-        Hero.captain_cosmic, BoxSet.DEFINITIVE_EDITION, AlternateTags.first_appearance
-    ),
+    HeroInsert(Hero.captain_cosmic, BoxSet.DEFINITIVE_EDITION, AlternateTags.definitive),
+    HeroInsert(Hero.captain_cosmic, BoxSet.DEFINITIVE_EDITION, AlternateTags.first_appearance),
     HeroInsert(Hero.chrono_ranger, BoxSet.SHATTERED_TIMELINES),
-    HeroInsert(
-        Hero.chrono_ranger, BoxSet.SHATTERED_TIMELINES, AlternateTags.best_of_times
-    ),
+    HeroInsert(Hero.chrono_ranger, BoxSet.SHATTERED_TIMELINES, AlternateTags.best_of_times),
     HeroInsert(Hero.doctor_medico, BoxSet.VOID_GUARD),
     HeroInsert(Hero.doctor_medico, BoxSet.VOID_GUARD, AlternateTags.malpractice),
     HeroInsert(Hero.expatriette, BoxSet.ROOK_CITY),
@@ -102,9 +86,7 @@ HEROES_TO_INSERT = [
     HeroInsert(Hero.fanatic, BoxSet.ENHANCED_EDITION),
     HeroInsert(Hero.fanatic, BoxSet.ENHANCED_EDITION, AlternateTags.redeemer),
     HeroInsert(Hero.fanatic, BoxSet.ENHANCED_EDITION, AlternateTags.prime_wardens),
-    HeroInsert(
-        Hero.fanatic, BoxSet.ENHANCED_EDITION, AlternateTags.xtreme_prime_wardens
-    ),
+    HeroInsert(Hero.fanatic, BoxSet.ENHANCED_EDITION, AlternateTags.xtreme_prime_wardens),
     HeroInsert(Hero.fanatic, BoxSet.DEFINITIVE_EDITION, AlternateTags.definitive),
     HeroInsert(Hero.fanatic, BoxSet.DEFINITIVE_EDITION, AlternateTags.first_appearance),
     HeroInsert(Hero.guise, BoxSet.GUISE),
@@ -123,9 +105,7 @@ HEROES_TO_INSERT = [
     HeroInsert(Hero.knyfe, BoxSet.VENGEANCE),
     HeroInsert(Hero.knyfe, BoxSet.VENGEANCE, AlternateTags.rogue_agent),
     HeroInsert(Hero.la_comodora, BoxSet.OBLIVAEON),
-    HeroInsert(
-        Hero.la_comodora, BoxSet.OBLIVAEON, AlternateTags.curse_of_the_black_spot
-    ),
+    HeroInsert(Hero.la_comodora, BoxSet.OBLIVAEON, AlternateTags.curse_of_the_black_spot),
     HeroInsert(Hero.legacy, BoxSet.ENHANCED_EDITION),
     HeroInsert(Hero.legacy, BoxSet.ENHANCED_EDITION, AlternateTags.americas_greatest),
     HeroInsert(Hero.legacy, BoxSet.ENHANCED_EDITION, AlternateTags.americas_newest),
@@ -153,9 +133,7 @@ HEROES_TO_INSERT = [
     ),
     HeroInsert(Hero.parse, BoxSet.VENGEANCE, AlternateTags.fugue_state),
     HeroInsert(Hero.ra, BoxSet.ENHANCED_EDITION),
-    HeroInsert(
-        Hero.ra, BoxSet.ENHANCED_EDITION, AlternateTags.horus_of_the_two_horizon
-    ),
+    HeroInsert(Hero.ra, BoxSet.ENHANCED_EDITION, AlternateTags.horus_of_the_two_horizon),
     HeroInsert(Hero.ra, BoxSet.ENHANCED_EDITION, AlternateTags.setting_sun),
     HeroInsert(Hero.ra, BoxSet.DEFINITIVE_EDITION, AlternateTags.definitive),
     HeroInsert(Hero.ra, BoxSet.DEFINITIVE_EDITION, AlternateTags.first_appearance),
@@ -181,9 +159,7 @@ HEROES_TO_INSERT = [
     HeroInsert(Hero.tempest, BoxSet.ENHANCED_EDITION),
     HeroInsert(Hero.tempest, BoxSet.ENHANCED_EDITION, AlternateTags.prime_wardens),
     HeroInsert(Hero.tempest, BoxSet.ENHANCED_EDITION, AlternateTags.freedom_six),
-    HeroInsert(
-        Hero.tempest, BoxSet.ENHANCED_EDITION, AlternateTags.xtreme_prime_wardens
-    ),
+    HeroInsert(Hero.tempest, BoxSet.ENHANCED_EDITION, AlternateTags.xtreme_prime_wardens),
     HeroInsert(Hero.tempest, BoxSet.DEFINITIVE_EDITION, AlternateTags.definitive),
     HeroInsert(Hero.tempest, BoxSet.DEFINITIVE_EDITION, AlternateTags.first_appearance),
     HeroInsert(Hero.unity, BoxSet.UNITY),
@@ -223,9 +199,7 @@ HEROES_TO_INSERT = [
     ),
     HeroInsert(Hero.lady_of_the_wood, BoxSet.CAULDRON, AlternateTags.season_of_change),
     HeroInsert(Hero.malichae, BoxSet.CAULDRON),
-    HeroInsert(
-        Hero.malichae, BoxSet.CAULDRON, AlternateTags.ministry_of_strategic_science
-    ),
+    HeroInsert(Hero.malichae, BoxSet.CAULDRON, AlternateTags.ministry_of_strategic_science),
     HeroInsert(Hero.malichae, BoxSet.CAULDRON, AlternateTags.shardmaster),
     HeroInsert(Hero.necro, BoxSet.CAULDRON),
     HeroInsert(Hero.necro, BoxSet.CAULDRON, AlternateTags.alt_1929),
@@ -247,18 +221,12 @@ HEROES_TO_INSERT = [
     HeroInsert(Hero.vanish, BoxSet.CAULDRON, AlternateTags.alt_1929),
     HeroInsert(Hero.vanish, BoxSet.CAULDRON, AlternateTags.first_response),
     HeroInsert(Hero.cricket, BoxSet.CAULDRON_EXPERIMENTAL),
-    HeroInsert(
-        Hero.cricket, BoxSet.CAULDRON_EXPERIMENTAL, AlternateTags.first_response
-    ),
+    HeroInsert(Hero.cricket, BoxSet.CAULDRON_EXPERIMENTAL, AlternateTags.first_response),
     HeroInsert(Hero.cricket, BoxSet.CAULDRON_EXPERIMENTAL, AlternateTags.renegade),
-    HeroInsert(
-        Hero.cricket, BoxSet.CAULDRON_EXPERIMENTAL, AlternateTags.wasteland_ronin
-    ),
+    HeroInsert(Hero.cricket, BoxSet.CAULDRON_EXPERIMENTAL, AlternateTags.wasteland_ronin),
     HeroInsert(Hero.cypher, BoxSet.CAULDRON_EXPERIMENTAL),
     HeroInsert(Hero.cypher, BoxSet.CAULDRON_EXPERIMENTAL, AlternateTags.first_response),
-    HeroInsert(
-        Hero.cypher, BoxSet.CAULDRON_EXPERIMENTAL, AlternateTags.swarming_protocol
-    ),
+    HeroInsert(Hero.cypher, BoxSet.CAULDRON_EXPERIMENTAL, AlternateTags.swarming_protocol),
     HeroInsert(Hero.titan, BoxSet.CAULDRON_EXPERIMENTAL),
     HeroInsert(Hero.titan, BoxSet.CAULDRON_EXPERIMENTAL, AlternateTags.alt_2199),
     HeroInsert(
@@ -273,9 +241,7 @@ HEROES_TO_INSERT = [
     HeroInsert(Hero.impact, BoxSet.CAULDRON_STORMFALL, AlternateTags.renegade),
     HeroInsert(Hero.impact, BoxSet.CAULDRON_STORMFALL, AlternateTags.wasteland_ronin),
     HeroInsert(Hero.magnificent_mara, BoxSet.CAULDRON_STORMFALL),
-    HeroInsert(
-        Hero.magnificent_mara, BoxSet.CAULDRON_STORMFALL, AlternateTags.alt_1929
-    ),
+    HeroInsert(Hero.magnificent_mara, BoxSet.CAULDRON_STORMFALL, AlternateTags.alt_1929),
     HeroInsert(
         Hero.magnificent_mara,
         BoxSet.CAULDRON_STORMFALL,

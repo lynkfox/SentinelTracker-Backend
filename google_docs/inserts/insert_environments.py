@@ -22,9 +22,7 @@ class EnvironmentInsert:
 
     def __post_init__(self):
         query = {
-            "pk": build_pk(
-                self.full_name, self.alternate_name, self.box_set, Type.ENVIRONMENT
-            ),
+            "pk": build_pk(self.full_name, self.alternate_name, self.box_set, Type.ENVIRONMENT),
             "sk": build_meta_sk(self.alternate_name),
         }
         self.box_set = self.box_set.value
@@ -73,18 +71,10 @@ ENVIRONMENTS_TO_INSERT = [
     EnvironmentInsert(Environment.time_cataclysm, BoxSet.SHATTERED_TIMELINES),
     EnvironmentInsert(Environment.tomb_of_anubis, BoxSet.INFERNAL_RELICS),
     EnvironmentInsert(Environment.wagner_mars_base, BoxSet.ENHANCED_EDITION),
-    EnvironmentInsert(
-        Environment.megalopolis, BoxSet.DEFINITIVE_EDITION, AlternateTags.definitive
-    ),
-    EnvironmentInsert(
-        Environment.freedom_tower, BoxSet.DEFINITIVE_EDITION, AlternateTags.definitive
-    ),
-    EnvironmentInsert(
-        Environment.insula_primalis, BoxSet.DEFINITIVE_EDITION, AlternateTags.definitive
-    ),
-    EnvironmentInsert(
-        Environment.magmaria, BoxSet.DEFINITIVE_EDITION, AlternateTags.definitive
-    ),
+    EnvironmentInsert(Environment.megalopolis, BoxSet.DEFINITIVE_EDITION, AlternateTags.definitive),
+    EnvironmentInsert(Environment.freedom_tower, BoxSet.DEFINITIVE_EDITION, AlternateTags.definitive),
+    EnvironmentInsert(Environment.insula_primalis, BoxSet.DEFINITIVE_EDITION, AlternateTags.definitive),
+    EnvironmentInsert(Environment.magmaria, BoxSet.DEFINITIVE_EDITION, AlternateTags.definitive),
     EnvironmentInsert(
         Environment.ruins_of_atlantis,
         BoxSet.DEFINITIVE_EDITION,
@@ -97,9 +87,7 @@ ENVIRONMENTS_TO_INSERT = [
     ),
     EnvironmentInsert(Environment.blackwood_forest, BoxSet.CAULDRON),
     EnvironmentInsert(Environment.f_s_c_continuance_wanderer, BoxSet.CAULDRON),
-    EnvironmentInsert(
-        Environment.halberd_experimental_research_center, BoxSet.CAULDRON
-    ),
+    EnvironmentInsert(Environment.halberd_experimental_research_center, BoxSet.CAULDRON),
     EnvironmentInsert(Environment.northspar, BoxSet.CAULDRON),
     EnvironmentInsert(Environment.st_simeons_catacombs, BoxSet.CAULDRON),
     EnvironmentInsert(Environment.wandering_isle, BoxSet.CAULDRON),

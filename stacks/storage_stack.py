@@ -12,13 +12,7 @@ from common.attributes import DynamoAttributes
 
 
 class StorageStack(NestedStack):
-    def __init__(
-        self,
-        scope: Construct,
-        construct_id: str,
-        deployment_properties: DeploymentProperties,
-        **kwargs
-    ) -> None:
+    def __init__(self, scope: Construct, construct_id: str, deployment_properties: DeploymentProperties, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
         """
             Contains the Storage Resources such as S3, Dynamodb, Parameter/Secrets
@@ -29,12 +23,8 @@ class StorageStack(NestedStack):
             self,
             ResourceNames.ITEM_DYNAMODB,
             table_name=props.prefix_name(ResourceNames.ITEM_DYNAMODB),
-            partition_key=dynamodb.Attribute(
-                name=DynamoAttributes.PARTITION_KEY, type=dynamodb.AttributeType.STRING
-            ),
-            sort_key=dynamodb.Attribute(
-                name=DynamoAttributes.SORT_KEY, type=dynamodb.AttributeType.STRING
-            ),
+            partition_key=dynamodb.Attribute(name=DynamoAttributes.PARTITION_KEY, type=dynamodb.AttributeType.STRING),
+            sort_key=dynamodb.Attribute(name=DynamoAttributes.SORT_KEY, type=dynamodb.AttributeType.STRING),
             removal_policy=core.RemovalPolicy.DESTROY,
         )
 
@@ -45,12 +35,8 @@ class StorageStack(NestedStack):
             database_name="",
             delete_automated_backups=True,
             max_allocated_storage=50,
-            instance_type=ec2.InstanceType.of(
-                ec2.InstanceClass.BURSTABLE4_GRAVITON, ec2.InstanceSize.SMALL
-            ),
-            instance_identifier=props.prefix_name(
-                ResourceNames.STATISTICS_RDS, lower=True
-            ),
+            instance_type=ec2.InstanceType.of(ec2.InstanceClass.BURSTABLE4_GRAVITON, ec2.InstanceSize.SMALL),
+            instance_identifier=props.prefix_name(ResourceNames.STATISTICS_RDS, lower=True),
             engine=rds.DatabaseInstanceEngine.mysql(
                 version=rds.MysqlEngineVersion.VER_8_0_28,
             ),

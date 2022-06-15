@@ -18,9 +18,7 @@ from datetime import datetime
 
 class Entity(BaseModel):
     name: str = Field(...)
-    set: Optional[BoxSet] = Field(
-        ..., description="Box Set this version of the entity came from"
-    )
+    set: Optional[BoxSet] = Field(..., description="Box Set this version of the entity came from")
     type: Optional[Type] = Field(..., dscription="Type of Entity")
     total_games: Optional[int] = Field(0, ge=0)
     total_wins: Optional[int] = Field(0, ge=0)
@@ -37,9 +35,7 @@ class Entity(BaseModel):
         super().__init__(**data)
         self._pk = self.name.upper().replace(" ", "_")
         self._sk = f"{self.type.name}#{self._pk}#META"
-        self._url = f"/entity/{self.type.name.lower()}/{self.name}".replace(
-            " ", "_"
-        ).lower()
+        self._url = f"/entity/{self.type.name.lower()}/{self.name}".replace(" ", "_").lower()
 
 
 class EntityComparison(BaseModel):
@@ -99,15 +95,7 @@ class OblivAeonDetail(BaseModel):
     @validator("id_hash", always=True)
     def hash_team(cls, id_hash, values):
         if id_hash is None or id_hash == "":
-            return hash(
-                "".join(
-                    [
-                        v if v is not None else "-"
-                        for k, v in values.items()
-                        if k != "id_hash"
-                    ]
-                )
-            )
+            return hash("".join([v if v is not None else "-" for k, v in values.items() if k != "id_hash"]))
         return id_hash
 
 
@@ -135,25 +123,13 @@ class HeroTeam(BaseModel):
     def hash_team_positions(cls, id_hash, values):
 
         if id_hash is None or id_hash == "":
-            return hash(
-                "".join(
-                    [
-                        v if v is not None else "-"
-                        for k, v in values.items()
-                        if "hero" in k
-                    ]
-                )
-            )
+            return hash("".join([v if v is not None else "-" for k, v in values.items() if "hero" in k]))
         return id_hash
 
     @validator("valid_team", always=True)
     def validate_team(cls, validation, values):
         # alphabetize heroes
-        members = [
-            value
-            for key, value in values.items()
-            if (key.startswith("hero")) and value is not None
-        ]
+        members = [value for key, value in values.items() if (key.startswith("hero")) and value is not None]
         members.sort()
         total_members = len(members)
 
@@ -184,9 +160,7 @@ class VillainOpponent(BaseModel):
         use_enum_values = True
         anystr_strip_whitespace = True
 
-    @validator(
-        "villain_two", "villain_three", "villain_four", "villain_five", always=True
-    )
+    @validator("villain_two", "villain_three", "villain_four", "villain_five", always=True)
     def collapse_team(cls, villain, values):
         """
         takes advantage of the fact that in validation on pydantic, values is only going to contain the attributes
@@ -202,25 +176,13 @@ class VillainOpponent(BaseModel):
     @validator("id_hash", always=True)
     def hash_team_positions(cls, id_hash, values):
         if id_hash is None or id_hash == "":
-            return hash(
-                "".join(
-                    [
-                        str(v) if v is not None else "-"
-                        for k, v in values.items()
-                        if k != "id_hash"
-                    ]
-                )
-            )
+            return hash("".join([str(v) if v is not None else "-" for k, v in values.items() if k != "id_hash"]))
         return id_hash
 
     @validator("valid_team", always=True)
     def validate_team(cls, validation, values):
         # alphabetize heroes
-        members = [
-            value
-            for key, value in values.items()
-            if (key.startswith("villain")) and value is not None
-        ]
+        members = [value for key, value in values.items() if (key.startswith("villain")) and value is not None]
         members.sort()
         total_members = len(members)
 
@@ -289,11 +251,7 @@ class GameDetail(BaseModel):
     @validator("entry_is_valid", always=True)
     def validate_entry(cls, entry, values):
         # validate that the number of villains, if not 1, is equal to the number of heroes.
-        villains = [
-            v
-            for k, v in values["villain"].__dict__.items()
-            if ("villain" in k and "incapped" not in k) and v is not None
-        ]
+        villains = [v for k, v in values["villain"].__dict__.items() if ("villain" in k and "incapped" not in k) and v is not None]
         if len(villains) != 1 and len(villains) != values["number_of_heroes"]:
             return False
 
@@ -301,13 +259,9 @@ class GameDetail(BaseModel):
         if not values["hero_team"].valid_team:
             return False
 
-        incapped_heroes = [
-            v for k, v in values.items() if "hero" in k and "incapped" in k and v
-        ]
+        incapped_heroes = [v for k, v in values.items() if "hero" in k and "incapped" in k and v]
 
-        if len(incapped_heroes) == values["number_of_heroes"] and isinstance(
-            values["end_result"], HeroWinCondition
-        ):
+        if len(incapped_heroes) == values["number_of_heroes"] and isinstance(values["end_result"], HeroWinCondition):
             return False
 
         return True

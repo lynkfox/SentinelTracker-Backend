@@ -34,9 +34,7 @@ def main():
 
     print("Inserting Environments")
     cursor = client.cursor()
-    insert_entities(
-        cursor, SqlTables.ENVIRONMENTS, create_values(ENVIRONMENTS_TO_INSERT)
-    )
+    insert_entities(cursor, SqlTables.ENVIRONMENTS, create_values(ENVIRONMENTS_TO_INSERT))
     client.commit()
     print(f"{cursor.rowcount} Environment records inserted.")
 
@@ -48,9 +46,7 @@ def insert_box_sets(cursor):
     values = [
         (
             member.value,
-            json.dumps(
-                {"pk": f"{_clean_name(member.value.upper())}#BOX_SET", "sk": "META#"}
-            ),
+            json.dumps({"pk": f"{_clean_name(member.value.upper())}#BOX_SET", "sk": "META#"}),
         )
         for member in BoxSet
     ]
@@ -63,10 +59,7 @@ def insert_entities(cursor, table, values):
 
 
 def create_values(entities: list):
-    return [
-        (entity.full_name, entity.box_set, entity.dynamo_meta_query)
-        for entity in entities
-    ]
+    return [(entity.full_name, entity.box_set, entity.dynamo_meta_query) for entity in entities]
 
 
 def _clean_name(name: str) -> str:
