@@ -38,20 +38,13 @@ def character_is(
     if prefix is not Type.HERO and prefix is not Type.VILLAIN:
         raise ValueError("type Mismatch: must be HERO or VILLAIN")
 
-    if prefix == Type.HERO and (
-        table_name is not SqlTables.GAME_DETAILS
-        and table_name is not SqlTables.HERO_TEAMS
-    ):
-        raise ValueError(
-            "Table Mismatch: type is HERO, table_name must be GAME_DETAILS or HERO_TEAMS"
-        )
-
-    if prefix == Type.VILLAIN and (
-        table_name is not SqlTables.GAME_DETAILS
+    if (
+        table_name is not SqlTables.HERO_TEAMS
+        and table_name is not SqlTables.GAME_DETAILS
         and table_name is not SqlTables.OPPONENTS
     ):
         raise ValueError(
-            "Table Mismatch: type is VILLAIN, table_name must be GAME_DETAILS or OPPONENTS"
+            "Table Mismatch: table_name must be GAME_DETAILS, HERO_TEAMS, or OPPONENTS"
         )
 
     return f'"{character_name}" IN ({ColumnGroup.team_members(prefix, table_name)})'

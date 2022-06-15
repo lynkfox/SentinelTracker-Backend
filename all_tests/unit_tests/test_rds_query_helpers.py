@@ -13,26 +13,12 @@ class Test_character_is:
         ) as e:
             character_is("test", Type.ENVIRONMENT)
 
-    def test_raises_value_error_on_type_hero_but_not_hero_team_table(self):
-        with pytest.raises(
-            ValueError,
-            match="Table Mismatch: type is HERO, table_name must be GAME_DETAILS or HERO_TEAMS",
-        ) as e:
-            character_is("test", Type.HERO, SqlTables.OPPONENTS)
-
     def test_raises_value_error_on_type_villain_but__not_opponent_table(self):
         with pytest.raises(
             ValueError,
-            match="Table Mismatch: type is VILLAIN, table_name must be GAME_DETAILS or OPPONENTS",
+            match="Table Mismatch: table_name must be GAME_DETAILS, HERO_TEAMS, or OPPONENTS",
         ) as e:
-            character_is("test", Type.VILLAIN, SqlTables.HERO_TEAMS)
-
-    def test_with_hero_prefix_column_names_correctly(self):
-        test_response = character_is("Absolute Zero", Type.HERO)
-        assert (
-            test_response
-            == '"Absolute Zero" IN (gameDetails.hero_one, gameDetails.hero_two, gameDetails.hero_three, gameDetails.hero_four, gameDetails.hero_five)'
-        )
+            character_is("test", Type.VILLAIN, SqlTables.HEROES)
 
     def test_with_hero_and_hero_teams_table_prefix_column_names_correctly(self):
         test_response = character_is("Absolute Zero", Type.HERO, SqlTables.HERO_TEAMS)
