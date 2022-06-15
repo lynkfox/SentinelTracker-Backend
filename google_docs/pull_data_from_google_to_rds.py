@@ -90,7 +90,7 @@ def main():
         set([create_values_for_game_details_insert(detail) for detail in details])
     )
 
-    validate_test_throway_method(opponent_team_values)
+    # validate_test_throway_method(opponent_team_values)
 
     end_statement = perf_counter()
 
@@ -156,11 +156,11 @@ def create_values_for_game_details_insert(game: GameDetail) -> set:
     return (
         game.username.username,
         game.entered_on,
-        game.game_mode.value,
-        game.selection_method.value,
-        game.platform.value,
-        game.end_result.value,
-        game.estimated_time.value,
+        game.game_mode,
+        game.selection_method,
+        game.platform,
+        game.end_result,
+        game.estimated_time,
         game.house_rules,
         game.number_of_players,
         game.number_of_heroes,
