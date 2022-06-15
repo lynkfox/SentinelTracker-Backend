@@ -1,26 +1,25 @@
-from dataclasses import dataclass
-from typing import ClassVar
+from enum import Enum
+from common.models.enums import EnhancedEnum
 
 
-@dataclass(frozen=True)
-class SqlTables:
-    STATISTICS_DB_NAME: ClassVar[str] = "sentinel_statistics"
+class SqlTables(EnhancedEnum):
+    STATISTICS_DB_NAME = "sentinel_statistics"
 
     # table names
-    BOX_SETS: ClassVar[str] = "boxSets"
-    ENVIRONMENTS: ClassVar[str] = "environments"
-    HEROES: ClassVar[str] = "heroes"
-    VILLAINS: ClassVar[str] = "villains"
-    USERS: ClassVar[str] = "users"
-    GAME_DETAILS: ClassVar[str] = "gameDetails"
-    HERO_TEAMS: ClassVar[str] = "heroTeams"
-    OPPONENTS: ClassVar[str] = "opponents"
-    OBLIVAEON_SETUPS: ClassVar[str] = "oblivaeonSetups"
-    NON_POS_HERO_TEAMS: ClassVar[str] = "nonPositionalHeroTeams"
-    NON_POS_OPPONENTS: ClassVar[str] = "nonPositionalOpponents"
+    BOX_SETS = "boxSets"
+    ENVIRONMENTS = "environments"
+    HEROES = "heroes"
+    VILLAINS = "villains"
+    USERS = "users"
+    GAME_DETAILS = "gameDetails"
+    HERO_TEAMS = "heroTeams"
+    OPPONENTS = "opponents"
+    OBLIVAEON_SETUPS = "oblivaeonSetups"
+    NON_POS_HERO_TEAMS = "nonPositionalHeroTeams"
+    NON_POS_OPPONENTS = "nonPositionalOpponents"
 
 
-class SqlColumns:
+class SqlColumns(EnhancedEnum):
     ID = "id"
     ID_HASH = "id_hash"
     NON_POSITIONAL_HASH = "non_positional_hash"

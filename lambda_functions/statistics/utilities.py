@@ -47,7 +47,7 @@ class LookUp:
         index 0. Builds Operations for each set, to allow any combination
         of /with /versus /in.
 
-        Respects values of only allowing 1 versus, 1 in, and 4 withs per
+        Respects values of only allowing 1 versus, 1 in, and 4 with's per
         hero or villain
         """
 
@@ -80,7 +80,7 @@ class LookUp:
 
     def _check_number_of_comparisons(self, operation):
         """
-        Checks comparsion operations (versus and in) if there is more than 1
+        Checks comparison operations (versus and in) if there is more than 1
         """
         self.versus_count += self._increment_to_maximum(
             operation.instruction, Comparator.VERSUS, self.versus_count, 1
@@ -92,8 +92,8 @@ class LookUp:
     def _increment_to_maximum(self, left: Enum, right: Enum, current: int, max: int):
         """
         Checks two values (left and right) and if they are the same, returns
-        1 to increment the value, unless it puts it above the maxium
-        (inculsive). If max reached, raises Value Error
+        1 to increment the value, unless it puts it above the maximum
+        (inclusive). If max reached, raises Value Error
         """
         if left == right:
             if current >= max:
@@ -201,7 +201,7 @@ class LookUp:
             with special situations like Akash'Bhuta
 
         Also returns the Enum type that follows the Selector, for use in
-            determing name_selection, alternate_selection
+            determining name_selection, alternate_selection
         """
         if len(self.operations) == 0:
             select = Selector(path_part)
@@ -242,8 +242,6 @@ class LookUp:
         raise ValueError("Unable to determine call")
 
     def _determine_entity_by_attached_part(self, next_part) -> Tuple[Selector, Enum]:
-        if next_part == Hero.akash_thriya or next_part == Villain.akash_bhuta:
-            return self._deal_with_duplicate_type(next_part)
 
         if Hero.has_member(next_part):
             return Selector.HERO, Hero
@@ -256,25 +254,16 @@ class LookUp:
 
         raise ValueError()
 
-    def _deal_with_duplicate_type(self, path_part) -> Tuple[Selector, Enum]:
-        """
-        dealing with Type for those who have the same name as another
-            entity type (ie: akash_bhuta)
-        """
-        for operation in self.operations:
-            if operation.entity_type == Selector.HERO:
-                return Selector.VILLAIN, Villain
-            elif operation.entity_type == Selector.VILLAIN:
-                return Selector.HERO, Hero
-            else:
-                continue
 
-        raise ValueError()
+def generate_sql(instructions: List[Operation]) -> any:
+    """
+    generates an SQL query string.
+    """
 
 
 def generate_query(instructions: List[Operation]) -> any:
     """
-    Takes Instructions and parses out appropritate PK/SK
+    Takes Instructions and parses out appropriate PK/SK
     """
     first_instruction = instructions[0]
     pk = f"{first_instruction.entity_type.value.upper()}#{first_instruction.name_selection.value}"

@@ -17,6 +17,9 @@ class Character(Enum):
     def __bool__(self):
         return bool(self.value)
 
+    def __str__(self):
+        return str(self.value)
+
 
 class Hero(Character):
     absolute_zero = "absolute_zero"

@@ -14,415 +14,457 @@ from common.models.character_enums import (
     HERO_DISPLAY_MAPPING,
     ENVIRONMENT_DISPLAY_MAPPING,
 )
-from common.rds import create_rds_key
+from common.rds import character_full_name
 
 
 ENVIRONMENT_GOOGLE_TO_RDS_MAP = {
-    "Celestial Tribunal": create_rds_key(
+    "Celestial Tribunal": character_full_name(
         Environment.celestial_tribunal, None, ENVIRONMENT_DISPLAY_MAPPING
     ),
-    "Champion Studios": create_rds_key(
+    "Champion Studios": character_full_name(
         Environment.champion_studios, None, ENVIRONMENT_DISPLAY_MAPPING
     ),
-    "Dok'Thorath": create_rds_key(
+    "Dok'Thorath": character_full_name(
         Environment.dok_thorath_capital, None, ENVIRONMENT_DISPLAY_MAPPING
     ),
-    "Enclave of the Endlings": create_rds_key(
+    "Enclave of the Endlings": character_full_name(
         Environment.enclave_of_the_endlings, None, ENVIRONMENT_DISPLAY_MAPPING
     ),
-    "Fort Adamant": create_rds_key(
+    "Fort Adamant": character_full_name(
         Environment.fort_adamant, None, ENVIRONMENT_DISPLAY_MAPPING
     ),
-    "Freedom Tower": create_rds_key(
+    "Freedom Tower": character_full_name(
         Environment.freedom_tower, None, ENVIRONMENT_DISPLAY_MAPPING
     ),
-    "Insula Primalis": create_rds_key(
+    "Insula Primalis": character_full_name(
         Environment.insula_primalis, None, ENVIRONMENT_DISPLAY_MAPPING
     ),
-    "Madame Mittermeier's": create_rds_key(
+    "Madame Mittermeier's": character_full_name(
         Environment.madame_mittermeiers, None, ENVIRONMENT_DISPLAY_MAPPING
     ),
-    "Maerynian Refuge": create_rds_key(
+    "Maerynian Refuge": character_full_name(
         Environment.maerynian_refuge, None, ENVIRONMENT_DISPLAY_MAPPING
     ),
-    "Magmaria": create_rds_key(Environment.magmaria, None, ENVIRONMENT_DISPLAY_MAPPING),
-    "Megalopolis": create_rds_key(
+    "Magmaria": character_full_name(
+        Environment.magmaria, None, ENVIRONMENT_DISPLAY_MAPPING
+    ),
+    "Megalopolis": character_full_name(
         Environment.megalopolis, None, ENVIRONMENT_DISPLAY_MAPPING
     ),
-    "Mobile Defense Platform": create_rds_key(
+    "Mobile Defense Platform": character_full_name(
         Environment.mobile_defense_platform, None, ENVIRONMENT_DISPLAY_MAPPING
     ),
-    "Mordengrad": create_rds_key(
+    "Mordengrad": character_full_name(
         Environment.mordengrad, None, ENVIRONMENT_DISPLAY_MAPPING
     ),
-    "Nexus of the Void": create_rds_key(
+    "Nexus of the Void": character_full_name(
         Environment.nexus_of_the_void, None, ENVIRONMENT_DISPLAY_MAPPING
     ),
-    "Omnitron IV": create_rds_key(
+    "Omnitron IV": character_full_name(
         Environment.omnitron_iv, None, ENVIRONMENT_DISPLAY_MAPPING
     ),
-    "Pike Industrial Complex": create_rds_key(
+    "Pike Industrial Complex": character_full_name(
         Environment.pike_industrial_complex, None, ENVIRONMENT_DISPLAY_MAPPING
     ),
-    "Realm of Discord": create_rds_key(
+    "Realm of Discord": character_full_name(
         Environment.realm_of_discord, None, ENVIRONMENT_DISPLAY_MAPPING
     ),
-    "Rook City": create_rds_key(
+    "Rook City": character_full_name(
         Environment.rook_city, None, ENVIRONMENT_DISPLAY_MAPPING
     ),
-    "Ruins of Atlantis": create_rds_key(
+    "Ruins of Atlantis": character_full_name(
         Environment.ruins_of_atlantis, None, ENVIRONMENT_DISPLAY_MAPPING
     ),
-    "Silver Gulch 1883": create_rds_key(
+    "Silver Gulch 1883": character_full_name(
         Environment.silver_gulch_1883, None, ENVIRONMENT_DISPLAY_MAPPING
     ),
-    "Temple of Zhu Long": create_rds_key(
+    "Temple of Zhu Long": character_full_name(
         Environment.temple_of_zhu_long, None, ENVIRONMENT_DISPLAY_MAPPING
     ),
-    "The Block": create_rds_key(
+    "The Block": character_full_name(
         Environment.the_block, None, ENVIRONMENT_DISPLAY_MAPPING
     ),
-    "The Court of Blood": create_rds_key(
+    "The Court of Blood": character_full_name(
         Environment.court_of_blood, None, ENVIRONMENT_DISPLAY_MAPPING
     ),
-    "The Final Wasteland": create_rds_key(
+    "The Final Wasteland": character_full_name(
         Environment.the_final_wasteland, None, ENVIRONMENT_DISPLAY_MAPPING
     ),
-    "Time Cataclysm": create_rds_key(
+    "Time Cataclysm": character_full_name(
         Environment.time_cataclysm, None, ENVIRONMENT_DISPLAY_MAPPING
     ),
-    "Tomb of Anubis": create_rds_key(
+    "Tomb of Anubis": character_full_name(
         Environment.tomb_of_anubis, None, ENVIRONMENT_DISPLAY_MAPPING
     ),
-    "Wagner Mars Base": create_rds_key(
+    "Wagner Mars Base": character_full_name(
         Environment.wagner_mars_base, None, ENVIRONMENT_DISPLAY_MAPPING
     ),
 }
 
 VILLAIN_GOOGLE_TO_RDS_MAP = {
     "(None)": None,
-    "Agent of Gloom Spite": create_rds_key(
+    "Agent of Gloom Spite": character_full_name(
         Villain.spite, AlternateTags.agent_of_gloom, VILLAIN_DISPLAY_MAPPING
     ),
-    "Akash'bhuta": create_rds_key(Villain.akash_bhuta, None, VILLAIN_DISPLAY_MAPPING),
-    "Ambuscade": create_rds_key(Villain.ambuscade, None, VILLAIN_DISPLAY_MAPPING),
-    "Ambuscade (Vengeance)": create_rds_key(
+    "Akash'bhuta": character_full_name(
+        Villain.akash_bhuta, None, VILLAIN_DISPLAY_MAPPING
+    ),
+    "Ambuscade": character_full_name(Villain.ambuscade, None, VILLAIN_DISPLAY_MAPPING),
+    "Ambuscade (Vengeance)": character_full_name(
         Villain.ambuscade, AlternateTags.team_villain, VILLAIN_DISPLAY_MAPPING
     ),
-    "Apostate": create_rds_key(Villain.apostate, None, VILLAIN_DISPLAY_MAPPING),
-    "Baron Blade": create_rds_key(Villain.baron_blade, None, VILLAIN_DISPLAY_MAPPING),
-    "Baron Blade (Vengeance)": create_rds_key(
+    "Apostate": character_full_name(Villain.apostate, None, VILLAIN_DISPLAY_MAPPING),
+    "Baron Blade": character_full_name(
+        Villain.baron_blade, None, VILLAIN_DISPLAY_MAPPING
+    ),
+    "Baron Blade (Vengeance)": character_full_name(
         Villain.baron_blade, AlternateTags.team_villain, VILLAIN_DISPLAY_MAPPING
     ),
-    "Biomancer (Vengeance)": create_rds_key(
+    "Biomancer (Vengeance)": character_full_name(
         Villain.biomancer, None, VILLAIN_DISPLAY_MAPPING
     ),
-    "Bugbear (Vengeance)": create_rds_key(
+    "Bugbear (Vengeance)": character_full_name(
         Villain.bugbear, None, VILLAIN_DISPLAY_MAPPING
     ),
-    "Chokepoint": create_rds_key(Villain.chokepoint, None, VILLAIN_DISPLAY_MAPPING),
-    "Citizen Dawn": create_rds_key(Villain.citizen_dawn, None, VILLAIN_DISPLAY_MAPPING),
-    "Citizens Hammer and Anvil (Vengeance)": create_rds_key(
+    "Chokepoint": character_full_name(
+        Villain.chokepoint, None, VILLAIN_DISPLAY_MAPPING
+    ),
+    "Citizen Dawn": character_full_name(
+        Villain.citizen_dawn, None, VILLAIN_DISPLAY_MAPPING
+    ),
+    "Citizens Hammer and Anvil (Vengeance)": character_full_name(
         Villain.citizens_hammer_and_anvil, None, VILLAIN_DISPLAY_MAPPING
     ),
-    "Cosmic Omnitron": create_rds_key(
+    "Cosmic Omnitron": character_full_name(
         Villain.omnitron, AlternateTags.cosmic, VILLAIN_DISPLAY_MAPPING
     ),
-    "Deadline": create_rds_key(Villain.deadline, None, VILLAIN_DISPLAY_MAPPING),
-    "Ermine (Vengeance)": create_rds_key(Villain.ermine, None, VILLAIN_DISPLAY_MAPPING),
-    "Friction (Vengeance)": create_rds_key(
+    "Deadline": character_full_name(Villain.deadline, None, VILLAIN_DISPLAY_MAPPING),
+    "Ermine (Vengeance)": character_full_name(
+        Villain.ermine, None, VILLAIN_DISPLAY_MAPPING
+    ),
+    "Friction (Vengeance)": character_full_name(
         Villain.friction, None, VILLAIN_DISPLAY_MAPPING
     ),
-    "Fright Train (Vengeance)": create_rds_key(
+    "Fright Train (Vengeance)": character_full_name(
         Villain.fright_train, None, VILLAIN_DISPLAY_MAPPING
     ),
-    "Gloomweaver": create_rds_key(Villain.gloomweaver, None, VILLAIN_DISPLAY_MAPPING),
-    "Grand Warlord Voss": create_rds_key(
+    "Gloomweaver": character_full_name(
+        Villain.gloomweaver, None, VILLAIN_DISPLAY_MAPPING
+    ),
+    "Grand Warlord Voss": character_full_name(
         Villain.grand_warlord_voss, None, VILLAIN_DISPLAY_MAPPING
     ),
-    "Greazer Clutch (Vengeance)": create_rds_key(
+    "Greazer Clutch (Vengeance)": character_full_name(
         Villain.greazer_clutch, None, VILLAIN_DISPLAY_MAPPING
     ),
-    "Infinitor": create_rds_key(Villain.infinitor, None, VILLAIN_DISPLAY_MAPPING),
-    "Iron Legacy": create_rds_key(Villain.iron_legacy, None, VILLAIN_DISPLAY_MAPPING),
-    "Kaargra Warfang": create_rds_key(
+    "Infinitor": character_full_name(Villain.infinitor, None, VILLAIN_DISPLAY_MAPPING),
+    "Iron Legacy": character_full_name(
+        Villain.iron_legacy, None, VILLAIN_DISPLAY_MAPPING
+    ),
+    "Kaargra Warfang": character_full_name(
         Villain.kaargra_warfang, None, VILLAIN_DISPLAY_MAPPING
     ),
-    "Kismet": create_rds_key(Villain.kismet, None, VILLAIN_DISPLAY_MAPPING),
-    "La Capitan": create_rds_key(Villain.la_capitan, None, VILLAIN_DISPLAY_MAPPING),
-    "La Capitan (Vengeance)": create_rds_key(
+    "Kismet": character_full_name(Villain.kismet, None, VILLAIN_DISPLAY_MAPPING),
+    "La Capitan": character_full_name(
+        Villain.la_capitan, None, VILLAIN_DISPLAY_MAPPING
+    ),
+    "La Capitan (Vengeance)": character_full_name(
         Villain.la_capitan, AlternateTags.team_villain, VILLAIN_DISPLAY_MAPPING
     ),
-    "Mad Bomber Blade": create_rds_key(
+    "Mad Bomber Blade": character_full_name(
         Villain.baron_blade, AlternateTags.mad_bomber, VILLAIN_DISPLAY_MAPPING
     ),
-    "Miss Information": create_rds_key(
+    "Miss Information": character_full_name(
         Villain.miss_information, None, VILLAIN_DISPLAY_MAPPING
     ),
-    "Miss Information (Vengeance)": create_rds_key(
+    "Miss Information (Vengeance)": character_full_name(
         Villain.miss_information, AlternateTags.team_villain, VILLAIN_DISPLAY_MAPPING
     ),
-    "Omnitron": create_rds_key(Villain.omnitron, None, VILLAIN_DISPLAY_MAPPING),
-    "Plague Rat": create_rds_key(Villain.plague_rat, None, VILLAIN_DISPLAY_MAPPING),
-    "Plague Rat (Vengeance)": create_rds_key(
+    "Omnitron": character_full_name(Villain.omnitron, None, VILLAIN_DISPLAY_MAPPING),
+    "Plague Rat": character_full_name(
+        Villain.plague_rat, None, VILLAIN_DISPLAY_MAPPING
+    ),
+    "Plague Rat (Vengeance)": character_full_name(
         Villain.plague_rat, AlternateTags.team_villain, VILLAIN_DISPLAY_MAPPING
     ),
-    "Progeny": create_rds_key(Villain.progeny, None, VILLAIN_DISPLAY_MAPPING),
-    "Proletariat (Vengeance)": create_rds_key(
+    "Progeny": character_full_name(Villain.progeny, None, VILLAIN_DISPLAY_MAPPING),
+    "Proletariat (Vengeance)": character_full_name(
         Villain.proletariat, None, VILLAIN_DISPLAY_MAPPING
     ),
-    "Sergeant Steel (Vengeance)": create_rds_key(
+    "Sergeant Steel (Vengeance)": character_full_name(
         Villain.sergeant_steel, None, VILLAIN_DISPLAY_MAPPING
     ),
-    "Skinwalker Gloomweaver": create_rds_key(
+    "Skinwalker Gloomweaver": character_full_name(
         Villain.gloomweaver, AlternateTags.skinwalker, VILLAIN_DISPLAY_MAPPING
     ),
-    "Spite": create_rds_key(Villain.spite, None, VILLAIN_DISPLAY_MAPPING),
-    "The Chairman": create_rds_key(Villain.chairman, None, VILLAIN_DISPLAY_MAPPING),
-    "The Dreamer": create_rds_key(Villain.the_dreamer, None, VILLAIN_DISPLAY_MAPPING),
-    "The Ennead": create_rds_key(Villain.the_ennead, None, VILLAIN_DISPLAY_MAPPING),
-    "The Matriarch": create_rds_key(Villain.matriarch, None, VILLAIN_DISPLAY_MAPPING),
-    "The Operative (Vengeance)": create_rds_key(
+    "Spite": character_full_name(Villain.spite, None, VILLAIN_DISPLAY_MAPPING),
+    "The Chairman": character_full_name(
+        Villain.chairman, None, VILLAIN_DISPLAY_MAPPING
+    ),
+    "The Dreamer": character_full_name(
+        Villain.the_dreamer, None, VILLAIN_DISPLAY_MAPPING
+    ),
+    "The Ennead": character_full_name(
+        Villain.the_ennead, None, VILLAIN_DISPLAY_MAPPING
+    ),
+    "The Matriarch": character_full_name(
+        Villain.matriarch, None, VILLAIN_DISPLAY_MAPPING
+    ),
+    "The Operative (Vengeance)": character_full_name(
         Villain.the_operative, None, VILLAIN_DISPLAY_MAPPING
     ),
-    "Tormented Infinitor": create_rds_key(
+    "Tormented Infinitor": character_full_name(
         Villain.infinitor, AlternateTags.heroic, VILLAIN_DISPLAY_MAPPING
     ),
-    "Unstable Kismet": create_rds_key(
+    "Unstable Kismet": character_full_name(
         Villain.kismet, AlternateTags.the_unstable, VILLAIN_DISPLAY_MAPPING
     ),
     "Vengeance Five": None,
     "Vengeance Style (Vengeance and Villains)": None,
-    "Wager Master": create_rds_key(Villain.wager_master, None, VILLAIN_DISPLAY_MAPPING),
+    "Wager Master": character_full_name(
+        Villain.wager_master, None, VILLAIN_DISPLAY_MAPPING
+    ),
 }
 
 HERO_GOOGLE_TO_RDS_MAPPING = {
     "(None - Selecting this option here will remove your entry from the general statistics, but provide us with interesting stats for 2 hero games in a separate study)": None,
     "(none)": None,
     "(None)": None,
-    "Absolute Zero": create_rds_key(Hero.absolute_zero, None, HERO_DISPLAY_MAPPING),
-    "Absolute Zero: Freedom Five": create_rds_key(
+    "Absolute Zero": character_full_name(
+        Hero.absolute_zero, None, HERO_DISPLAY_MAPPING
+    ),
+    "Absolute Zero: Freedom Five": character_full_name(
         Hero.absolute_zero, AlternateTags.freedom_five, HERO_DISPLAY_MAPPING
     ),
-    "Absolute Zero: Freedom Six (Elemental Wrath)": create_rds_key(
+    "Absolute Zero: Freedom Six (Elemental Wrath)": character_full_name(
         Hero.absolute_zero, AlternateTags.freedom_six, HERO_DISPLAY_MAPPING
     ),
-    "Absolute Zero: Termi-Nation": create_rds_key(
+    "Absolute Zero: Termi-Nation": character_full_name(
         Hero.absolute_zero, AlternateTags.termi_nation, HERO_DISPLAY_MAPPING
     ),
-    "Akash'Thriya": create_rds_key(Hero.akash_thriya, None, HERO_DISPLAY_MAPPING),
-    "Akash'Thriya: Spirit of the Void": create_rds_key(
+    "Akash'Thriya": character_full_name(Hero.akash_thriya, None, HERO_DISPLAY_MAPPING),
+    "Akash'Thriya: Spirit of the Void": character_full_name(
         Hero.akash_thriya, AlternateTags.spirit_of_the_void, HERO_DISPLAY_MAPPING
     ),
-    "Argent Adept": create_rds_key(Hero.argent_adept, None, HERO_DISPLAY_MAPPING),
-    "Argent Adept: Dark Conductor (Kvothe)": create_rds_key(
+    "Argent Adept": character_full_name(Hero.argent_adept, None, HERO_DISPLAY_MAPPING),
+    "Argent Adept: Dark Conductor (Kvothe)": character_full_name(
         Hero.argent_adept, AlternateTags.dark_conductor, HERO_DISPLAY_MAPPING
     ),
-    "Argent Adept: Prime Warden": create_rds_key(
+    "Argent Adept: Prime Warden": character_full_name(
         Hero.argent_adept, AlternateTags.prime_wardens, HERO_DISPLAY_MAPPING
     ),
-    "Argent Adept: XTREME Prime Warden": create_rds_key(
+    "Argent Adept: XTREME Prime Warden": character_full_name(
         Hero.argent_adept, AlternateTags.xtreme_prime_wardens, HERO_DISPLAY_MAPPING
     ),
-    "Benchmark": create_rds_key(Hero.bench_mark, None, HERO_DISPLAY_MAPPING),
-    "Benchmark: Supply and Demand": create_rds_key(
+    "Benchmark": character_full_name(Hero.bench_mark, None, HERO_DISPLAY_MAPPING),
+    "Benchmark: Supply and Demand": character_full_name(
         Hero.bench_mark, AlternateTags.supply_and_demand, HERO_DISPLAY_MAPPING
     ),
-    "Bunker": create_rds_key(Hero.bunker, None, HERO_DISPLAY_MAPPING),
-    "Bunker: Freedom Five": create_rds_key(
+    "Bunker": character_full_name(Hero.bunker, None, HERO_DISPLAY_MAPPING),
+    "Bunker: Freedom Five": character_full_name(
         Hero.bunker, AlternateTags.freedom_five, HERO_DISPLAY_MAPPING
     ),
-    "Bunker: Freedom Six (Engine of War)": create_rds_key(
+    "Bunker: Freedom Six (Engine of War)": character_full_name(
         Hero.bunker, AlternateTags.freedom_six, HERO_DISPLAY_MAPPING
     ),
-    "Bunker: GI": create_rds_key(Hero.bunker, AlternateTags.gi, HERO_DISPLAY_MAPPING),
-    "Bunker: Termi-Nation": create_rds_key(
+    "Bunker: GI": character_full_name(
+        Hero.bunker, AlternateTags.gi, HERO_DISPLAY_MAPPING
+    ),
+    "Bunker: Termi-Nation": character_full_name(
         Hero.bunker, AlternateTags.termi_nation, HERO_DISPLAY_MAPPING
     ),
-    "Captain Cosmic": create_rds_key(Hero.captain_cosmic, None, HERO_DISPLAY_MAPPING),
-    "Captain Cosmic: Prime Warden": create_rds_key(
+    "Captain Cosmic": character_full_name(
+        Hero.captain_cosmic, None, HERO_DISPLAY_MAPPING
+    ),
+    "Captain Cosmic: Prime Warden": character_full_name(
         Hero.captain_cosmic, AlternateTags.prime_wardens, HERO_DISPLAY_MAPPING
     ),
-    "Captain Cosmic: Requital": create_rds_key(
+    "Captain Cosmic: Requital": character_full_name(
         Hero.captain_cosmic, AlternateTags.requital, HERO_DISPLAY_MAPPING
     ),
-    "Captain Cosmic: XTREME Prime Warden": create_rds_key(
+    "Captain Cosmic: XTREME Prime Warden": character_full_name(
         Hero.captain_cosmic, AlternateTags.xtreme_prime_wardens, HERO_DISPLAY_MAPPING
     ),
-    "Chrono-Ranger": create_rds_key(Hero.chrono_ranger, None, HERO_DISPLAY_MAPPING),
-    "Chrono-Ranger: Best of Times": create_rds_key(
+    "Chrono-Ranger": character_full_name(
+        Hero.chrono_ranger, None, HERO_DISPLAY_MAPPING
+    ),
+    "Chrono-Ranger: Best of Times": character_full_name(
         Hero.chrono_ranger, AlternateTags.best_of_times, HERO_DISPLAY_MAPPING
     ),
-    "Dr. Medico: Void Guard": create_rds_key(
+    "Dr. Medico: Void Guard": character_full_name(
         Hero.doctor_medico, None, HERO_DISPLAY_MAPPING
     ),
-    "Dr. Medico: Void Guard, Malpractice": create_rds_key(
+    "Dr. Medico: Void Guard, Malpractice": character_full_name(
         Hero.doctor_medico, AlternateTags.malpractice, HERO_DISPLAY_MAPPING
     ),
-    "Expatriette": create_rds_key(Hero.expatriette, None, HERO_DISPLAY_MAPPING),
-    "Expatriette: Dark Watch": create_rds_key(
+    "Expatriette": character_full_name(Hero.expatriette, None, HERO_DISPLAY_MAPPING),
+    "Expatriette: Dark Watch": character_full_name(
         Hero.expatriette, AlternateTags.dark_watch, HERO_DISPLAY_MAPPING
     ),
-    "Fanatic": create_rds_key(Hero.fanatic, None, HERO_DISPLAY_MAPPING),
-    "Fanatic: Prime Warden": create_rds_key(
+    "Fanatic": character_full_name(Hero.fanatic, None, HERO_DISPLAY_MAPPING),
+    "Fanatic: Prime Warden": character_full_name(
         Hero.fanatic, AlternateTags.prime_wardens, HERO_DISPLAY_MAPPING
     ),
-    "Fanatic: Redeemer": create_rds_key(
+    "Fanatic: Redeemer": character_full_name(
         Hero.fanatic, AlternateTags.redeemer, HERO_DISPLAY_MAPPING
     ),
-    "Fanatic: XTREME Prime Warden": create_rds_key(
+    "Fanatic: XTREME Prime Warden": character_full_name(
         Hero.fanatic, AlternateTags.xtreme_prime_wardens, HERO_DISPLAY_MAPPING
     ),
-    "Guise": create_rds_key(Hero.guise, None, HERO_DISPLAY_MAPPING),
-    "Guise: Completionist": create_rds_key(
+    "Guise": character_full_name(Hero.guise, None, HERO_DISPLAY_MAPPING),
+    "Guise: Completionist": character_full_name(
         Hero.guise, AlternateTags.completionist, HERO_DISPLAY_MAPPING
     ),
-    "Guise: Santa": create_rds_key(
+    "Guise: Santa": character_full_name(
         Hero.guise, AlternateTags.santa, HERO_DISPLAY_MAPPING
     ),
-    "Haka": create_rds_key(Hero.haka, None, HERO_DISPLAY_MAPPING),
-    "Haka: Eternal": create_rds_key(
+    "Haka": character_full_name(Hero.haka, None, HERO_DISPLAY_MAPPING),
+    "Haka: Eternal": character_full_name(
         Hero.haka, AlternateTags.eternal, HERO_DISPLAY_MAPPING
     ),
-    "Haka: Prime Warden": create_rds_key(
+    "Haka: Prime Warden": character_full_name(
         Hero.haka, AlternateTags.prime_wardens, HERO_DISPLAY_MAPPING
     ),
-    "Haka: XTREME Prime Warden": create_rds_key(
+    "Haka: XTREME Prime Warden": character_full_name(
         Hero.haka, AlternateTags.xtreme_prime_wardens, HERO_DISPLAY_MAPPING
     ),
-    "Harpy": create_rds_key(Hero.harpy, None, HERO_DISPLAY_MAPPING),
-    "Harpy: Dark Watch": create_rds_key(
+    "Harpy": character_full_name(Hero.harpy, None, HERO_DISPLAY_MAPPING),
+    "Harpy: Dark Watch": character_full_name(
         Hero.harpy, AlternateTags.dark_watch, HERO_DISPLAY_MAPPING
     ),
-    "Idealist: Void Guard": create_rds_key(Hero.idealist, None, HERO_DISPLAY_MAPPING),
-    "Idealist: Void Guard, Super Sentai": create_rds_key(
+    "Idealist: Void Guard": character_full_name(
+        Hero.idealist, None, HERO_DISPLAY_MAPPING
+    ),
+    "Idealist: Void Guard, Super Sentai": character_full_name(
         Hero.idealist, AlternateTags.super_sentai, HERO_DISPLAY_MAPPING
     ),
-    "K.N.Y.F.E.": create_rds_key(Hero.knyfe, None, HERO_DISPLAY_MAPPING),
-    "K.N.Y.F.E.: Rogue Agent": create_rds_key(
+    "K.N.Y.F.E.": character_full_name(Hero.knyfe, None, HERO_DISPLAY_MAPPING),
+    "K.N.Y.F.E.: Rogue Agent": character_full_name(
         Hero.knyfe, AlternateTags.rogue_agent, HERO_DISPLAY_MAPPING
     ),
-    "La Comodora": create_rds_key(Hero.la_comodora, None, HERO_DISPLAY_MAPPING),
-    "La Comodora: Curse of the Black Spot": create_rds_key(
+    "La Comodora": character_full_name(Hero.la_comodora, None, HERO_DISPLAY_MAPPING),
+    "La Comodora: Curse of the Black Spot": character_full_name(
         Hero.la_comodora, AlternateTags.curse_of_the_black_spot, HERO_DISPLAY_MAPPING
     ),
-    "Legacy": create_rds_key(Hero.legacy, None, HERO_DISPLAY_MAPPING),
-    "Legacy: Freedom Five": create_rds_key(
+    "Legacy": character_full_name(Hero.legacy, None, HERO_DISPLAY_MAPPING),
+    "Legacy: Freedom Five": character_full_name(
         Hero.legacy, AlternateTags.freedom_five, HERO_DISPLAY_MAPPING
     ),
-    "Legacy: Greatest": create_rds_key(
+    "Legacy: Greatest": character_full_name(
         Hero.legacy, AlternateTags.americas_greatest, HERO_DISPLAY_MAPPING
     ),
-    "Legacy: Young": create_rds_key(
+    "Legacy: Young": character_full_name(
         Hero.legacy, AlternateTags.americas_newest, HERO_DISPLAY_MAPPING
     ),
-    "Lifeline": create_rds_key(Hero.lifeline, None, HERO_DISPLAY_MAPPING),
-    "Lifeline: Blood Mage": create_rds_key(
+    "Lifeline": character_full_name(Hero.lifeline, None, HERO_DISPLAY_MAPPING),
+    "Lifeline: Blood Mage": character_full_name(
         Hero.lifeline, AlternateTags.bloodmage, HERO_DISPLAY_MAPPING
     ),
-    "Luminary": create_rds_key(Hero.luminary, None, HERO_DISPLAY_MAPPING),
-    "Luminary: Heroic (Ivana)": create_rds_key(
+    "Luminary": character_full_name(Hero.luminary, None, HERO_DISPLAY_MAPPING),
+    "Luminary: Heroic (Ivana)": character_full_name(
         Hero.luminary, AlternateTags.heroic, HERO_DISPLAY_MAPPING
     ),
-    "Mainstay: Void Guard": create_rds_key(Hero.mainstay, None, HERO_DISPLAY_MAPPING),
-    "Mainstay: Void Guard, Road Warrior": create_rds_key(
+    "Mainstay: Void Guard": character_full_name(
+        Hero.mainstay, None, HERO_DISPLAY_MAPPING
+    ),
+    "Mainstay: Void Guard, Road Warrior": character_full_name(
         Hero.mainstay, AlternateTags.road_warrior, HERO_DISPLAY_MAPPING
     ),
-    "Mr. Fixer": create_rds_key(Hero.mr_fixer, None, HERO_DISPLAY_MAPPING),
-    "Mr. Fixer: Dark Watch": create_rds_key(
+    "Mr. Fixer": character_full_name(Hero.mr_fixer, None, HERO_DISPLAY_MAPPING),
+    "Mr. Fixer: Dark Watch": character_full_name(
         Hero.mr_fixer, AlternateTags.dark_watch, HERO_DISPLAY_MAPPING
     ),
-    "Naturalist": create_rds_key(Hero.naturalist, None, HERO_DISPLAY_MAPPING),
-    "Naturalist: Hunted": create_rds_key(
+    "Naturalist": character_full_name(Hero.naturalist, None, HERO_DISPLAY_MAPPING),
+    "Naturalist: Hunted": character_full_name(
         Hero.naturalist, AlternateTags.the_hunted, HERO_DISPLAY_MAPPING
     ),
-    "Nightmist": create_rds_key(Hero.nightmist, None, HERO_DISPLAY_MAPPING),
-    "Nightmist: Dark Watch": create_rds_key(
+    "Nightmist": character_full_name(Hero.nightmist, None, HERO_DISPLAY_MAPPING),
+    "Nightmist: Dark Watch": character_full_name(
         Hero.nightmist, AlternateTags.dark_watch, HERO_DISPLAY_MAPPING
     ),
-    "Omnitron-X": create_rds_key(Hero.ominitron_x, None, HERO_DISPLAY_MAPPING),
-    "Omnitron-X: Omnitron-U": create_rds_key(
+    "Omnitron-X": character_full_name(Hero.ominitron_x, None, HERO_DISPLAY_MAPPING),
+    "Omnitron-X: Omnitron-U": character_full_name(
         Hero.ominitron_x, AlternateTags.u, HERO_DISPLAY_MAPPING
     ),
-    "Parse": create_rds_key(Hero.parse, None, HERO_DISPLAY_MAPPING),
-    "Parse: Fugue State": create_rds_key(
+    "Parse": character_full_name(Hero.parse, None, HERO_DISPLAY_MAPPING),
+    "Parse: Fugue State": character_full_name(
         Hero.parse, AlternateTags.fugue_state, HERO_DISPLAY_MAPPING
     ),
-    "Ra": create_rds_key(Hero.ra, None, HERO_DISPLAY_MAPPING),
-    "Ra: Horus of Two Horizons": create_rds_key(
+    "Ra": character_full_name(Hero.ra, None, HERO_DISPLAY_MAPPING),
+    "Ra: Horus of Two Horizons": character_full_name(
         Hero.ra, AlternateTags.horus_of_the_two_horizon, HERO_DISPLAY_MAPPING
     ),
-    "Ra: Setting Sun": create_rds_key(
+    "Ra: Setting Sun": character_full_name(
         Hero.ra, AlternateTags.setting_sun, HERO_DISPLAY_MAPPING
     ),
-    "Scholar": create_rds_key(Hero.scholar, None, HERO_DISPLAY_MAPPING),
-    "Scholar: Of the Infinite": create_rds_key(
+    "Scholar": character_full_name(Hero.scholar, None, HERO_DISPLAY_MAPPING),
+    "Scholar: Of the Infinite": character_full_name(
         Hero.scholar, AlternateTags.of_the_infinite, HERO_DISPLAY_MAPPING
     ),
-    "Setback": create_rds_key(Hero.setback, None, HERO_DISPLAY_MAPPING),
-    "Setback: Dark Watch": create_rds_key(
+    "Setback": character_full_name(Hero.setback, None, HERO_DISPLAY_MAPPING),
+    "Setback: Dark Watch": character_full_name(
         Hero.setback, AlternateTags.dark_watch, HERO_DISPLAY_MAPPING
     ),
-    "Sky-Scraper": create_rds_key(Hero.sky_scraper, None, HERO_DISPLAY_MAPPING),
-    "Sky-Scraper: Extremist": create_rds_key(
+    "Sky-Scraper": character_full_name(Hero.sky_scraper, None, HERO_DISPLAY_MAPPING),
+    "Sky-Scraper: Extremist": character_full_name(
         Hero.sky_scraper, AlternateTags.extremist, HERO_DISPLAY_MAPPING
     ),
-    "Stuntman": create_rds_key(Hero.stuntman, None, HERO_DISPLAY_MAPPING),
-    "Stuntman: Action Hero": create_rds_key(
+    "Stuntman": character_full_name(Hero.stuntman, None, HERO_DISPLAY_MAPPING),
+    "Stuntman: Action Hero": character_full_name(
         Hero.stuntman, AlternateTags.action_hero, HERO_DISPLAY_MAPPING
     ),
-    "Tachyon": create_rds_key(Hero.tachyon, None, HERO_DISPLAY_MAPPING),
-    "Tachyon: Freedom Five": create_rds_key(
+    "Tachyon": character_full_name(Hero.tachyon, None, HERO_DISPLAY_MAPPING),
+    "Tachyon: Freedom Five": character_full_name(
         Hero.tachyon, AlternateTags.freedom_five, HERO_DISPLAY_MAPPING
     ),
-    "Tachyon: Freedom Six (Team Leader)": create_rds_key(
+    "Tachyon: Freedom Six (Team Leader)": character_full_name(
         Hero.tachyon, AlternateTags.freedom_six, HERO_DISPLAY_MAPPING
     ),
-    "Tachyon: Super Scientific": create_rds_key(
+    "Tachyon: Super Scientific": character_full_name(
         Hero.tachyon, AlternateTags.super_scientific, HERO_DISPLAY_MAPPING
     ),
-    "Tempest": create_rds_key(Hero.tempest, None, HERO_DISPLAY_MAPPING),
-    "Tempest: Freedom Six (Sacrifice)": create_rds_key(
+    "Tempest": character_full_name(Hero.tempest, None, HERO_DISPLAY_MAPPING),
+    "Tempest: Freedom Six (Sacrifice)": character_full_name(
         Hero.tempest, AlternateTags.freedom_six, HERO_DISPLAY_MAPPING
     ),
-    "Tempest: Prime Warden": create_rds_key(
+    "Tempest: Prime Warden": character_full_name(
         Hero.tempest, AlternateTags.prime_wardens, HERO_DISPLAY_MAPPING
     ),
-    "Tempest: XTREME Prime Warden": create_rds_key(
+    "Tempest: XTREME Prime Warden": character_full_name(
         Hero.tempest, AlternateTags.xtreme_prime_wardens, HERO_DISPLAY_MAPPING
     ),
-    "The Sentinels": create_rds_key(
+    "The Sentinels": character_full_name(
         Hero.southwest_sentinels, None, HERO_DISPLAY_MAPPING
     ),
-    "The Sentinels: Adamant": create_rds_key(
+    "The Sentinels: Adamant": character_full_name(
         Hero.southwest_sentinels, AlternateTags.adamant, HERO_DISPLAY_MAPPING
     ),
-    "Unity": create_rds_key(Hero.unity, None, HERO_DISPLAY_MAPPING),
-    "Unity: Freedom Six (Golem)": create_rds_key(
+    "Unity": character_full_name(Hero.unity, None, HERO_DISPLAY_MAPPING),
+    "Unity: Freedom Six (Golem)": character_full_name(
         Hero.unity, AlternateTags.freedom_six, HERO_DISPLAY_MAPPING
     ),
-    "Unity: Termi-Nation": create_rds_key(
+    "Unity: Termi-Nation": character_full_name(
         Hero.unity, AlternateTags.termi_nation, HERO_DISPLAY_MAPPING
     ),
-    "Visionary": create_rds_key(Hero.visionary, None, HERO_DISPLAY_MAPPING),
-    "Visionary: Dark": create_rds_key(
+    "Visionary": character_full_name(Hero.visionary, None, HERO_DISPLAY_MAPPING),
+    "Visionary: Dark": character_full_name(
         Hero.visionary, AlternateTags.dark, HERO_DISPLAY_MAPPING
     ),
-    "Visionary: Unleashed": create_rds_key(
+    "Visionary: Unleashed": character_full_name(
         Hero.visionary, AlternateTags.unleashed, HERO_DISPLAY_MAPPING
     ),
-    "Wraith": create_rds_key(Hero.wraith, None, HERO_DISPLAY_MAPPING),
-    "Wraith: Freedom Five": create_rds_key(
+    "Wraith": character_full_name(Hero.wraith, None, HERO_DISPLAY_MAPPING),
+    "Wraith: Freedom Five": character_full_name(
         Hero.wraith, AlternateTags.freedom_five, HERO_DISPLAY_MAPPING
     ),
-    "Wraith: Freedom Six (Price of Freedom)": create_rds_key(
+    "Wraith: Freedom Six (Price of Freedom)": character_full_name(
         Hero.wraith, AlternateTags.freedom_six, HERO_DISPLAY_MAPPING
     ),
-    "Wraith: Rook City": create_rds_key(
+    "Wraith: Rook City": character_full_name(
         Hero.wraith, AlternateTags.rook_city, HERO_DISPLAY_MAPPING
     ),
-    "Writhe: Void Guard": create_rds_key(Hero.writhe, None, HERO_DISPLAY_MAPPING),
-    "Writhe: Void Guard, Cosmic Inventor": create_rds_key(
+    "Writhe: Void Guard": character_full_name(Hero.writhe, None, HERO_DISPLAY_MAPPING),
+    "Writhe: Void Guard, Cosmic Inventor": character_full_name(
         Hero.writhe, AlternateTags.cosmic_inventor, HERO_DISPLAY_MAPPING
     ),
 }

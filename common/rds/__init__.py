@@ -28,7 +28,7 @@ def get_mysql_client():
     )
 
 
-def create_rds_key(
+def character_full_name(
     full_name: Union[Character, str],
     alternate_name: Union[AlternateTags, str, None],
     mapping: dict,

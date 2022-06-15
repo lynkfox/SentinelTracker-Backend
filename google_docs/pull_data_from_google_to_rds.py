@@ -1,5 +1,5 @@
 from __future__ import print_function
-from google_docs.google_aws_common import SqlColumns, SqlTables
+from common.sql_attributes import SqlColumns, SqlTables
 from auth import get_google_credentials_through_oath2
 from common.models.schema_models import (
     GameDetail,

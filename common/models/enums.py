@@ -9,6 +9,11 @@ from typing import ClassVar
 #####################################################
 
 
+class EnhancedEnum(Enum):
+    def __str__(self):
+        return str(self.value)
+
+
 class Type(Enum):
     HERO = "Hero"
     VILLAIN = "Villain"

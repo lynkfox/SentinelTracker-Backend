@@ -1,4 +1,4 @@
-from lambda_functions.get_entity.utilities import LookUp, Operation
+from lambda_functions.statistics.utilities import LookUp, Operation
 from common.models.enums import Default, Comparator, Type, Selector
 from common.models.character_enums import Hero, Villain, Environment, AlternateTags
 
