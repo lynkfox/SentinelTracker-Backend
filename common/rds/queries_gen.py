@@ -123,7 +123,7 @@ def team_is(names: List[str], prefix: Type = Type.HERO, positional=False) -> str
             OPPONENTS depending on Type
     """
     if len(names) > 5:
-        raise ValueError("names: too many names for with_allies")
+        raise ValueError("names: too many names for team_is")
 
     if not positional:
         names.sort()
@@ -132,12 +132,15 @@ def team_is(names: List[str], prefix: Type = Type.HERO, positional=False) -> str
     else:
         table_name = SqlTables.GAME_DETAILS
 
-    columns = ColumnGroup.team_columns(prefix, table_name)[: len(names)]
+    columns = ColumnGroup.team_columns(prefix, table_name)
 
-    if len(names) == 1:
-        return f"{columns[0]}='{names[0]}'"
+    if positional:
+        columns = columns[: len(names)]
+        return ", ".join([f"{value}='{names[i]}'" for i, value in enumerate(columns)])
 
-    return ", ".join([f"{value}='{names[i]}'" for i, value in enumerate(columns)])
+    in_string = f"IN ({', '.join(columns)})"
+
+    return ", ".join([f"{name} {in_string}" for name in names])
 
 
 def in_environment(name: str) -> str:
