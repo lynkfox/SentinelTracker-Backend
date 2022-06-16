@@ -145,3 +145,23 @@ class Test_generate_from_operations:
             test_result
             == "SELECT * from gameDetails INNER JOIN heroTeams on heroTeams.id_hash = gameDetails.hero_team INNER JOIN opponents on opponents.id_hash = gameDetails.villain WHERE 'Baron Blade' IN (opponents.villain_one, opponents.villain_two, opponents.villain_three, opponents.villain_four, opponents.villain_five) AND gameDetails.entry_is_valid"
         )
+
+    def test_single_environment(self):
+        operations = LookUp("environment/insula_primalis").operations
+
+        test_result = generate_from_operations(operations)
+
+        assert (
+            test_result
+            == "SELECT * from gameDetails INNER JOIN heroTeams on heroTeams.id_hash = gameDetails.hero_team INNER JOIN opponents on opponents.id_hash = gameDetails.villain WHERE gameDetails.environment='Insula Primalis' AND gameDetails.entry_is_valid"
+        )
+
+    def test_hero_versus_villain(self):
+        operations = LookUp("hero/absolute_zero/versus/baron_blade").operations
+
+        test_result = generate_from_operations(operations)
+
+        assert (
+            test_result
+            == "SELECT * from gameDetails INNER JOIN heroTeams on heroTeams.id_hash = gameDetails.hero_team INNER JOIN opponents on opponents.id_hash = gameDetails.villain WHERE 'Absolute Zero' IN (heroTeams.hero_one, heroTeams.hero_two, heroTeams.hero_three, heroTeams.hero_four, heroTeams.hero_five) AND 'Baron Blade' IN (opponents.villain_one, opponents.villain_two, opponents.villain_three, opponents.villain_four, opponents.villain_five) AND gameDetails.entry_is_valid"
+        )

@@ -203,13 +203,11 @@ def generate_from_operations(operations: List[Operation]) -> str:
 
         instruction_dispatch[1](name + definitive + alternate_name)
 
-    select_statement = "SELECT * from gameDetails INNER JOIN heroTeams on heroTeams.id_hash = gameDetails.hero_team INNER JOIN opponents on opponents.id_hash = gameDetails.villain WHERE "
-    select_statement += team_is(heroes, Type.HERO, positional=False) if len(heroes) > 0 else " "
-    select_statement += " AND " if (len(opponents) > 0 or len(locations) > 0) and len(heroes) > 0 else " "
-    select_statement += team_is(opponents, Type.VILLAIN, positional=False) if len(opponents) > 0 and len(heroes) == 0 else ""
-    select_statement += " AND " if len(locations) > 0 and (len(heroes) > 0 or len(opponents) > 0) else " "
-    select_statement += in_location(locations[0]) if len(locations) > 0 else " "
-    select_statement += " AND " if len(locations) > 0 or len(heroes) > 0 or len(opponents) > 0 else " "
-    select_statement += "gameDetails.entry_is_valid"
+    location = in_location(locations[0]) if len(locations) > 0 else None
+    hero = team_is(heroes, Type.HERO, positional=False) if len(heroes) > 0 else None
+    opponents = team_is(opponents, Type.VILLAIN, positional=False) if len(opponents) > 0 else None
 
-    return select_statement.replace("  ", " ").replace("  ", " ")
+    where_statement = " AND ".join(filter(None, [hero, opponents, location, "gameDetails.entry_is_valid"]))
+    select_statement = "SELECT * from gameDetails INNER JOIN heroTeams on heroTeams.id_hash = gameDetails.hero_team INNER JOIN opponents on opponents.id_hash = gameDetails.villain WHERE "
+
+    return select_statement + where_statement
