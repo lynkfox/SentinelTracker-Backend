@@ -47,14 +47,15 @@ class Test_team_is:
     def test_returns_valid_string_with_only_one_hero(self):
         test_response = team_is(["Absolute Zero"], Type.HERO)
         assert (
-            test_response == "'Absolute Zero' IN (heroTeams.hero_one,heroTeams.hero_two,heroTeams.hero_three,heroTeams.hero_four,heroTeams.hero_five)"
+            test_response
+            == "'Absolute Zero' IN (heroTeams.hero_one, heroTeams.hero_two, heroTeams.hero_three, heroTeams.hero_four, heroTeams.hero_five)"
         )
 
     def test_returns_valid_string_with_more_than_one_hero(self):
         test_response = team_is(["Absolute Zero", "Bunker"], Type.HERO)
         assert (
             test_response
-            == "'Absolute Zero' IN (heroTeams.hero_one,heroTeams.hero_two,heroTeams.hero_three,heroTeams.hero_four,heroTeams.hero_five), 'Bunker' IN (heroTeams.hero_one,heroTeams.hero_two,heroTeams.hero_three,heroTeams.hero_four,heroTeams.hero_five)"
+            == "'Absolute Zero' IN (heroTeams.hero_one, heroTeams.hero_two, heroTeams.hero_three, heroTeams.hero_four, heroTeams.hero_five), 'Bunker' IN (heroTeams.hero_one, heroTeams.hero_two, heroTeams.hero_three, heroTeams.hero_four, heroTeams.hero_five)"
         )
 
     def test_same_order_if_positional_true(self):
@@ -65,12 +66,15 @@ class Test_team_is:
         test_response = team_is(["Legacy", "Bunker"], Type.HERO)
         assert (
             test_response
-            == "'Bunker' IN (heroTeams.hero_one,heroTeams.hero_two,heroTeams.hero_three,heroTeams.hero_four,heroTeams.hero_five), 'Legacy' IN (heroTeams.hero_one,heroTeams.hero_two,heroTeams.hero_three,heroTeams.hero_four,heroTeams.hero_five)"
+            == "'Bunker' IN (heroTeams.hero_one, heroTeams.hero_two, heroTeams.hero_three, heroTeams.hero_four, heroTeams.hero_five), 'Legacy' IN (heroTeams.hero_one, heroTeams.hero_two, heroTeams.hero_three, heroTeams.hero_four, heroTeams.hero_five)"
         )
 
     def test_villains_points_to_opponent_table(self):
         test_response = team_is(["Baron Blade", "Ermine"], Type.VILLAIN)
-        assert test_response == "opponents.villain_one='Baron Blade', opponents.villain_two='Ermine'"
+        assert (
+            test_response
+            == "'Baron Blade' IN (opponents.villain_one, opponents.villain_two, opponents.villain_three, opponents.villain_four, opponents.villain_five), 'Ermine' IN (opponents.villain_one, opponents.villain_two, opponents.villain_three, opponents.villain_four, opponents.villain_five)"
+        )
 
     def test_raises_value_error_with_more_than_5_names(self):
         with pytest.raises(ValueError, match="names: too many names for team_is") as e:

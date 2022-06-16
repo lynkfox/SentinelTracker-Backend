@@ -140,7 +140,7 @@ def team_is(names: List[str], prefix: Type = Type.HERO, positional=False) -> str
 
     in_string = f"IN ({', '.join(columns)})"
 
-    return ", ".join([f"{name} {in_string}" for name in names])
+    return ", ".join([f"'{name}' {in_string}" for name in names])
 
 
 def in_environment(name: str) -> str:
