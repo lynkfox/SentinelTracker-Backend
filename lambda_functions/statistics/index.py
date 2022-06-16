@@ -3,7 +3,8 @@ import os
 
 import boto3
 from aws_lambda_powertools import Logger
-from common.models.entity import Statistics
+from models import Statistics
+from common.rds.queries import query_
 
 logger = Logger()
 
@@ -26,7 +27,7 @@ def lambda_handler(event: dict, context: dict) -> dict:
             body = {"message": "Preflight Accepted"}
 
         if _event.IS_GET:
-            body = get_entity(_event.entity_name, dynamo_resource=DYNAMO_RESOURCE)
+            body = query_(_event.look_up_data.operations)
 
     except Exception as e:
         logger.exception("Unhandled Error")

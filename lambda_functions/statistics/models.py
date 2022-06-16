@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from common.models.entity import ApiEvent
 from common.models.enums import ApiEventTypes
-from utilities import LookUp
+from common.rds import LookUp
 
 
 @dataclass
