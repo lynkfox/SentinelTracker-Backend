@@ -3,27 +3,6 @@ from common.models.enums import Default, Type
 from common.models.game_details_enums import BoxSet
 from typing import Union
 
-"""
-
-Functions found in here are for interaction with dynamodb. If they interact directly with the dynamo,
-i.e. querying or insert/updating, they will expect to be passed a dynamodb resource
-
-
-    Dynamodb Arrangement
-
-    [name]#TYPE
-        META#
-            Character Information (BoxSet, Difficulty/Peril/Complexity, HP, Powers, ect)
-        META#ALT#[alt_name]
-            Character Information (BoxSet, Difficulty/Peril/Complexity, HP, Powers, ect)
-        CACHE#[hash of previous requests]
-            Total Victories for [name], Total Games, De-hashed values, TTL?
-        CACHE#ALT#[alt_name]#[hash of previous requests]
-
-
-
-"""
-
 
 def build_pk(
     primary_name: Character,

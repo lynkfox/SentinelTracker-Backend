@@ -42,28 +42,37 @@ class Test_character_is:
 
 class Test_with_allies:
     def test_returns_str(self):
-        assert isinstance(with_allies(["Absolute Zero"], Type.HERO), str)
+        assert isinstance(team_is(["Absolute Zero"], Type.HERO), str)
 
     def test_returns_valid_string_with_only_one_hero(self):
-        test_response = with_allies(["Absolute Zero"], Type.HERO)
+        test_response = team_is(["Absolute Zero"], Type.HERO)
         assert test_response == "heroTeams.hero_one=`Absolute Zero`"
 
     def test_returns_valid_string_with_more_than_one_hero(self):
-        test_response = with_allies(["Absolute Zero", "Bunker"], Type.HERO)
+        test_response = team_is(["Absolute Zero", "Bunker"], Type.HERO)
         assert test_response == "heroTeams.hero_one=`Absolute Zero`, heroTeams.hero_two=`Bunker`"
 
     def test_same_order_if_positional_true(self):
-        test_response = with_allies(["Writhe", "Bunker"], Type.HERO, positional=True)
+        test_response = team_is(["Writhe", "Bunker"], Type.HERO, positional=True)
         assert test_response == "gameDetails.hero_one=`Writhe`, gameDetails.hero_two=`Bunker`"
 
     def test_sorts_if_positional_left_to_default(self):
-        test_response = with_allies(["Writhe", "Bunker"], Type.HERO)
+        test_response = team_is(["Writhe", "Bunker"], Type.HERO)
         assert test_response == "heroTeams.hero_one=`Bunker`, heroTeams.hero_two=`Writhe`"
 
     def test_villains_points_to_opponent_table(self):
-        test_response = with_allies(["Baron Blade", "Ermine"], Type.VILLAIN)
+        test_response = team_is(["Baron Blade", "Ermine"], Type.VILLAIN)
         assert test_response == "opponents.villain_one=`Baron Blade`, opponents.villain_two=`Ermine`"
 
     def test_raises_value_error_with_more_than_5_names(self):
         with pytest.raises(ValueError, match="names: too many names for with_allies") as e:
-            test_response = with_allies(["", "", "", "", "", ""], Type.VILLAIN)
+            test_response = team_is(["", "", "", "", "", ""], Type.VILLAIN)
+
+
+class Test_in_environment:
+    def test_returns_a_string(self):
+        assert isinstance(in_environment("Insula Primalis"), str)
+
+    def test_returns_a_valid_qualifier(self):
+        test_result = in_environment("Insula Primalis")
+        assert test_result == "gameDetails.environment=`Insula Primalis`"

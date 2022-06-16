@@ -1,5 +1,5 @@
 from common.models.enums import Type
-from common.sql_attributes import SqlTables
+from common.sql_attributes import SqlColumns, SqlTables
 from dataclasses import dataclass
 from typing import List
 
@@ -39,7 +39,7 @@ class ColumnGroup:
     @classmethod
     def _is_hero_or_villain(cls, prefix: Type):
         """
-        Error Handling for hero_[number] column names.
+        Error Handling for [hero|villain]_[number] column names.
         """
         if prefix is not Type.HERO and prefix is not Type.VILLAIN:
             raise ValueError("prefix Mismatch: must be HERO or VILLAIN")
@@ -71,9 +71,10 @@ def character_is(
     return f"`{character_name}` IN ({ColumnGroup.team_member(prefix, table_name)})"
 
 
-def with_allies(names: List[str], prefix: Type = Type.HERO, positional=False) -> str:
+def team_is(names: List[str], prefix: Type = Type.HERO, positional=False) -> str:
     """
-    using character_is and a list of up to 5 names builds a team query string
+        using character_is and a list of up to 5 names builds part of the WHERE
+        query for looking up a team.
 
     Parameters:
         names (List[str]): common.rds.character_full_name() for each  character
@@ -100,3 +101,19 @@ def with_allies(names: List[str], prefix: Type = Type.HERO, positional=False) ->
         return f"{columns[0]}=`{names[0]}`"
 
     return ", ".join([f"{value}=`{names[i]}`" for i, value in enumerate(columns)])
+
+
+def in_environment(name: str) -> str:
+    """
+    builds part of the WHERE query string for adding an Environment to the
+    lookup
+
+    Parameters:
+        name (str) : use common.rds.character_full_name() to generate
+        the name properly.
+    """
+
+    # TODO: Need to revamp how the api_name to display_name and enums work. There is no easy way to validate that
+    # the name passed in is correct in the current setup.
+
+    return f"{SqlTables.GAME_DETAILS}.{SqlColumns.ENVIRONMENT}=`{name}`"

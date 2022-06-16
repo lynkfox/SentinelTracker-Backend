@@ -1,6 +1,6 @@
 from lambda_functions.statistics.utilities import LookUp, Operation
 from common.models.enums import Default, Comparator, Type, Selector
-from common.models.character_enums import Hero, Villain, Environment, AlternateTags
+from common.models.character_enums import Hero, Villain, Location, AlternateTags
 
 
 class Test_Lookup:
@@ -156,7 +156,7 @@ class Test_Lookup:
         operation_two = Operation(
             Comparator.IN,
             Selector.ENVIRONMENT,
-            Environment.insula_primalis,
+            Location.insula_primalis,
             Default.BASE,
         )
 
@@ -176,7 +176,7 @@ class Test_Lookup:
         operation_two = Operation(
             Comparator.IN,
             Selector.ENVIRONMENT,
-            Environment.insula_primalis,
+            Location.insula_primalis,
             Default.BASE,
         )
 
@@ -277,7 +277,7 @@ class Test_Lookup:
         operation_four = Operation(
             Comparator.IN,
             Selector.ENVIRONMENT,
-            Environment.insula_primalis,
+            Location.insula_primalis,
             Default.BASE,
         )
 
@@ -293,7 +293,7 @@ class Test_Lookup:
         operation_one = Operation(
             Comparator.START,
             Selector.ENVIRONMENT,
-            Environment.insula_primalis,
+            Location.insula_primalis,
             Default.BASE,
         )
 

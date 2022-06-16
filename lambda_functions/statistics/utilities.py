@@ -3,7 +3,7 @@ import os
 from dataclasses import dataclass, field
 from common.attributes import DynamoAttributes
 from common.models.enums import Selector, Comparator, Default, Type
-from common.models.character_enums import Hero, Villain, Environment, AlternateTags
+from common.models.character_enums import Hero, Villain, Location, AlternateTags
 from typing import Union, List, Tuple
 from enum import Enum
 from aws_lambda_powertools import Logger
@@ -184,7 +184,7 @@ class LookUp:
             if select == Selector.VILLAIN:
                 return select, Villain
             if select == Selector.ENVIRONMENT:
-                return select, Environment
+                return select, Location
 
         elif next_part == Default.ALL:
 
@@ -205,7 +205,7 @@ class LookUp:
                     return Selector.HERO, None
 
             if current_instruction == Comparator.IN:
-                return Selector.ENVIRONMENT, Environment
+                return Selector.ENVIRONMENT, Location
 
         else:
             select, enum_type = self._determine_entity_by_attached_part(next_part)
@@ -222,8 +222,8 @@ class LookUp:
         if Villain.has_member(next_part):
             return Selector.VILLAIN, Villain
 
-        if Environment.has_member(next_part):
-            return Selector.ENVIRONMENT, Environment
+        if Location.has_member(next_part):
+            return Selector.ENVIRONMENT, Location
 
         raise ValueError()
 

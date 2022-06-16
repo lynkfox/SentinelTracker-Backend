@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field, PrivateAttr, validator
 from pydantic.fields import ModelField
 from common.models.enums import Type
-from common.models.character_enums import Environment, Hero, Villain
+from common.models.character_enums import Location, Hero, Villain
 from common.models.game_details_enums import BoxSet
 from common.models.game_details_enums import (
     HeroLossCondition,

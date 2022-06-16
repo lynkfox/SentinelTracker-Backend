@@ -2,7 +2,7 @@ from google_docs.inserts.insert_environments import EnvironmentInsert
 from google_docs.inserts.insert_heroes import HeroInsert
 from google_docs.inserts.insert_villains import VillainInsert
 
-from common.models.character_enums import AlternateTags, Hero, Villain, Environment
+from common.models.character_enums import AlternateTags, Hero, Villain, Location
 from common.models.game_details_enums import BoxSet
 
 
@@ -254,27 +254,27 @@ RENEGADE_VILLAIN_INSERTS = [
 
 RENEGADE_ENVIRONMENT_INSERTS = [
     EnvironmentInsert(
-        Environment.diamond_manor,
+        Location.diamond_manor,
         BoxSet.ROOK_CITY_RENEGADES,
         AlternateTags.definitive,
     ),
     EnvironmentInsert(
-        Environment.pike_industrial_complex,
+        Location.pike_industrial_complex,
         BoxSet.ROOK_CITY_RENEGADES,
         AlternateTags.definitive,
     ),
     EnvironmentInsert(
-        Environment.rook_city,
+        Location.rook_city,
         BoxSet.ROOK_CITY_RENEGADES,
         AlternateTags.definitive,
     ),
     EnvironmentInsert(
-        Environment.realm_of_discord,
+        Location.realm_of_discord,
         BoxSet.ROOK_CITY_RENEGADES,
         AlternateTags.definitive,
     ),
     EnvironmentInsert(
-        Environment.temple_of_zhu_long,
+        Location.temple_of_zhu_long,
         BoxSet.ROOK_CITY_RENEGADES,
         AlternateTags.definitive,
     ),
