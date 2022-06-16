@@ -66,7 +66,7 @@ class Test_with_allies:
 
     def test_raises_value_error_with_more_than_5_names(self):
         with pytest.raises(ValueError, match="names: too many names for with_allies") as e:
-            test_response = team_is(["", "", "", "", "", ""], Type.VILLAIN)
+            team_is(["", "", "", "", "", ""], Type.VILLAIN)
 
 
 class Test_in_environment:
@@ -76,3 +76,20 @@ class Test_in_environment:
     def test_returns_a_valid_qualifier(self):
         test_result = in_environment("Insula Primalis")
         assert test_result == "gameDetails.environment=`Insula Primalis`"
+
+
+class Test_build_team_join:
+    def test_returns_a_string(self):
+        assert isinstance(build_team_join(), str)
+
+    def test_returns_hero_teams_join_with_hero_type(self):
+        test_result = build_team_join(Type.HERO)
+        assert test_result == f"inner join heroTeams on {SqlTables.GAME_DETAILS}.hero_team=heroTeams.id_hash"
+
+    def test_returns_opponents_join_with_villain_type(self):
+        test_result = build_team_join(Type.VILLAIN)
+        assert test_result == f"inner join opponents on {SqlTables.GAME_DETAILS}.hero_team=opponents.id_hash"
+
+    def test_raises_value_error_with_not_approved_type(self):
+        with pytest.raises(ValueError, match="prefix mismatch: Must be HERO or VILLAIN") as e:
+            build_team_join(Type.SCION)

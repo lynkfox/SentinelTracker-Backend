@@ -117,3 +117,20 @@ def in_environment(name: str) -> str:
     # the name passed in is correct in the current setup.
 
     return f"{SqlTables.GAME_DETAILS}.{SqlColumns.ENVIRONMENT}=`{name}`"
+
+
+def build_team_join(prefix: Type = Type.HERO) -> str:
+    """
+    Returns the join for [type] teams and gameDetails
+    """
+
+    if prefix is Type.HERO:
+        table = SqlTables.HERO_TEAMS
+
+    elif prefix is Type.VILLAIN:
+        table = SqlTables.OPPONENTS
+
+    else:
+        raise ValueError("prefix mismatch: Must be HERO or VILLAIN")
+
+    return f"inner join {table} on {SqlTables.GAME_DETAILS}.hero_team={table}.id_hash"
