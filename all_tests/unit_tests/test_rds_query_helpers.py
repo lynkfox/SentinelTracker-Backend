@@ -1,6 +1,6 @@
-from re import S
-from common.rds.queries_gen import *
+from common.rds import LookUp
 import pytest
+from common.rds.queries_gen import *
 
 
 class Test_character_is:
@@ -55,7 +55,7 @@ class Test_team_is:
         test_response = team_is(["Absolute Zero", "Bunker"], Type.HERO)
         assert (
             test_response
-            == "'Absolute Zero' IN (heroTeams.hero_one, heroTeams.hero_two, heroTeams.hero_three, heroTeams.hero_four, heroTeams.hero_five), 'Bunker' IN (heroTeams.hero_one, heroTeams.hero_two, heroTeams.hero_three, heroTeams.hero_four, heroTeams.hero_five)"
+            == "'Absolute Zero' IN (heroTeams.hero_one, heroTeams.hero_two, heroTeams.hero_three, heroTeams.hero_four, heroTeams.hero_five) AND 'Bunker' IN (heroTeams.hero_one, heroTeams.hero_two, heroTeams.hero_three, heroTeams.hero_four, heroTeams.hero_five)"
         )
 
     def test_same_order_if_positional_true(self):
@@ -66,14 +66,14 @@ class Test_team_is:
         test_response = team_is(["Legacy", "Bunker"], Type.HERO)
         assert (
             test_response
-            == "'Bunker' IN (heroTeams.hero_one, heroTeams.hero_two, heroTeams.hero_three, heroTeams.hero_four, heroTeams.hero_five), 'Legacy' IN (heroTeams.hero_one, heroTeams.hero_two, heroTeams.hero_three, heroTeams.hero_four, heroTeams.hero_five)"
+            == "'Bunker' IN (heroTeams.hero_one, heroTeams.hero_two, heroTeams.hero_three, heroTeams.hero_four, heroTeams.hero_five) AND 'Legacy' IN (heroTeams.hero_one, heroTeams.hero_two, heroTeams.hero_three, heroTeams.hero_four, heroTeams.hero_five)"
         )
 
     def test_villains_points_to_opponent_table(self):
         test_response = team_is(["Baron Blade", "Ermine"], Type.VILLAIN)
         assert (
             test_response
-            == "'Baron Blade' IN (opponents.villain_one, opponents.villain_two, opponents.villain_three, opponents.villain_four, opponents.villain_five), 'Ermine' IN (opponents.villain_one, opponents.villain_two, opponents.villain_three, opponents.villain_four, opponents.villain_five)"
+            == "'Baron Blade' IN (opponents.villain_one, opponents.villain_two, opponents.villain_three, opponents.villain_four, opponents.villain_five) AND 'Ermine' IN (opponents.villain_one, opponents.villain_two, opponents.villain_three, opponents.villain_four, opponents.villain_five)"
         )
 
     def test_raises_value_error_with_more_than_5_names(self):
@@ -83,8 +83,65 @@ class Test_team_is:
 
 class Test_in_environment:
     def test_returns_a_string(self):
-        assert isinstance(in_environment("Insula Primalis"), str)
+        assert isinstance(in_location("Insula Primalis"), str)
 
     def test_returns_a_valid_qualifier(self):
-        test_result = in_environment("Insula Primalis")
+        test_result = in_location("Insula Primalis")
         assert test_result == "gameDetails.environment='Insula Primalis'"
+
+
+class Test_generate_from_operations:
+    def test_single_base_hero_generates_good_sql_select_query(self):
+        operations = LookUp("hero/absolute_zero").operations
+
+        test_result = generate_from_operations(operations)
+
+        assert test_result == (
+            "SELECT * from gameDetails INNER JOIN heroTeams on heroTeams.id_hash = gameDetails.hero_team INNER JOIN opponents on opponents.id_hash = gameDetails.villain WHERE 'Absolute Zero' IN (heroTeams.hero_one, heroTeams.hero_two, heroTeams.hero_three, heroTeams.hero_four, heroTeams.hero_five) AND gameDetails.entry_is_valid"
+        )
+
+    def test_multiple_base_heroes(self):
+        operations = LookUp("hero/absolute_zero/with/bunker").operations
+
+        test_result = generate_from_operations(operations)
+
+        assert test_result == (
+            "SELECT * from gameDetails INNER JOIN heroTeams on heroTeams.id_hash = gameDetails.hero_team INNER JOIN opponents on opponents.id_hash = gameDetails.villain WHERE 'Absolute Zero' IN (heroTeams.hero_one, heroTeams.hero_two, heroTeams.hero_three, heroTeams.hero_four, heroTeams.hero_five) AND 'Bunker' IN (heroTeams.hero_one, heroTeams.hero_two, heroTeams.hero_three, heroTeams.hero_four, heroTeams.hero_five) AND gameDetails.entry_is_valid"
+        )
+
+    def test_single_hero_alternate(self):
+        operations = LookUp("hero/absolute_zero/freedom_six").operations
+
+        test_result = generate_from_operations(operations)
+
+        assert test_result == (
+            "SELECT * from gameDetails INNER JOIN heroTeams on heroTeams.id_hash = gameDetails.hero_team INNER JOIN opponents on opponents.id_hash = gameDetails.villain WHERE 'Absolute Zero, Freedom Six' IN (heroTeams.hero_one, heroTeams.hero_two, heroTeams.hero_three, heroTeams.hero_four, heroTeams.hero_five) AND gameDetails.entry_is_valid"
+        )
+
+    def test_single_hero_definite(self):
+        operations = LookUp("hero/absolute_zero/definitive").operations
+
+        test_result = generate_from_operations(operations)
+
+        assert test_result == (
+            "SELECT * from gameDetails INNER JOIN heroTeams on heroTeams.id_hash = gameDetails.hero_team INNER JOIN opponents on opponents.id_hash = gameDetails.villain WHERE 'Absolute Zero, Definitive' IN (heroTeams.hero_one, heroTeams.hero_two, heroTeams.hero_three, heroTeams.hero_four, heroTeams.hero_five) AND gameDetails.entry_is_valid"
+        )
+
+    def test_multiple_heroes_with_alts(self):
+        operations = LookUp("hero/absolute_zero/freedom_six/with/legacy/americas_greatest").operations
+
+        test_result = generate_from_operations(operations)
+
+        assert test_result == (
+            "SELECT * from gameDetails INNER JOIN heroTeams on heroTeams.id_hash = gameDetails.hero_team INNER JOIN opponents on opponents.id_hash = gameDetails.villain WHERE 'Absolute Zero, Freedom Six' IN (heroTeams.hero_one, heroTeams.hero_two, heroTeams.hero_three, heroTeams.hero_four, heroTeams.hero_five) AND 'Legacy, America's Greatest' IN (heroTeams.hero_one, heroTeams.hero_two, heroTeams.hero_three, heroTeams.hero_four, heroTeams.hero_five) AND gameDetails.entry_is_valid"
+        )
+
+    def test_single_villain(self):
+        operations = LookUp("villain/baron_blade").operations
+
+        test_result = generate_from_operations(operations)
+
+        assert (
+            test_result
+            == "SELECT * from gameDetails INNER JOIN heroTeams on heroTeams.id_hash = gameDetails.hero_team INNER JOIN opponents on opponents.id_hash = gameDetails.villain WHERE 'Baron Blade' IN (opponents.villain_one, opponents.villain_two, opponents.villain_three, opponents.villain_four, opponents.villain_five) AND gameDetails.entry_is_valid"
+        )

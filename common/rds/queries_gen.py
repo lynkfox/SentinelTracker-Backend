@@ -1,4 +1,4 @@
-from common.models.enums import Type, Default
+from common.models.enums import Type, Default, Selector, Comparator
 from common.sql_attributes import SqlColumns, SqlTables
 from dataclasses import dataclass
 from typing import List
@@ -148,7 +148,7 @@ def team_is(names: List[str], prefix: Type = Type.HERO, positional=False) -> str
 
     in_string = f"IN ({', '.join(columns)})"
 
-    return ", ".join([f"'{name}' {in_string}" for name in names])
+    return " AND ".join([f"'{name}' {in_string}" for name in names])
 
 
 def in_location(name: str) -> str:
@@ -185,9 +185,9 @@ def generate_from_operations(operations: List[Operation]) -> str:
     locations = []
 
     dispatch = {
-        Type.HERO: (HERO_DISPLAY_MAPPING.get, heroes.append),
-        Type.VILLAIN: (VILLAIN_DISPLAY_MAPPING.get, opponents.append),
-        Type.ENVIRONMENT: (LOCATION_DISPLAY_MAPPING.get, locations.append),
+        Selector.HERO: (HERO_DISPLAY_MAPPING.get, heroes.append),
+        Selector.VILLAIN: (VILLAIN_DISPLAY_MAPPING.get, opponents.append),
+        Selector.ENVIRONMENT: (LOCATION_DISPLAY_MAPPING.get, locations.append),
     }
 
     for instruction in operations:
@@ -199,13 +199,17 @@ def generate_from_operations(operations: List[Operation]) -> str:
 
         name = instruction_dispatch[0](instruction.name_selection)
         definitive = ALTERNATE_TAG_DISPLAY_MAPPING.get(AlternateTags.definitive) if instruction.definitive else ""
-        alternate_name = ALTERNATE_TAG_DISPLAY_MAPPING.get(instruction.alternate_selection)
+        alternate_name = ALTERNATE_TAG_DISPLAY_MAPPING.get(instruction.alternate_selection, "")
 
         instruction_dispatch[1](name + definitive + alternate_name)
 
     select_statement = "SELECT * from gameDetails INNER JOIN heroTeams on heroTeams.id_hash = gameDetails.hero_team INNER JOIN opponents on opponents.id_hash = gameDetails.villain WHERE "
-    select_statement += team_is(heroes, Type.HERO, positional=False) if len(heroes) > 0 else ""
-    select_statement += " AND " if len(opponents) > 0 or len(locations) > 0 else " "
+    select_statement += team_is(heroes, Type.HERO, positional=False) if len(heroes) > 0 else " "
+    select_statement += " AND " if (len(opponents) > 0 or len(locations) > 0) and len(heroes) > 0 else " "
     select_statement += team_is(opponents, Type.VILLAIN, positional=False) if len(opponents) > 0 and len(heroes) == 0 else ""
-    select_statement += " AND " if len(locations) > 0 else " "
-    select_statement += in_location(locations[0]) if len(locations) > 0 else ""
+    select_statement += " AND " if len(locations) > 0 and (len(heroes) > 0 or len(opponents) > 0) else " "
+    select_statement += in_location(locations[0]) if len(locations) > 0 else " "
+    select_statement += " AND " if len(locations) > 0 or len(heroes) > 0 or len(opponents) > 0 else " "
+    select_statement += "gameDetails.entry_is_valid"
+
+    return select_statement.replace("  ", " ").replace("  ", " ")
