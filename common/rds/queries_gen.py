@@ -50,6 +50,43 @@ class ColumnGroup:
             raise ValueError("table_name Mismatch: table_name must be GAME_DETAILS, HERO_TEAMS, or OPPONENTS")
 
 
+##################################################################
+#                                                                #
+#        WHERE query pieces                                      #
+#                                                                #
+##################################################################
+
+"""
+    SELECT * from gameDetails
+	INNER JOIN heroTeams on heroTeams.id_hash = gameDetails.hero_team
+    INNER JOIN opponents on opponents.id_hash = gameDetails.villain
+    WHERE
+    ### heros paired together, regardless of position:
+    # "Bunker" in (heroTeams.hero_one, heroTeams.hero_two, heroTeams.hero_three, heroTeams.hero_four, heroTeams.hero_five) and "NightMist" in (heroTeams.hero_one, heroTeams.hero_two, heroTeams.hero_three, heroTeams.hero_four)
+
+    ### heroes in specific positions
+	# gameDetails.hero_one="Bunker" and gameDetails.hero_two="NightMist"
+
+    ### for non team villains
+    # opponents.villain_one="Citizen Dawn"
+
+    ### for team villains where position doesn't matter
+    # "Greazer Clutch" in (opponents.villain_one, opponents.villain_two, opponents.villain_three, opponents.villain_four, opponents.villain_five)
+
+    ### for team villains where the position matters
+    #gameDetails.villain_one = "Greazer Clutch" and gameDetails.villain_two = "Proletariat"
+
+    ### Environment
+    # gameDetails.environment="Insula Primalis"
+
+    ### Game mode
+    # gameDetails.game_mode="Team Villains"
+
+    and gameDetails.entry_is_valid
+
+"""
+
+
 def character_is(
     character_name: str,
     prefix: Type = Type.HERO,
@@ -68,7 +105,7 @@ def character_is(
             SqlTables.OPPONENTS
 
     """
-    return f"`{character_name}` IN ({ColumnGroup.team_member(prefix, table_name)})"
+    return f"'{character_name}' IN ({ColumnGroup.team_member(prefix, table_name)})"
 
 
 def team_is(names: List[str], prefix: Type = Type.HERO, positional=False) -> str:
@@ -98,9 +135,9 @@ def team_is(names: List[str], prefix: Type = Type.HERO, positional=False) -> str
     columns = ColumnGroup.team_columns(prefix, table_name)[: len(names)]
 
     if len(names) == 1:
-        return f"{columns[0]}=`{names[0]}`"
+        return f"{columns[0]}='{names[0]}'"
 
-    return ", ".join([f"{value}=`{names[i]}`" for i, value in enumerate(columns)])
+    return ", ".join([f"{value}='{names[i]}'" for i, value in enumerate(columns)])
 
 
 def in_environment(name: str) -> str:
@@ -116,21 +153,4 @@ def in_environment(name: str) -> str:
     # TODO: Need to revamp how the api_name to display_name and enums work. There is no easy way to validate that
     # the name passed in is correct in the current setup.
 
-    return f"{SqlTables.GAME_DETAILS}.{SqlColumns.ENVIRONMENT}=`{name}`"
-
-
-def build_team_join(prefix: Type = Type.HERO) -> str:
-    """
-    Returns the join for [type] teams and gameDetails
-    """
-
-    if prefix is Type.HERO:
-        table = SqlTables.HERO_TEAMS
-
-    elif prefix is Type.VILLAIN:
-        table = SqlTables.OPPONENTS
-
-    else:
-        raise ValueError("prefix mismatch: Must be HERO or VILLAIN")
-
-    return f"inner join {table} on {SqlTables.GAME_DETAILS}.hero_team={table}.id_hash"
+    return f"{SqlTables.GAME_DETAILS}.{SqlColumns.ENVIRONMENT}='{name}'"
