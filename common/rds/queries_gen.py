@@ -11,18 +11,6 @@ class ColumnGroup:
     """
 
     @classmethod
-    def team_member(
-        cls,
-        prefix: Type = Type.HERO,
-        table_name: SqlTables = SqlTables.GAME_DETAILS,
-    ):
-        """
-        shortcut for the same column names used over and over again.
-        """
-
-        return ", ".join(cls.team_columns(prefix, table_name))
-
-    @classmethod
     def team_columns(cls, prefix: Type = Type.HERO, table_name: SqlTables = SqlTables.GAME_DETAILS) -> list:
         """
         returns a list of columns in order all prefixed, for use in only needing a few of them for positional lookups
@@ -35,6 +23,18 @@ class ColumnGroup:
         column_prefix = f"{table_name}.{prefix.value.lower()}"
 
         return [column_prefix + suffix for suffix in suffixes]
+
+    @classmethod
+    def team_member(
+        cls,
+        prefix: Type = Type.HERO,
+        table_name: SqlTables = SqlTables.GAME_DETAILS,
+    ):
+        """
+        shortcut for the same column names used over and over again.
+        """
+
+        return ", ".join(cls.team_columns(prefix, table_name))
 
     @classmethod
     def _is_hero_or_villain(cls, prefix: Type):
