@@ -1,3 +1,4 @@
+from __future__ import annotations
 from copy import deepcopy
 from dataclasses import dataclass, field
 from common.models.entity import ApiEvent
@@ -20,7 +21,7 @@ class StatsIncoming(ApiEvent):
 
     def _is_allowed_method(self):
         """
-        GetEntity only allowes Options and Get method calls.
+        GetEntity only allows Options and Get method calls.
         """
         if self.IS_OPTIONS:
             self.api_type = ApiEventTypes.CORS_PREFLIGHT
@@ -88,23 +89,7 @@ class Statistics(BaseModel):
             return 0.0
 
 
-class WithStatistics(Statistics):
-    """
-    Statistics for a given character WITH (as an ally of) the Requested Character (only included in single character lookups that dont already include a WITH keyword)
-    """
-
-    With: str = Field(description="Ally character being compared with")
-
-
-class AgainstStatistics(Statistics):
-    """
-    Statistics for a given character AGAINST the Requested Character (only included in single side lookups that don't include a VERSUS keyword)
-    """
-
-    Against: str = Field(description="Opponent character (Hero or Villain) being compared with")
-
-
-class InStatistics(Statistics):
+class LocationStatistics(Statistics):
     """
     Statistics for a given Environment the game is played IN with the requested Characters (included in any combination of Heroes or Villains that dont include an IN keyword)
     """
@@ -123,9 +108,10 @@ class HeroStatistics(Statistics):
     IncapacitatedRate: Optional[float] = Field(description="Derived: Incapacitated percentage", default=0.0)
     TotalWinsWhileIncapacitated: Optional[float] = Field(description="Total wins when incapacitated", default=0)
     WinRateWhenIncapacitated: Optional[float] = Field(description="Derived: Win rate when incapacitated", default=0.0)
-    Versus: Optional[List[AgainstStatistics]]
-    With: Optional[List[WithStatistics]]
-    In: Optional[List[InStatistics]]
+    Versus: Optional[List[OpponentStatistics]]
+    With: Optional[List[HeroStatistics]]
+    In: Optional[List[LocationStatistics]]
+    SpecialEndConditions: Optional[List[SpecialStatistics]]
 
     @validator("IncapacitatedRate", always=True, allow_reuse=True)
     def calculate_incap_rate(cls, incap, values):
@@ -153,10 +139,10 @@ class OpponentStatistics(Statistics):
     UltimateModeTotalGames: int = Field(description="Total games with Ultimate Mode", default=0)
     UltimateModeWins: int = Field(description="Total Wins by players against this Villain with Ultimate Mode", default=0)
     UltimateModeWinRate: float = Field(description="Derived: Win percentage of Ultimate Mode against this Villain", default=0.0)
-    Versus: Optional[List[AgainstStatistics]]
-    With: Optional[List[WithStatistics]]
-    In: Optional[List[InStatistics]]
-    SpecialEndConditions: Optional[List[SpecialStatistics]]
+    Versus: Optional[List[HeroStatistics]]
+    With: Optional[List[OpponentStatistics]]
+    In: Optional[List[LocationStatistics]]
+    SpecialEndConditions: Optional[List["SpecialStatistics"]]
 
     class Config:
         @staticmethod
@@ -200,10 +186,7 @@ class UserStatistics(Statistics):
 class StatisticsResponse(BaseModel):
     RequestedSet: RequestedSet
     OriginalRequestedPath: str = Field(description="Original instruction path for the RequestedSet as reference")
-    Statistics: Union[HeroStatistics, OpponentStatistics, Statistics, None]
-    Versus: Optional[dict] = Field(description="Links to characters versus this team (if Versus not in RequestedSet)")
-    With: Optional[dict] = Field(description="Links to characters with this team (if With not in RequestedSet)")
-    In: Optional[dict] = Field(description="Links to environments this set up has played in (if In not in RequestedSet)")
+    Statistics: Union[HeroStatistics, OpponentStatistics, UserStatistics, Statistics, None]
 
     class Config:
         @staticmethod

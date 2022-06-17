@@ -15,10 +15,35 @@ def calculate(request: LookUp, response: List[GameDetail]) -> models.StatisticsR
     # py-linq Enumerable, for using LINQ style syntax
     collection = Enumerable(response)
 
+    requested_parameters = describe_query_parameters(request.operations)
+
+    if requested_parameters.heroes is None or len(requested_parameters.heroes) == 0:
+        # include AgainstStatistics for each Hero
+        pass
+
+    if requested_parameters.villains is None or len(requested_parameters.villains) == 0:
+        # include AgainstStatistics for each Villain
+        pass
+
+    if requested_parameters.locations is None or len(requested_parameters.locations) == 0:
+        # include InStatistics for each environment
+        pass
+
+    if len(requested_parameters.heroes) == 1:
+        # include WithStatistics for each other Hero
+        pass
+
+    if len(requested_parameters.villains) == 1:
+        # include With statistics for each other Villain
+        pass
+
     total_games = len(response)
     total_wins = collection.where(lambda x: _is_win_condition(x.end_result))
 
-    models.StatisticsResponse()
+    # temp
+    stats = models.Statistics(TotalGames=total_games, TotalWins=total_wins)
+
+    return models.StatisticsResponse(RequestedSet=requested_parameters, Statistics=stats)
 
 
 def describe_query_parameters(operations=List[Operation]) -> models.RequestedSet:
