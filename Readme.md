@@ -59,12 +59,39 @@ These can all be combined in any order as long as the rules of all the heroes an
 
 # TO DO:
 
-Enable All keyword
+**Enable All keyword**
 * `hero/absolute_zero/all` - gets all versions of Absolute Zero not just his base form
 
-Enable OR keyword
+**Enable OR keyword**
 * `hero/absolute_zero/or/legacy/in/insula_primalis` - gets all the games with *either* AZ and Legacy in Insula Primalis
 
+**Enable sending pseudo query language in body as part of a json structure**
+* Similar in idea to JSON-Logic but with less ambiguity and more sugar for friendliness
+    * something like - for a generic query
+    ```
+    {
+        "hero": {
+            "name": "absolute_zero"
+            "with": [("legacy", "americas_greatest")]
+        }
+    }
+    ```
+
+    or for something far more specific
+
+    ```
+    {
+        "hero": {
+            "name": "absolute_zero",
+            "where": {
+                "incapped": "yes",
+                "number_of_players": {
+                    "greater_than": 2
+                }
+            }
+        }
+    }
+    ```
 
 
 

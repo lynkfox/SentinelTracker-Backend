@@ -26,17 +26,18 @@ class MainStack(Stack):
 
         self.props = deployment_properties
 
-        # vpc = ec2.Vpc.from_lookup(self, "VPCFromLookup", is_default=True)
-        vpc = ec2.Vpc(
-            self,
-            "VPC",
-            nat_gateways=1,
-            subnet_configuration=[
-                ec2.SubnetConfiguration(name="tracker-public", subnet_type=ec2.SubnetType.PUBLIC),
-                ec2.SubnetConfiguration(name="tracker-isolated", subnet_type=ec2.SubnetType.PRIVATE_ISOLATED),
-            ],
-        )
-        vpc.apply_removal_policy(core.RemovalPolicy.DESTROY)
+        vpc = ec2.Vpc.from_lookup(self, "VPCFromLookup", is_default=True)
+
+        # vpc = ec2.Vpc(
+        #     self,
+        #     "VPC",
+        #     nat_gateways=0,
+        #     subnet_configuration=[
+        #         ec2.SubnetConfiguration(name="tracker-public", subnet_type=ec2.SubnetType.PUBLIC),
+        #         ec2.SubnetConfiguration(name="tracker-isolated", subnet_type=ec2.SubnetType.PRIVATE_ISOLATED),
+        #     ],
+        # )
+        # vpc.apply_removal_policy(core.RemovalPolicy.DESTROY)
 
         self.props.vpc = vpc
 
@@ -50,5 +51,4 @@ class MainStack(Stack):
             self,
             "ApiEndpoint",
             value=api.backend_api.url,
-            export_name="apiUrl",
         )

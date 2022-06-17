@@ -11,7 +11,7 @@ default_environment = cdk.Environment(account=os.getenv("CDK_DEFAULT_ACCOUNT"), 
 deployment_props = DeploymentProperties()
 MainStack(
     app,
-    deployment_props.prefix_name("SentinelsTrackerBackend"),
+    deployment_props.prefix_name("TrackerBackend"),
     env=default_environment,
     deployment_properties=deployment_props,
 )

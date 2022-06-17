@@ -45,6 +45,7 @@ class LambdaStack(NestedStack):
             timeout=core.Duration.seconds(29),
             layers=[layer],
             vpc=props.vpc,
+            allow_public_subnet=True,
         )
 
         self.lambda_mapping[ResourceNames.STATISTICS] = statistics
