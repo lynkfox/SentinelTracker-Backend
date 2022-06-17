@@ -2,10 +2,12 @@ from dataclasses import dataclass, field
 from common.models.entity import ApiEvent
 from common.models.enums import ApiEventTypes
 from common.rds import LookUp
+from pydantic import BaseModel
+from typing import List, Optional
 
 
 @dataclass
-class Statistics(ApiEvent):
+class StatsIncoming(ApiEvent):
     entity_name: str = field(init=False)
     api_type: str = field(init=False)
     look_up_data: LookUp = field(init=False)
@@ -27,3 +29,19 @@ class Statistics(ApiEvent):
 
         else:
             raise TypeError("Not a valid Type for GetEntity - must be GET or OPTIONS")
+
+
+class RequestedSet(BaseModel):
+    """
+    Details about the requested data set, which heroes, villains,
+    environments, and users were asked to be retrieved in combination
+    """
+
+    heros: Optional[List[str]]
+    villains: Optional[List[str]]
+    environment: Optional[List[str]]
+    user: Optional[List[str]]
+
+
+class Statistics(BaseModel):
+    RequestedSet: RequestedSet
