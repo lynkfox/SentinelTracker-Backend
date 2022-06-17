@@ -1,7 +1,7 @@
 from common.models.enums import Type, Default, Selector, Comparator
 from common.sql_attributes import SqlColumns, SqlTables
 from dataclasses import dataclass
-from typing import List
+from typing import List, Optional
 from common.rds import Operation
 from common.models.character_enums import (
     AlternateTags,
@@ -167,6 +167,13 @@ def in_location(name: str) -> str:
     return f"{SqlTables.GAME_DETAILS}.{SqlColumns.ENVIRONMENT}='{name}'"
 
 
+def user_is(name: Optional[str]) -> Optional[str]:
+    """
+    Forms the username WHERE string, returning None if passed None.
+    """
+    return f"{SqlTables.GAME_DETAILS}.{SqlColumns.USERNAME}='{name}'" if name is not None else None
+
+
 ##################################################################
 #                                                                #
 #        Build Query by Operation                                #
@@ -183,6 +190,7 @@ def generate_from_operations(operations: List[Operation]) -> str:
     heroes = []
     opponents = []
     locations = []
+    username = None
 
     dispatch = {
         Selector.HERO: (HERO_DISPLAY_MAPPING.get, heroes.append),
@@ -192,6 +200,10 @@ def generate_from_operations(operations: List[Operation]) -> str:
 
     for instruction in operations:
         ## TODO - handle Default.ALL and Default.BASE
+
+        if instruction.entity_type == Selector.USER:
+            username = instruction.name_selection
+            continue
 
         instruction_dispatch = dispatch.get(instruction.entity_type)
 
@@ -206,8 +218,9 @@ def generate_from_operations(operations: List[Operation]) -> str:
     location = in_location(locations[0]) if len(locations) > 0 else None
     hero = team_is(heroes, Type.HERO, positional=False) if len(heroes) > 0 else None
     opponents = team_is(opponents, Type.VILLAIN, positional=False) if len(opponents) > 0 else None
+    users = user_is(username)
 
-    where_statement = " AND ".join(filter(None, [hero, opponents, location, "gameDetails.entry_is_valid"]))
+    where_statement = " AND ".join(filter(None, [hero, opponents, location, users, "gameDetails.entry_is_valid"]))
     select_statement = "SELECT * from gameDetails INNER JOIN heroTeams on heroTeams.id_hash = gameDetails.hero_team INNER JOIN opponents on opponents.id_hash = gameDetails.villain WHERE "
 
     return select_statement + where_statement

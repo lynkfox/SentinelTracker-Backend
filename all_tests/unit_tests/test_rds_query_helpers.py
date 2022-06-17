@@ -171,4 +171,27 @@ class Test_generate_from_operations:
 
         test_result = generate_from_operations(operations)
 
-        assert test_result
+        assert (
+            test_result
+            == "SELECT * from gameDetails INNER JOIN heroTeams on heroTeams.id_hash = gameDetails.hero_team INNER JOIN opponents on opponents.id_hash = gameDetails.villain WHERE 'Absolute Zero' IN (heroTeams.hero_one, heroTeams.hero_two, heroTeams.hero_three, heroTeams.hero_four, heroTeams.hero_five) AND 'Baron Blade' IN (opponents.villain_one, opponents.villain_two, opponents.villain_three, opponents.villain_four, opponents.villain_five) AND gameDetails.environment='Insula Primalis' AND gameDetails.entry_is_valid"
+        )
+
+    def test_user(self):
+        operations = LookUp("user/Lynkfox").operations
+
+        test_result = generate_from_operations(operations)
+
+        assert (
+            test_result
+            == "SELECT * from gameDetails INNER JOIN heroTeams on heroTeams.id_hash = gameDetails.hero_team INNER JOIN opponents on opponents.id_hash = gameDetails.villain WHERE gameDetails.username='Lynkfox' AND gameDetails.entry_is_valid"
+        )
+
+    def test_hero_from_user(self):
+        operations = LookUp("hero/absolute_zero/from/Lynkfox").operations
+
+        test_result = generate_from_operations(operations)
+
+        assert (
+            test_result
+            == "SELECT * from gameDetails INNER JOIN heroTeams on heroTeams.id_hash = gameDetails.hero_team INNER JOIN opponents on opponents.id_hash = gameDetails.villain WHERE 'Absolute Zero' IN (heroTeams.hero_one, heroTeams.hero_two, heroTeams.hero_three, heroTeams.hero_four, heroTeams.hero_five) AND gameDetails.username='Lynkfox' AND gameDetails.entry_is_valid"
+        )
