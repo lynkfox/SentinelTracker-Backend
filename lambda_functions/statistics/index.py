@@ -4,8 +4,8 @@ import os
 import boto3
 from aws_lambda_powertools import Logger
 from common.rds import get_mysql_client
-from models import StatsIncoming
-from models import StatisticsResponse
+from models import StatsIncoming, StatisticsResponse
+from results import calculate
 from common.rds.queries import query
 
 logger = Logger()
@@ -35,7 +35,7 @@ def lambda_handler(event: dict, context: dict) -> dict:
                 body = StatisticsResponse.schema_json()
             else:
                 results = query(_event.look_up_data.operations, MY_SQL_CLIENT)
-                body = calculate_results(_event.look_up_data)
+                body = calculate(_event.look_up_data)
 
     except Exception as e:
         logger.exception("Unhandled Error")
