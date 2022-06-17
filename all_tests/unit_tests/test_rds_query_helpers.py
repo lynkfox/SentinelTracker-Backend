@@ -195,3 +195,12 @@ class Test_generate_from_operations:
             test_result
             == "SELECT * from gameDetails INNER JOIN heroTeams on heroTeams.id_hash = gameDetails.hero_team INNER JOIN opponents on opponents.id_hash = gameDetails.villain WHERE 'Absolute Zero' IN (heroTeams.hero_one, heroTeams.hero_two, heroTeams.hero_three, heroTeams.hero_four, heroTeams.hero_five) AND gameDetails.username='Lynkfox' AND gameDetails.entry_is_valid"
         )
+
+
+def test_query():
+    from common.rds import get_mysql_client
+    from common.rds.queries import query
+
+    operations = LookUp("hero/absolute_zero/from/Lynkfox").operations
+    response = query(operations, get_mysql_client())
+    assert response

@@ -21,13 +21,12 @@ from aws_lambda_powertools import Logger
 from boto3.dynamodb.conditions import Key
 
 logger = Logger(child=True)
+CLIENT = boto3.client("secretsmanager")
 
 
 def get_mysql_client():
 
-    client = boto3.client("secretsmanager")
-
-    response = client.get_secret_value(SecretId="statisticsrdsSecret27E3DF08-7PVhSz2tbcfc")
+    response = CLIENT.get_secret_value(SecretId="statisticsrdsSecret27E3DF08-7PVhSz2tbcfc")
 
     secrets = json.loads(response["SecretString"])
 
@@ -35,7 +34,7 @@ def get_mysql_client():
         host=secrets["host"],
         user=secrets["username"],
         password=secrets["password"],
-        database=SqlTables.STATISTICS_DB_NAME,
+        database=SqlTables.STATISTICS_DB_NAME.value,
     )
 
 

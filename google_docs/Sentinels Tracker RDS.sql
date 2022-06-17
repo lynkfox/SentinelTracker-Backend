@@ -110,6 +110,7 @@ CREATE TABLE `gameDetails` (
   `villain_four_incapped` bool,
   `villain_five` varchar(255),
   `villain_five_incapped` bool,
+  `comment` varchar(255),
   `entry_is_valid` bool DEFAULT false
 );
 

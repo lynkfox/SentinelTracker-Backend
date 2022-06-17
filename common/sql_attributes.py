@@ -70,3 +70,4 @@ class SqlColumns(EnhancedEnum):
     V5_INCAP = "villain_five_incapped"
     ENTRY_IS_VALID = "entry_is_valid"
     VALID_TEAM = "valid_team"
+    COMMENT = "comment"
