@@ -6,7 +6,7 @@ from typing import Optional
 @dataclass
 class DeploymentProperties:
     PREFIX: str = field(default="Sentinels")
-    ENVIRONMENT: str = field(default="DEMO")
+    ENVIRONMENT: str = field(default=None)
     vpc: Optional[ec2.IVpc] = field(default=None)
 
     def prefix_name(self, name: str, lower: bool = False) -> str:
@@ -20,5 +20,6 @@ class DeploymentProperties:
         Returns:
             (str): Name prefixed with Prefix and Environment with dashes between.
         """
-        full_name = f"{self.PREFIX}-{self.ENVIRONMENT}-{name}"
+        deployment_env = f"{self.ENVIRONMENT}-" if self.ENVIRONMENT is not None else ""
+        full_name = f"{self.PREFIX}-{deployment_env}{name}"
         return full_name.lower() if lower else full_name

@@ -19,6 +19,7 @@ from typing import Union, List, Tuple
 from enum import Enum
 from aws_lambda_powertools import Logger
 from boto3.dynamodb.conditions import Key
+from botocore.exceptions import ClientError
 
 logger = Logger(child=True)
 CLIENT = boto3.client("secretsmanager")
@@ -26,16 +27,24 @@ CLIENT = boto3.client("secretsmanager")
 
 def get_mysql_client():
 
-    response = CLIENT.get_secret_value(SecretId="statisticsrdsSecret27E3DF08-7PVhSz2tbcfc")
+    try:
+        response = CLIENT.get_secret_value(SecretId=os.getenv("SECRET_NAME"))
+    except ClientError as e:
+        logger.exception("Client Error")
+        raise e
 
-    secrets = json.loads(response["SecretString"])
+    try:
+        secrets = json.loads(response["SecretString"])
 
-    return mysql.connector.connect(
-        host=secrets["host"],
-        user=secrets["username"],
-        password=secrets["password"],
-        database=SqlTables.STATISTICS_DB_NAME.value,
-    )
+        return mysql.connector.connect(
+            host=secrets["host"],
+            user=secrets["username"],
+            password=secrets["password"],
+            database=SqlTables.STATISTICS_DB_NAME.value,
+        )
+    except Exception as e:
+        logger.exception("unable to open sql connection")
+        raise e
 
 
 def character_full_name(

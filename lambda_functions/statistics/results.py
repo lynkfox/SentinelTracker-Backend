@@ -1,7 +1,7 @@
 from py_linq import Enumerable
 import models
 from common.rds import LookUp, Operation
-from common.rds.queries import parse_for_rds_names
+from common.rds.queries_gen import parse_for_rds_names
 from common.models.schema_models import GameDetail
 from common.models.game_details_enums import HeroWinCondition, HeroLossCondition
 from typing import List

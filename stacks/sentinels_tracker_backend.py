@@ -6,7 +6,6 @@ from aws_cdk import Stack
 from aws_cdk import aws_ec2 as ec2
 from constructs import Construct
 
-from configurations import DirectoryLocations, ResourceNames
 from configurations.common import DeploymentProperties
 from stacks.storage_stack import StorageStack
 from stacks.lambda_stack import LambdaStack
@@ -34,7 +33,6 @@ class MainStack(Stack):
             nat_gateways=1,
             subnet_configuration=[
                 ec2.SubnetConfiguration(name="tracker-public", subnet_type=ec2.SubnetType.PUBLIC),
-                ec2.SubnetConfiguration(name="tracker-private", subnet_type=ec2.SubnetType.PRIVATE_WITH_NAT),
                 ec2.SubnetConfiguration(name="tracker-isolated", subnet_type=ec2.SubnetType.PRIVATE_ISOLATED),
             ],
         )
@@ -44,7 +42,7 @@ class MainStack(Stack):
 
         storage = StorageStack(self, "StorageStack", self.props)
 
-        functions = LambdaStack(self, "Lambdas", self.props, storage.sentinels_dynamo)
+        functions = LambdaStack(self, "Lambdas", self.props, storage.statistics)
 
         api = ApiStack(self, "Api", self.props, functions.lambda_mapping)
 
