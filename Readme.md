@@ -20,6 +20,54 @@ The following assumptions are made when data is inputted into the dataset.
     * likewise the order of environments destroyed, additional heroes played by player slot are recorded, but not taken into account (beyond the starting team of Heroes and starting Environment)
 
 
+# Querying the Data through the API
+
+The api end point is queried with the following structure:
+
+[type]/[name]/[alternate_tag]/[keyword]/[name]/[alternate_tag] ... ect
+
+## Type
+The `Type` in the first field sets the nature for the following keywords. It can be:
+* **hero/**
+* **villain/**
+* **environment/**
+
+## Name
+The `name` field is just the base character name - `absolute_zero` or `baron_blade` or `insula_primalis`
+
+## Alternate Tag
+The `alternate_tag` is how to focus in on a single alt version. If left blank, the Enhanced Edition base character is used.
+* like: `freedom_six` or `mad_bomber`
+* `definitive` will select the characters base definitive version
+* if a character has an alternate that has the same name in both EE and Definitive, the prefixing the name with definitive will indicate it should be used: `baron_blade/definitive_mad_bomber`
+
+## Keywords:
+* **in/** - The name immediately following this must be an environment name.
+    * you can follow this with `/definitive` for the definitive version.
+* **with/** - Pairs the name following it with the first proceeding it. All characters of the same type (hero or villain) need to be chained together.
+    * `absolute_zero/with/legacy`
+    * `absolute_zero/freedom_six/with/tachyon/freedom_six`
+* **versus/** - This keyword switches types and the name that follows it must be the opposite type of the ones before it.
+    * `absolute_zero/versus/baron_blade`
+    * *with/* can be on both sides of the `versus` tag at the same time, for use with team villains.
+    * `absolute_zero/with/legacy/versus/baron_blade/team_villain/plague_rat/team_villain.
+* **from/** this keyword narrows the results down to a single (case sensitive) user name.
+
+These can all be combined in any order as long as the rules of all the heroes and all the villains are on opposite sides of the versus. *note: currently environment cannot start a chain - you can do just `environment/insula_primalis` but cannot chain any further than that - further needs of refinement need to use the `in` keyword*
+
+`hero/absolute_zero/with_legacy/in/insula_primalus/versus/baron_blade/from/Lynkfox`
+
+# TO DO:
+
+Enable All keyword
+* `hero/absolute_zero/all` - gets all versions of Absolute Zero not just his base form
+
+Enable OR keyword
+* `hero/absolute_zero/or/legacy/in/insula_primalis` - gets all the games with *either* AZ and Legacy in Insula Primalis
+
+
+
+
 # First time Setup:
 
 ## Requirements:

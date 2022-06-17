@@ -5,6 +5,7 @@ import boto3
 from aws_lambda_powertools import Logger
 from common.rds import get_mysql_client
 from models import StatsIncoming
+from models import StatisticsResponse
 from common.rds.queries import query
 
 logger = Logger()
@@ -30,7 +31,11 @@ def lambda_handler(event: dict, context: dict) -> dict:
             body = {"message": "Preflight Accepted"}
 
         if _event.IS_GET:
-            results = query(_event.look_up_data.operations, MY_SQL_CLIENT)
+            if _event.path == "":
+                body = StatisticsResponse.schema_json()
+            else:
+                results = query(_event.look_up_data.operations, MY_SQL_CLIENT)
+                body = calculate_results(_event.look_up_data)
 
     except Exception as e:
         logger.exception("Unhandled Error")
