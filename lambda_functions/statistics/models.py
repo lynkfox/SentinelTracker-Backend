@@ -40,7 +40,7 @@ class RequestedSet(BaseModel):
     heroes: Optional[List[str]]
     villains: Optional[List[str]]
     environment: Optional[List[str]]
-    user: Optional[List[str]]
+    user: Optional[str]
 
     class Config:
         @staticmethod

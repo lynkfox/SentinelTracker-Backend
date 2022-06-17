@@ -187,6 +187,20 @@ def generate_from_operations(operations: List[Operation]) -> str:
     build the SQL Query string.
     """
 
+    heroes, opponents, locations, username = parse_for_rds_names(operations)
+
+    location = in_location(locations[0]) if len(locations) > 0 else None
+    hero = team_is(heroes, Type.HERO, positional=False) if len(heroes) > 0 else None
+    opponents = team_is(opponents, Type.VILLAIN, positional=False) if len(opponents) > 0 else None
+    users = user_is(username)
+
+    where_statement = " AND ".join(filter(None, [hero, opponents, location, users, "gameDetails.entry_is_valid"]))
+    select_statement = "SELECT * from gameDetails INNER JOIN heroTeams on heroTeams.id_hash = gameDetails.hero_team INNER JOIN opponents on opponents.id_hash = gameDetails.villain WHERE "
+
+    return select_statement + where_statement
+
+
+def parse_for_rds_names(operations):
     heroes = []
     opponents = []
     locations = []
@@ -199,8 +213,7 @@ def generate_from_operations(operations: List[Operation]) -> str:
     }
 
     for instruction in operations:
-        ## TODO - handle Default.ALL and Default.BASE
-
+        ## TODO - handle Default.ALL
         if instruction.entity_type == Selector.USER:
             username = instruction.name_selection
             continue
@@ -214,13 +227,4 @@ def generate_from_operations(operations: List[Operation]) -> str:
         alternate_name = ALTERNATE_TAG_DISPLAY_MAPPING.get(instruction.alternate_selection, "")
 
         instruction_dispatch[1](name + definitive + alternate_name)
-
-    location = in_location(locations[0]) if len(locations) > 0 else None
-    hero = team_is(heroes, Type.HERO, positional=False) if len(heroes) > 0 else None
-    opponents = team_is(opponents, Type.VILLAIN, positional=False) if len(opponents) > 0 else None
-    users = user_is(username)
-
-    where_statement = " AND ".join(filter(None, [hero, opponents, location, users, "gameDetails.entry_is_valid"]))
-    select_statement = "SELECT * from gameDetails INNER JOIN heroTeams on heroTeams.id_hash = gameDetails.hero_team INNER JOIN opponents on opponents.id_hash = gameDetails.villain WHERE "
-
-    return select_statement + where_statement
+    return heroes, opponents, locations, username

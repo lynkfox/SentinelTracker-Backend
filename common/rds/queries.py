@@ -1,7 +1,7 @@
 from common.rds import Operation
 from typing import List
 from common.models.schema_models import GameDetail
-from common.rds.queries_gen import generate_from_operations
+from common.rds.queries_gen import generate_from_operations, parse_for_rds_names
 
 
 def query(operations: List[Operation], my_sql_client: any) -> List[GameDetail]:

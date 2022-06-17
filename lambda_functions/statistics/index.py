@@ -35,7 +35,7 @@ def lambda_handler(event: dict, context: dict) -> dict:
                 body = StatisticsResponse.schema_json()
             else:
                 results = query(_event.look_up_data.operations, MY_SQL_CLIENT)
-                body = calculate(_event.look_up_data)
+                body = calculate(_event.look_up_data, results).json()
 
     except Exception as e:
         logger.exception("Unhandled Error")
