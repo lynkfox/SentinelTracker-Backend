@@ -24,5 +24,5 @@ def map_row_to_GameDetails(row: tuple) -> dict:
     maps a query response to a dictionary compatible with GameDetails base
     model.
     """
-    GameDetail.__fields__
-    return GameDetail(**{key: row[i + 1] for i, key in enumerate(GameDetail.__fields__)})
+    key_values = {key: row[i + 1] for i, key in enumerate(GameDetail.__fields__)}
+    return GameDetail(**key_values)

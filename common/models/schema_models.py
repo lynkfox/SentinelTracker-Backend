@@ -166,7 +166,7 @@ class GameDetail(BaseModel):
     Model of a row in the Game Details table
     """
 
-    username: Optional[User]
+    username: Union[User, str]
     entered_on: datetime
     game_mode: Optional[GameMode]
     selection_method: Optional[SelectionMethod]
@@ -179,9 +179,9 @@ class GameDetail(BaseModel):
     perceived_difficulty: Optional[int]
     rounds: Optional[int] = Field()
     oblivaeon_details: Optional[OblivAeonDetail]
-    hero_team: HeroTeam
+    hero_team: Union[HeroTeam, int]
     environment: str
-    villain: VillainOpponent
+    villain: Union[VillainOpponent, int]
     hero_one: Optional[str]
     hero_one_incapped: Optional[bool]
     hero_two: Optional[str]
@@ -211,6 +211,8 @@ class GameDetail(BaseModel):
 
     @validator("villain", always=True)
     def update_game_type(cls, opponent: VillainOpponent, values):
+        if isinstance(opponent, int):
+            return opponent
         if opponent.villain_two is not None:
             values["game_mode"] = GameMode.VILLAINS.value
         return opponent
@@ -218,6 +220,9 @@ class GameDetail(BaseModel):
     @validator("entry_is_valid", always=True)
     def validate_entry(cls, entry, values):
         # validate that the number of villains, if not 1, is equal to the number of heroes.
+        if entry is not None:
+            return entry
+
         villains = [v for k, v in values["villain"].__dict__.items() if ("villain" in k and "incapped" not in k) and v is not None]
         if len(villains) != 1 and len(villains) != values["number_of_heroes"]:
             return False
