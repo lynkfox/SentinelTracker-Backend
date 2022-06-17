@@ -1,3 +1,5 @@
+from dis import dis
+from re import L
 from common.models.character_enums import (
     Character,
     AlternateTags,
@@ -107,10 +109,10 @@ class LookUp:
         (5 heroes, 5 villains, 1 environment)
         """
         self.hero_count += self._increment_to_maximum(operation.entity_type, Selector.HERO, self.hero_count, 5)
-        self.villain_count += self._increment_to_maximum(operation.entity_type, Selector.VILLAIN, self.villain_count, 5)
+        self.villain_count += self._increment_to_maximum(operation.entity_type, Selector.OPPONENT, self.villain_count, 5)
         self.environment_count += self._increment_to_maximum(
             operation.entity_type,
-            Selector.ENVIRONMENT,
+            Selector.LOCATION,
             self.environment_count,
             1,
         )
@@ -147,7 +149,10 @@ class LookUp:
 
             entity_type, character_enum = self._determine_entity_type(self.path_parts[current_index], next_part, instruction)
 
-            name_selection = character_enum(next_part) if next_part != Default.ALL else Default.ALL
+            if character_enum == "user":
+                name_selection = next_part
+            else:
+                name_selection = character_enum(next_part) if next_part != Default.ALL else Default.ALL
 
             if follow_up_part is not None and "definitive_" in follow_up_part:
                 definitive = True
@@ -220,34 +225,33 @@ class LookUp:
         if len(self.operations) == 0:
             select = Selector(path_part)
 
-            if select == Selector.HERO:
-                return select, Hero
-            if select == Selector.VILLAIN:
-                return select, Villain
-            if select == Selector.ENVIRONMENT:
-                return select, Location
+            dispatch = {Selector.HERO: Hero, Selector.OPPONENT: Villain, Selector.LOCATION: Location}
 
-        elif next_part == Default.ALL:
+            return select, dispatch.get(select, "user")
+
+        elif next_part == Default.ALL or self._not_a_known_enum(next_part):
 
             if current_instruction == Comparator.WITH:
-                last_instruction = self.operations[-1].entity_type
-                if last_instruction == Selector.HERO:
-                    return last_instruction, None
-                if last_instruction == Selector.VILLAIN:
-                    return last_instruction, None
+                previous_instruction = self.operations[-1].entity_type
+                if previous_instruction == Selector.HERO:
+                    return previous_instruction, None
+                if previous_instruction == Selector.OPPONENT:
+                    return previous_instruction, None
 
                 return self._determine_entity_by_attached_part(next_part)
 
             if current_instruction == Comparator.VERSUS:
                 first_instruction = self.operations[0].entity_type
                 if first_instruction == Selector.HERO:
-                    return Selector.VILLAIN, None
-                if first_instruction == Selector.VILLAIN:
+                    return Selector.OPPONENT, None
+                if first_instruction == Selector.OPPONENT:
                     return Selector.HERO, None
 
             if current_instruction == Comparator.IN:
-                return Selector.ENVIRONMENT, Location
+                return Selector.LOCATION, Location
 
+            if current_instruction == Comparator.FROM:
+                return Selector.USER, "user"
         else:
             select, enum_type = self._determine_entity_by_attached_part(next_part)
             if select is not None:
@@ -261,12 +265,15 @@ class LookUp:
             return Selector.HERO, Hero
 
         if Villain.has_member(next_part):
-            return Selector.VILLAIN, Villain
+            return Selector.OPPONENT, Villain
 
         if Location.has_member(next_part):
-            return Selector.ENVIRONMENT, Location
+            return Selector.LOCATION, Location
 
         raise ValueError()
+
+    def _not_a_known_enum(self, next_part) -> bool:
+        return not Hero.has_member(next_part) and not Villain.has_member(next_part) and not Location.has_member(next_part)
 
 
 def generate_sql(instructions: List[Operation]) -> any:

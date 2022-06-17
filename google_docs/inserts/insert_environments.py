@@ -22,7 +22,7 @@ class EnvironmentInsert:
 
     def __post_init__(self):
         query = {
-            "pk": build_pk(self.full_name, self.alternate_name, self.box_set, Type.ENVIRONMENT),
+            "pk": build_pk(self.full_name, self.alternate_name, self.box_set, Type.LOCATION),
             "sk": build_meta_sk(self.alternate_name),
         }
         self.box_set = self.box_set.value

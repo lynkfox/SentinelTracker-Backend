@@ -186,8 +186,8 @@ def generate_from_operations(operations: List[Operation]) -> str:
 
     dispatch = {
         Selector.HERO: (HERO_DISPLAY_MAPPING.get, heroes.append),
-        Selector.VILLAIN: (VILLAIN_DISPLAY_MAPPING.get, opponents.append),
-        Selector.ENVIRONMENT: (LOCATION_DISPLAY_MAPPING.get, locations.append),
+        Selector.OPPONENT: (VILLAIN_DISPLAY_MAPPING.get, opponents.append),
+        Selector.LOCATION: (LOCATION_DISPLAY_MAPPING.get, locations.append),
     }
 
     for instruction in operations:

@@ -9,7 +9,7 @@ class Test_character_is:
 
     def test_raises_value_error_on_not_type_hero(self):
         with pytest.raises(ValueError, match="prefix Mismatch: must be HERO or VILLAIN") as e:
-            character_is("test", Type.ENVIRONMENT)
+            character_is("test", Type.LOCATION)
 
     def test_raises_value_error_on_type_villain_but__not_opponent_table(self):
         with pytest.raises(
@@ -165,3 +165,10 @@ class Test_generate_from_operations:
             test_result
             == "SELECT * from gameDetails INNER JOIN heroTeams on heroTeams.id_hash = gameDetails.hero_team INNER JOIN opponents on opponents.id_hash = gameDetails.villain WHERE 'Absolute Zero' IN (heroTeams.hero_one, heroTeams.hero_two, heroTeams.hero_three, heroTeams.hero_four, heroTeams.hero_five) AND 'Baron Blade' IN (opponents.villain_one, opponents.villain_two, opponents.villain_three, opponents.villain_four, opponents.villain_five) AND gameDetails.entry_is_valid"
         )
+
+    def test_hero_versus_villain_in_env(self):
+        operations = LookUp("hero/absolute_zero/versus/baron_blade/in/insula_primalis").operations
+
+        test_result = generate_from_operations(operations)
+
+        assert test_result

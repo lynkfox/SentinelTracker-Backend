@@ -22,7 +22,8 @@ class Type(Enum):
     VILLAIN = "Villain"
     TEAM_VILLAIN = "Team Villain"
     SCION = "Scion"
-    ENVIRONMENT = "Environment"
+    LOCATION = "Environment"
+    USER = "User"
 
 
 class ApiEventTypes(Enum):
@@ -38,7 +39,7 @@ class ApiEnum(Enum):
         Quick check to see if key is within this class.
         """
         if isinstance(key, str):
-            return key.upper() in cls.__members__
+            return key.upper() in cls.__members__ or key.lower() in [x.value.lower() for x in cls.__members__.values()]
         elif isinstance(key, Enum):
             return key.name in cls.__members__
         else:
@@ -50,9 +51,10 @@ class Selector(ApiEnum):
     Restful API selector types
     """
 
-    VILLAIN = "villain"
+    OPPONENT = "villain"
     HERO = "hero"
-    ENVIRONMENT = "environment"
+    LOCATION = "environment"
+    USER = "user"
 
 
 class Comparator(ApiEnum):
@@ -64,6 +66,7 @@ class Comparator(ApiEnum):
     VERSUS = "versus"
     WITH = "with"
     IN = "in"
+    FROM = "from"
 
 
 class Default(Enum):
