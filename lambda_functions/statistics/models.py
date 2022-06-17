@@ -210,6 +210,3 @@ class StatisticsResponse(BaseModel):
         def schema_extra(schema: Dict[str, Any], model: Type["StatisticsResponse"]) -> None:
             for prop in schema.get("properties", {}).values():
                 prop.pop("title", None)
-
-
-OpponentStatistics.schema_json()
