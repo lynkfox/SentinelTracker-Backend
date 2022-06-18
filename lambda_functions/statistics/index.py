@@ -3,7 +3,6 @@ import os
 
 import boto3
 from aws_lambda_powertools import Logger
-from common.rds import get_proxy_sql_client
 from models import StatsIncoming, StatisticsResponse
 from results import calculate
 from common.rds.queries import query
@@ -17,10 +16,11 @@ logger = Logger()
 DYNAMO_RESOURCE = boto3.resource("dynamodb")
 DYNAMO_TABLE = os.getenv("DYNAMO_TABLE_NAME")
 
-CLIENT = boto3.client("secretsmanager")
 
+os.environ["LIBMYSQL_ENABLE_CLEARTEXT_PLUGIN"] = "1"
 
-MY_SQL_CLIENT = get_proxy_sql_client()
+# session = boto3.Session(profile_name='default')
+rds_client = boto3.client("rds")
 
 
 @logger.inject_lambda_context(log_event=True, clear_state=True)
@@ -30,7 +30,24 @@ def lambda_handler(event: dict, context: dict) -> dict:
     """
 
     try:
+        endpoint = os.getenv("PROXY")
 
+        token = rds_client.generate_db_auth_token(DBHostname=endpoint, Port=3306, DBUsername="admin", Region="us-east-2")
+
+        logger.debug("Token received, getting client")
+
+        MY_SQL_CLIENT = mysql.connector.connect(
+            host=endpoint,
+            user="admin",
+            password=token,
+            database=SqlTables.STATISTICS_DB_NAME.value,
+        )
+    except Exception as e:
+        logger.exception("unable to open sql connection")
+        raise e
+
+    try:
+        logger.debug("Processing Event")
         _event = StatsIncoming(event)
         body = {"message": "Invalid format"}
 

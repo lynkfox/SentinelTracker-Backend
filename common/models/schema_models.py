@@ -22,13 +22,6 @@ class User(BaseModel):
     """
 
     username: str
-    dynamo_meta_query: Optional[str]
-    total_wins: Optional[int]
-    total_games: Optional[int]
-
-    @validator("dynamo_meta_query", always=True)
-    def create_dynamo_meta_query(cls, value, values):
-        return json.dumps({"pk": f"{values['username']}#USER", "sk": f"#META"})
 
 
 class OblivAeonDetail(BaseModel):

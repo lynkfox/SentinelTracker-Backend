@@ -44,6 +44,7 @@ class LambdaStack(NestedStack):
             handler="index.lambda_handler",
             timeout=core.Duration.seconds(29),
             layers=[layer],
+            memory_size=512,
             vpc=props.vpc,
             allow_public_subnet=True,
         )
