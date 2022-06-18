@@ -193,6 +193,7 @@ class LookUp:
             if character_enum == "user":
                 name_selection = next_part
             else:
+
                 name_selection = character_enum(next_part) if next_part != Default.ALL else Default.ALL
 
             if follow_up_part is not None and "definitive_" in follow_up_part:
@@ -222,16 +223,21 @@ class LookUp:
                 definitive,
             )
 
-        except ValueError as e:
+        except (ValueError, TypeError) as e:
+            logging_values = {
+                "current_index": current_index,
+                "current_point": self.path_parts[current_index],
+                "next_value": self.path_parts[current_index + 1] if len(self.path_parts) > current_index + 1 else None,
+                "potential_qualifier_value": self.path_parts[current_index + 2] if len(self.path_parts) > current_index + 2 else None,
+            }
             logger.exception(
                 "Unable to determine Operation",
-                extra={
-                    "current_index": current_index,
-                    "current_point": self.path_parts[current_index],
-                },
+                extra=logging_values,
             )
 
-            raise ValueError("Unable to determine Operation")
+            raise ValueError(
+                f"Unable to determine Operation: {logging_values['current_index']}/{logging_values['next_value']}/{logging_values['potential_qualifier_value']}"
+            )
 
         except Exception as e:
             logger.exception(

@@ -61,9 +61,13 @@ def lambda_handler(event: dict, context: dict) -> dict:
                 results = query(_event.look_up_data.operations, MY_SQL_CLIENT)
                 body = calculate(_event.look_up_data, results).json()
 
+    except ValueError as e:
+        logger.exception("Unable to parse path or body")
+        body = json.dumps({"message": "Cannot determine query - please check spelling and format", "unparsableQuery": e.args[0]})
+
     except Exception as e:
         logger.exception("Unhandled Error")
-        body = {"message": "Error'd", "errorMessage": str(e)}
+        body = json.dumps({"message": "Error'd - Please contact Lynkfox with this message", "errorMessage": str(e)})
 
     finally:
         return {
