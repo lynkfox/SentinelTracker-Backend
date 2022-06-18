@@ -33,4 +33,10 @@ class StorageStack(NestedStack):
             vpc_subnets=ec2.SubnetSelection(subnet_type=ec2.SubnetType.PUBLIC),
         )
 
-        self.rds_proxy = rds.DatabaseProxy(self, f"{ResourceNames.STATISTICS_RDS}proxy", secrets=[self.statistics.secret], vpc=props.vpc)
+        self.rds_proxy = rds.DatabaseProxy(
+            self,
+            f"{ResourceNames.STATISTICS_RDS}proxy",
+            secrets=[self.statistics.secret],
+            vpc=props.vpc,
+            proxy_target=rds.ProxyTarget.from_instance(self.statistics),
+        )
