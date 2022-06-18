@@ -24,11 +24,13 @@ from botocore.exceptions import ClientError
 logger = Logger(child=True)
 CLIENT = boto3.client("secretsmanager")
 
+default_secret = "statisticsrdsSecret27E3DF08-mZiOfTCIxjJA"
+
 
 def get_mysql_client():
 
     try:
-        response = CLIENT.get_secret_value(SecretId=os.getenv("SECRET_NAME"))
+        response = CLIENT.get_secret_value(SecretId=os.getenv("SECRET_NAME", default_secret))
     except ClientError as e:
         logger.exception("Client Error")
         raise e

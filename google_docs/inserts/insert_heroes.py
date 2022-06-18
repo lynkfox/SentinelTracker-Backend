@@ -1,37 +1,52 @@
-import json
-
 from dataclasses import dataclass, field
-from common.dynamo import build_pk, build_meta_sk
 from common.models.character_enums import (
     AlternateTags,
     Hero,
     HERO_DISPLAY_MAPPING,
     ALTERNATE_TAG_DISPLAY_MAPPING,
 )
-from common.models.enums import Type
 from common.models.game_details_enums import BoxSet
 from typing import Union
 
 
 @dataclass
 class HeroInsert:
-    full_name: Union[Hero, str]
+    character: Union[Hero, str]
     box_set: Union[BoxSet, str]
     alternate_name: Union[AlternateTags, str, None] = field(default=None)
-    dynamo_meta_query: str = field(init=False)
+    base: Union[Hero, str] = field(default=None)
+    full_name: str = field(init=False)
+    query_name_value: str = field(init=False)
+    query_alt_value: str = field(init=False)
 
     def __post_init__(self):
 
-        query = {
-            "pk": build_pk(self.full_name, self.alternate_name, self.box_set, Type.HERO),
-            "sk": build_meta_sk(self.alternate_name),
-        }
-        self.box_set = self.box_set.value
-        self.alternate_name = ALTERNATE_TAG_DISPLAY_MAPPING.get(self.alternate_name)
-        self.full_name = HERO_DISPLAY_MAPPING.get(self.full_name)
-        self.dynamo_meta_query = json.dumps(query)
+        display_name = HERO_DISPLAY_MAPPING.get(self.character)
+        display_alt = ALTERNATE_TAG_DISPLAY_MAPPING.get(self.alternate_name)
+        is_definitive = (
+            self.box_set in [BoxSet.DEFINITIVE_EDITION, BoxSet.ROOK_CITY_RENEGADES] and self.alternate_name is not AlternateTags.definitive
+        )
+
+        self.query_name_value = self.character.value
+
         if self.alternate_name is not None:
-            self.full_name = f"{self.full_name}{self.alternate_name}"
+            self.query_alt_value = (
+                f"definitive_{_deal_with_alt_prefix(self.alternate_name.value)}"
+                if is_definitive
+                else _deal_with_alt_prefix(self.alternate_name.value)
+            )
+        else:
+            self.query_alt_value = None
+
+        self.box_set = self.box_set.value
+        self.base = display_name
+
+        if self.alternate_name is not None and is_definitive:
+            self.full_name = f"{display_name}{ALTERNATE_TAG_DISPLAY_MAPPING.get(AlternateTags.definitive)}{display_alt}"
+        elif self.alternate_name is not None:
+            self.full_name = f"{display_name}{display_alt}"
+        else:
+            self.full_name = display_name
 
 
 def _deal_with_alt_prefix(name: str):

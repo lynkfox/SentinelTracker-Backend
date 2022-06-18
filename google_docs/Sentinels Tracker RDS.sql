@@ -1,42 +1,30 @@
-CREATE TABLE `boxSets` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `full_name` varchar(255) UNIQUE,
-  `dynamo_meta_query` varchar(255)
-);
-
 CREATE TABLE `villains` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `full_name` varchar(255) UNIQUE,
-  `box_set` varchar(255),
-  `dynamo_meta_query` varchar(255),
-  `total_wins` int DEFAULT 0,
-  `total_games` int DEFAULT 0
+  `base` varchar(255),
+  `query_name_value` varchar(255),
+  `query_alt_value` varchar(255)
 );
 
 CREATE TABLE `heroes` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `full_name` varchar(255) UNIQUE,
-  `box_set` varchar(255),
-  `dynamo_meta_query` varchar(255),
-  `total_wins` int DEFAULT 0,
-  `total_games` int DEFAULT 0
+  `base` varchar(255),
+  `query_name_value` varchar(255),
+  `query_alt_value` varchar(255)
 );
 
 CREATE TABLE `environments` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `full_name` varchar(255) UNIQUE,
-  `box_set` varchar(255),
-  `dynamo_meta_query` varchar(255),
-  `total_wins` int DEFAULT 0,
-  `total_games` int DEFAULT 0
+  `base` varchar(255),
+  `query_name_value` varchar(255),
+  `query_alt_value` varchar(255)
 );
 
 CREATE TABLE `users` (
   `id` int UNIQUE PRIMARY KEY AUTO_INCREMENT,
-  `username` varchar(255) UNIQUE,
-  `dynamo_meta_query` varchar(255),
-  `total_wins` int DEFAULT 0,
-  `total_games` int DEFAULT 0
+  `username` varchar(255) UNIQUE
 );
 
 CREATE TABLE `heroTeams` (
@@ -110,15 +98,9 @@ CREATE TABLE `gameDetails` (
   `villain_four_incapped` bool,
   `villain_five` varchar(255),
   `villain_five_incapped` bool,
-  `comment` varchar(255),
+  `comments` varchar(255),
   `entry_is_valid` bool DEFAULT false
 );
-
-ALTER TABLE `villains` ADD FOREIGN KEY (`box_set`) REFERENCES `boxSets` (`full_name`);
-
-ALTER TABLE `heroes` ADD FOREIGN KEY (`box_set`) REFERENCES `boxSets` (`full_name`);
-
-ALTER TABLE `environments` ADD FOREIGN KEY (`box_set`) REFERENCES `boxSets` (`full_name`);
 
 ALTER TABLE `heroTeams` ADD FOREIGN KEY (`hero_one`) REFERENCES `heroes` (`full_name`);
 

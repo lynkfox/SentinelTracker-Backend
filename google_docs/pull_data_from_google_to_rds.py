@@ -20,6 +20,8 @@ from time import perf_counter
 DOCUMENT_ID = "1bVppJL4rC5lWULLGZ7AP5xH6YZLYsv86Wme1SpU6agE"
 RANGE = "Form Responses 4!A2:AL"
 
+# last insert 31225 - bet tho that the actual last row number is higher than that
+
 
 def main():
 
@@ -52,14 +54,14 @@ def main():
     end_parse = perf_counter()
 
     print("\n** Creating Insert Statements ...")
-    user_sql_statement = f"INSERT INTO {SqlTables.USERS} ({SqlColumns.USERNAME}, {SqlColumns.DYNAMO_META}) VALUES (%s, %s)"
+    user_sql_statement = f"INSERT INTO {SqlTables.USERS} ({SqlColumns.USERNAME}, claimed) VALUES (%s, %s)"
     user_values = list(
         filter(
             None,
             list(set([create_values_for_user_insert(detail.username) for detail in details if detail is not None and detail.username is not None])),
         )
     )
-    blank_user_sql = f"INSERT {SqlTables.USERS} ({SqlColumns.USERNAME}, {SqlColumns.DYNAMO_META}) VALUES ('', '')"
+    blank_user_sql = f"INSERT {SqlTables.USERS} ({SqlColumns.USERNAME}, claimed) VALUES ('', '')"
 
     hero_team_columns = [
         SqlColumns.ID_HASH.value,
@@ -126,7 +128,7 @@ def main():
         SqlColumns.V4_INCAP.value,
         SqlColumns.VILLAIN_FIVE.value,
         SqlColumns.V5_INCAP.value,
-        SqlColumns.COMMENT.value,
+        SqlColumns.COMMENTS.value,
         SqlColumns.ENTRY_IS_VALID.value,
     ]
 
@@ -184,7 +186,7 @@ def insert_value_shortcut(columns):
 
 def create_values_for_user_insert(user: User) -> set:
     if user.username != "":
-        return (user.username, user.dynamo_meta_query)
+        return (user.username, False)
 
 
 def create_values_for_hero_insert(hero_team: HeroTeam) -> set:
@@ -311,7 +313,7 @@ def map_row_to_game_details(row: list, row_count: int) -> GameDetail:
         "villain_three_incapped": 7,
         "villain_four_incapped": 9,
         "villain_five_incapped": 11,
-        "comment": 35,
+        "comments": 35,
     }
     details = {}
     for key, index in dispatch.items():
