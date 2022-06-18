@@ -17,6 +17,13 @@ class StorageStack(NestedStack):
         """
         props = deployment_properties
 
+        ###########################
+        # For free tier eligibility, replace instance_type value with:
+        #
+        #  instance_type=ec2.InstanceType.of(ec2.InstanceClass.BURSTABLE2, ec2.InstanceSize.MICRO),
+        #
+        ###########################
+
         self.statistics = rds.DatabaseInstance(
             self,
             ResourceNames.STATISTICS_RDS,

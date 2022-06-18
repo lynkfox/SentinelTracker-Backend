@@ -117,12 +117,12 @@ def get_all_heroes_in_results(results: Enumerable) -> list:
     Parses the result for all the hero names and returns a sorted set of them
     """
 
-    hero_one = results.select(lambda x: x.hero_one).distinct(lambda x: x.hero_one).to_list()
-    hero_two = results.select(lambda x: x.hero_two).distinct(lambda x: x.hero_two).to_list()
-    hero_three = results.select(lambda x: x.hero_three).distinct(lambda x: x.hero_three).to_list()
-    hero_four = results.select(lambda x: x.hero_four).distinct(lambda x: x.hero_four).to_list()
-    hero_five = results.select(lambda x: x.hero_five).distinct(lambda x: x.hero_five).to_list()
+    hero_one = results.distinct(lambda x: x.hero_one).select(lambda x: x.hero_one).to_list()
+    hero_two = results.distinct(lambda x: x.hero_two).select(lambda x: x.hero_two).to_list()
+    hero_three = results.distinct(lambda x: x.hero_three).select(lambda x: x.hero_three).to_list()
+    hero_four = results.distinct(lambda x: x.hero_four).select(lambda x: x.hero_four).to_list()
+    hero_five = results.distinct(lambda x: x.hero_five).select(lambda x: x.hero_five).to_list()
 
-    all_heroes = [*hero_one, *hero_two, *hero_three, *hero_four, *hero_five]
+    all_heroes = filter(None, [*hero_one, *hero_two, *hero_three, *hero_four, *hero_five])
 
     return sorted(set(all_heroes))
