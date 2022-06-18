@@ -43,7 +43,7 @@ class MainStack(Stack):
 
         storage = StorageStack(self, "StorageStack", self.props)
 
-        functions = LambdaStack(self, "Lambdas", self.props, storage.statistics)
+        functions = LambdaStack(self, "Lambdas", self.props, storage.rds_proxy)
 
         api = ApiStack(self, "Api", self.props, functions.lambda_mapping)
 
@@ -52,3 +52,5 @@ class MainStack(Stack):
             "ApiEndpoint",
             value=api.backend_api.url,
         )
+
+        core.CfnOutput(self, "ProxyEndpoint", value=storage.rds_proxy.endpoint)

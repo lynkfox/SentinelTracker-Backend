@@ -19,7 +19,7 @@ root_directory = Path(__file__).parents[1]
 
 class LambdaStack(NestedStack):
     def __init__(
-        self, scope: Construct, construct_id: str, deployment_properties: DeploymentProperties, rds_table: rds.IDatabaseInstance, **kwargs
+        self, scope: Construct, construct_id: str, deployment_properties: DeploymentProperties, rds_table: rds.DatabaseProxy, **kwargs
     ) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
@@ -39,7 +39,7 @@ class LambdaStack(NestedStack):
             ResourceNames.STATISTICS,
             function_name=props.prefix_name(ResourceNames.STATISTICS),
             code=aws_lambda.Code.from_asset(os.path.join(root_directory, DirectoryLocations.STATISTICS)),
-            environment=LambdaEnvironmentVariables({}, ResourceNames.STATISTICS, rds_table.secret.secret_name).as_dict(),
+            environment=LambdaEnvironmentVariables({}, ResourceNames.STATISTICS, rds_table.endpoint).as_dict(),
             runtime=aws_lambda.Runtime.PYTHON_3_9,
             handler="index.lambda_handler",
             timeout=core.Duration.seconds(29),
@@ -55,3 +55,5 @@ class LambdaStack(NestedStack):
                 actions=["secretsmanager:GetSecretValue"], resources=[f"arn:aws:secretsmanager:{self.region}:{self.account}:secret:*"]
             )
         )
+
+        rds_table.grant_connect(statistics)

@@ -30,7 +30,7 @@ default_secret = "statisticsrdsSecret27E3DF08-mZiOfTCIxjJA"
 def get_mysql_client():
 
     try:
-        response = CLIENT.get_secret_value(SecretId=os.getenv("SECRET_NAME", default_secret))
+        response = CLIENT.get_secret_value(SecretId=default_secret)
     except ClientError as e:
         logger.exception("Client Error")
         raise e
@@ -39,7 +39,7 @@ def get_mysql_client():
         secrets = json.loads(response["SecretString"])
 
         return mysql.connector.connect(
-            host=secrets["host"],
+            host=os.getenv("PROXY", secrets["host"]),
             user=secrets["username"],
             password=secrets["password"],
             database=SqlTables.STATISTICS_DB_NAME.value,

@@ -2,6 +2,7 @@ import aws_cdk as core
 from aws_cdk import NestedStack
 from aws_cdk import aws_rds as rds
 from aws_cdk import aws_ec2 as ec2
+from aws_cdk import aws_iam as iam
 from constructs import Construct
 
 from configurations import ResourceNames
@@ -31,3 +32,5 @@ class StorageStack(NestedStack):
             vpc=props.vpc,
             vpc_subnets=ec2.SubnetSelection(subnet_type=ec2.SubnetType.PUBLIC),
         )
+
+        self.rds_proxy = rds.DatabaseProxy(self, f"{ResourceNames.STATISTICS_RDS}proxy", secrets=[self.statistics.secret], vpc=props.vpc)

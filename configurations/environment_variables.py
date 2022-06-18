@@ -6,12 +6,12 @@ from dataclasses import dataclass, field
 class LambdaEnvironmentVariables:
     unique_env: dict
     lambda_name: str
-    secret_name: str
+    proxy_endpoint: str
     log_level: str = field(default="DEBUG")
     environment: str = field(default=Environment.DEMO)
 
     def as_dict(self):
         return {
             **self.unique_env,
-            **{"POWERTOOLS_SERVICE_NAME": self.lambda_name, "LOG_LEVEL": self.log_level, "SECRET_NAME": self.secret_name},
+            **{"POWERTOOLS_SERVICE_NAME": self.lambda_name, "LOG_LEVEL": self.log_level, "PROXY": self.proxy_endpoint},
         }
