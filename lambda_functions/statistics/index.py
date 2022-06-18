@@ -7,6 +7,7 @@ from models import StatsIncoming, StatisticsResponse
 from results import calculate
 from common.rds.queries import query
 from botocore.exceptions import ClientError
+from datetime import datetime
 
 from common.sql_attributes import SqlTables
 import mysql.connector
@@ -67,7 +68,9 @@ def lambda_handler(event: dict, context: dict) -> dict:
 
     except Exception as e:
         logger.exception("Unhandled Error")
-        body = json.dumps({"message": "Error'd - Please contact Lynkfox with this message", "errorMessage": str(e)})
+        body = json.dumps(
+            {"message": "Error'd - Please contact Lynkfox with this message", "errorMessage": str(e), "errorTime": datetime.now().isoformat()}
+        )
 
     finally:
         return {
