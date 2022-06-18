@@ -8,5 +8,5 @@ common_layer:
 	pip install mysql-connector-python --target "python" >/dev/null
 	pip install pydantic --target "python" >/dev/null
 	pip install py-linq --target "python" >/dev/null
-	zip -r common.zip python
+	zip -r common.zip python >/dev/null
 	rm -r python
