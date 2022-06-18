@@ -49,7 +49,7 @@ def lambda_handler(event: dict, context: dict) -> dict:
     try:
         logger.debug("Processing Event")
         _event = StatsIncoming(event)
-        body = {"message": "Invalid format"}
+        body = json.dumps({"message": "Invalid format"})
 
         if _event.IS_OPTIONS:
             body = {"message": "Preflight Accepted"}
@@ -73,5 +73,5 @@ def lambda_handler(event: dict, context: dict) -> dict:
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Methods": "OPTIONS,GET",
             },
-            "body": json.dumps(body),
+            "body": body,
         }

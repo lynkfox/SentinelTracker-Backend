@@ -89,7 +89,7 @@ class Statistics(BaseModel):
     @validator("WinRate", always=True, allow_reuse=True)
     def calculate_win_rate(cls, wins, values):
         try:
-            return round(values["TotalWins"] / values["TotalGames"], 2)
+            return round(values["TotalWins"] / values["TotalGames"] * 100, 3)
         except Exception:
             return 0.0
 
@@ -103,7 +103,7 @@ class Statistics(BaseModel):
     @validator("LossRate", always=True, allow_reuse=True)
     def calculate_loss_rate(cls, losses, values):
         try:
-            return round(values["TotalLosses"] / values["TotalGames"], 2)
+            return round(values["TotalLosses"] / values["TotalGames"] * 100, 3)
         except Exception:
             return 0.0
 
@@ -135,14 +135,14 @@ class HeroStatistics(Statistics):
     @validator("IncapacitatedRate", always=True, allow_reuse=True)
     def calculate_incap_rate(cls, incap, values):
         try:
-            return round(values["Incapacitated"] / values["TotalGames"], 2)
+            return round(values["Incapacitated"] / values["TotalGames"] * 100, 3)
         except Exception:
             return 0.0
 
     @validator("WinRateWhenIncapacitated", always=True, allow_reuse=True)
     def calculate_wins_while_incap_rate(cls, incap, values):
         try:
-            return round(values["TotalWinsWhileIncapacitated"] / values["Incapacitated"], 2)
+            return round(values["TotalWinsWhileIncapacitated"] / values["Incapacitated"] * 100, 3)
         except Exception:
             return 0.0
 
@@ -178,21 +178,21 @@ class OpponentStatistics(Statistics):
     @validator("AdvancedModeWinRate", always=True, allow_reuse=True)
     def calculate_advanced_win_rate(cls, wins, values):
         try:
-            return round(values["AdvancedModeWins"] / values["AdvancedModeTotalGames"], 2)
+            return round(values["AdvancedModeWins"] / values["AdvancedModeTotalGames"] * 100, 3)
         except Exception:
             return 0.0
 
     @validator("ChallengeModeWinRate", always=True, allow_reuse=True)
     def calculate_challenge_win_rate(cls, wins, values):
         try:
-            return round(values["ChallengeModeWins"] / values["ChallengeModeTotalGames"], 2)
+            return round(values["ChallengeModeWins"] / values["ChallengeModeTotalGames"] * 100, 3)
         except Exception:
             return 0.0
 
     @validator("UltimateModeWinRate", always=True, allow_reuse=True)
     def calculate_ultimate_win_rate(cls, wins, values):
         try:
-            return round(values["UltimateModeWins"] / values["UltimateModeTotalGames"], 2)
+            return round(values["UltimateModeWins"] / values["UltimateModeTotalGames"] * 100, 3)
         except Exception:
             return 0.0
 
@@ -205,7 +205,7 @@ class UserStatistics(Statistics):
 class StatisticsResponse(BaseModel):
     RequestedSet: RequestedSet
     OriginalRequestedPath: str = Field(description="Original instruction path for the RequestedSet as reference")
-    Statistics: Union[HeroStatistics, OpponentStatistics, UserStatistics, Statistics, None]
+    Statistics: Union[Statistics, HeroStatistics, OpponentStatistics, UserStatistics, None]
 
     class Config:
         @staticmethod

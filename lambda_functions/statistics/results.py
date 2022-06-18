@@ -25,7 +25,7 @@ def calculate(request: LookUp, response: List[GameDetail]) -> models.StatisticsR
         # include AgainstStatistics for each Villain
         pass
 
-    if requested_parameters.locations is None or len(requested_parameters.locations) == 0:
+    if requested_parameters.environment is None or len(requested_parameters.environment) == 0:
         # include InStatistics for each environment
         pass
 
@@ -38,12 +38,12 @@ def calculate(request: LookUp, response: List[GameDetail]) -> models.StatisticsR
         pass
 
     total_games = len(response)
-    total_wins = collection.where(lambda x: _is_win_condition(x.end_result))
+    total_wins = len(list(collection.where(lambda x: _is_win_condition(x.end_result))))
 
     # temp
     stats = models.Statistics(TotalGames=total_games, TotalWins=total_wins)
 
-    return models.StatisticsResponse(RequestedSet=requested_parameters, Statistics=stats)
+    return models.StatisticsResponse(RequestedSet=requested_parameters, OriginalRequestedPath=request.path, Statistics=stats)
 
 
 def describe_query_parameters(operations=List[Operation]) -> models.RequestedSet:
