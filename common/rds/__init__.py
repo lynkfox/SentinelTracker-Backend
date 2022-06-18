@@ -1,5 +1,3 @@
-from dis import dis
-from re import L
 from common.models.character_enums import (
     Character,
     AlternateTags,
@@ -12,22 +10,26 @@ import mysql.connector
 import os
 
 from dataclasses import dataclass, field
-from common.attributes import DynamoAttributes
 from common.models.enums import Selector, Comparator, Default, Type
 from common.models.character_enums import Hero, Villain, Location, AlternateTags
 from typing import Union, List, Tuple
 from enum import Enum
 from aws_lambda_powertools import Logger
-from boto3.dynamodb.conditions import Key
 from botocore.exceptions import ClientError
 
 logger = Logger(child=True)
 CLIENT = boto3.client("secretsmanager")
 
 default_secret = "statisticsrdsSecret27E3DF08-mZiOfTCIxjJA"
+os.environ["LIBMYSQL_ENABLE_CLEARTEXT_PLUGIN"] = "1"
+
+rds_client = boto3.client("rds")
 
 
 def get_mysql_client():
+    """
+    Really only used for basic connections from scripts. Wont work for from lambda
+    """
 
     try:
         response = CLIENT.get_secret_value(SecretId=default_secret)
@@ -42,6 +44,35 @@ def get_mysql_client():
             host=os.getenv("PROXY", secrets["host"]),
             user=secrets["username"],
             password=secrets["password"],
+            database=SqlTables.STATISTICS_DB_NAME.value,
+        )
+    except Exception as e:
+        logger.exception("unable to open sql connection")
+        raise e
+
+
+def get_proxy_sql_client():
+    """
+    for database proxy rolls.
+    """
+    try:
+        response = CLIENT.get_secret_value(SecretId=default_secret)
+    except ClientError as e:
+        logger.exception("Client Error")
+        raise e
+
+    try:
+        secrets = json.loads(response["SecretString"])
+
+        logger.info("got secrets, attempting to get token")
+        endpoint = os.getenv("PROXY", secrets["host"])
+
+        token = rds_client.generate_db_auth_token(DBHostname=endpoint, Port=3306, DBUsername=secrets["username"], Region="us-east-2")
+
+        return mysql.connector.connect(
+            host=endpoint,
+            user=secrets["username"],
+            password=token,
             database=SqlTables.STATISTICS_DB_NAME.value,
         )
     except Exception as e:

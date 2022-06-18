@@ -3,17 +3,24 @@ import os
 
 import boto3
 from aws_lambda_powertools import Logger
-from common.rds import get_mysql_client
+from common.rds import get_proxy_sql_client
 from models import StatsIncoming, StatisticsResponse
 from results import calculate
 from common.rds.queries import query
+from botocore.exceptions import ClientError
+
+from common.sql_attributes import SqlTables
+import mysql.connector
 
 logger = Logger()
 
 DYNAMO_RESOURCE = boto3.resource("dynamodb")
 DYNAMO_TABLE = os.getenv("DYNAMO_TABLE_NAME")
 
-MY_SQL_CLIENT = get_mysql_client()
+CLIENT = boto3.client("secretsmanager")
+
+
+MY_SQL_CLIENT = get_proxy_sql_client()
 
 
 @logger.inject_lambda_context(log_event=True, clear_state=True)

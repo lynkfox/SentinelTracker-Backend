@@ -10,11 +10,15 @@ from typing import List, Optional, Union, Dict, Any, Type
 
 @dataclass
 class StatsIncoming(ApiEvent):
+    IS_OPTIONS: bool = field(init=False)
+    IS_GET: bool = field(init=False)
+    IS_POST: bool = field(init=False)
     entity_name: str = field(init=False)
     api_type: str = field(init=False)
     look_up_data: LookUp = field(init=False)
 
     def __post_init__(self):
+        self.determine_type()
         self._is_allowed_method()
 
         self.look_up_data = LookUp(self.path)
