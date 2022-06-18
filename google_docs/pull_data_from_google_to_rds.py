@@ -20,7 +20,7 @@ from time import perf_counter
 DOCUMENT_ID = "1bVppJL4rC5lWULLGZ7AP5xH6YZLYsv86Wme1SpU6agE"
 RANGE = "Form Responses 4!A2:AL"
 
-# last insert 31225 - bet tho that the actual last row number is higher than that
+# last insert 31302 last row
 
 
 def main():
