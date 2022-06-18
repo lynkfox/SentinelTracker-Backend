@@ -24,7 +24,7 @@ os.environ["LIBMYSQL_ENABLE_CLEARTEXT_PLUGIN"] = "1"
 rds_client = boto3.client("rds")
 
 
-@logger.inject_lambda_context(log_event=True, clear_state=True)
+# @logger.inject_lambda_context(log_event=True, clear_state=True)
 def lambda_handler(event: dict, context: dict) -> dict:
     """
     Handles all routing of the api, based on path.

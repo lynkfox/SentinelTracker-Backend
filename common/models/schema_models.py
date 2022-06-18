@@ -193,10 +193,10 @@ class GameDetail(BaseModel):
     villain_four_incapped: Optional[bool]
     villain_five: Optional[str]
     villain_five_incapped: Optional[bool]
-    comment: Optional[str]
-    entry_is_valid: bool = Field(True)
     advanced: Optional[bool]
     challenge: Optional[bool]
+    comment: Optional[str]
+    entry_is_valid: bool = Field(True)
 
     class Config:
         use_enum_values = True

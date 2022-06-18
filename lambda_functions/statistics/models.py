@@ -75,10 +75,10 @@ class Statistics(BaseModel):
     """
 
     TotalGames: int = Field(description="Total games recorded with this RequestedSet", default=0)
-    TotalWins: int = Field(description="Total wins recorded with this RequestedSet", default=0)
-    WinRate: float = Field(description="Derived: Win percentage", default=0.0)
-    TotalLosses: int = Field(description="Derived: Number of losses", default=0)
-    LossRate: float = Field(description="Derived: Loss percentage", default=0.0)
+    TotalPlayerVictories: int = Field(description="Total wins recorded with this RequestedSet", default=0)
+    PlayerVictoryRate: float = Field(description="Derived: Win percentage", default=0.0)
+    TotalPlayerDefeats: int = Field(description="Derived: Number of losses", default=0)
+    PlayerDefeatRate: float = Field(description="Derived: Loss percentage", default=0.0)
 
     class Config:
         @staticmethod
@@ -86,24 +86,24 @@ class Statistics(BaseModel):
             for prop in schema.get("properties", {}).values():
                 prop.pop("title", None)
 
-    @validator("WinRate", always=True, allow_reuse=True)
+    @validator("PlayerVictoryRate", always=True, allow_reuse=True)
     def calculate_win_rate(cls, wins, values):
         try:
-            return round(values["TotalWins"] / values["TotalGames"] * 100, 3)
+            return round(values["TotalPlayerVictories"] / values["TotalGames"] * 100, 3)
         except Exception:
             return 0.0
 
-    @validator("TotalLosses", always=True, allow_reuse=True)
+    @validator("TotalPlayerDefeats", always=True, allow_reuse=True)
     def calculate_losses(cls, losses, values):
         try:
-            return values["TotalGames"] - values["TotalWins"]
+            return values["TotalGames"] - values["TotalPlayerVictories"]
         except Exception:
             return 0
 
-    @validator("LossRate", always=True, allow_reuse=True)
+    @validator("PlayerDefeatRate", always=True, allow_reuse=True)
     def calculate_loss_rate(cls, losses, values):
         try:
-            return round(values["TotalLosses"] / values["TotalGames"] * 100, 3)
+            return round(values["TotalPlayerDefeats"] / values["TotalGames"] * 100, 3)
         except Exception:
             return 0.0
 
@@ -125,8 +125,8 @@ class SpecialStatistics(Statistics):
 class HeroStatistics(Statistics):
     Incapacitated: Optional[int] = Field(description="Total times incapacitated", default=0)
     IncapacitatedRate: Optional[float] = Field(description="Derived: Incapacitated percentage", default=0.0)
-    TotalWinsWhileIncapacitated: Optional[float] = Field(description="Total wins when incapacitated", default=0)
-    WinRateWhenIncapacitated: Optional[float] = Field(description="Derived: Win rate when incapacitated", default=0.0)
+    TotalPlayerVictoriesWhileIncapacitated: Optional[float] = Field(description="Total wins when incapacitated", default=0)
+    PlayerVictoryRateWhenIncapacitated: Optional[float] = Field(description="Derived: Win rate when incapacitated", default=0.0)
     Versus: Optional[Dict[str, OpponentStatistics]] = Field(default_factory=dict)
     With: Optional[Dict[str, HeroStatistics]] = Field(default_factory=dict)
     In: Optional[Dict[str, LocationStatistics]] = Field(default_factory=dict)
@@ -139,25 +139,24 @@ class HeroStatistics(Statistics):
         except Exception:
             return 0.0
 
-    @validator("WinRateWhenIncapacitated", always=True, allow_reuse=True)
+    @validator("PlayerVictoryRateWhenIncapacitated", always=True, allow_reuse=True)
     def calculate_wins_while_incap_rate(cls, incap, values):
         try:
-            return round(values["TotalWinsWhileIncapacitated"] / values["Incapacitated"] * 100, 3)
+            return round(values["TotalPlayerVictoriesWhileIncapacitated"] / values["Incapacitated"] * 100, 3)
         except Exception:
             return 0.0
 
 
 class OpponentStatistics(Statistics):
-    comment: str = Field(default="Wins in this object are total times Heroes/Players have triumphed over this villain")
     AdvancedModeTotalGames: int = Field(description="Total games with Advanced Mode", default=0)
-    AdvancedModeWins: int = Field(description="Total Wins by players against this Villain with Advanced Mode", default=0)
-    AdvancedModeWinRate: float = Field(description="Derived: Win percentage of Advanced Mode against this Villain", default=0.0)
+    AdvancedModePlayerVictories: int = Field(description="Total Wins by players against this Villain with Advanced Mode", default=0)
+    AdvancedModePlayerVictoryRate: float = Field(description="Derived: Win percentage of Advanced Mode against this Villain", default=0.0)
     ChallengeModeTotalGames: int = Field(description="Total games with Challenge Mode", default=0)
-    ChallengeModeWins: int = Field(description="Total Wins by players against this Villain with Challenge Mode", default=0)
-    ChallengeModeWinRate: float = Field(description="Derived: Win percentage of Challenge Mode against this Villain", default=0.0)
+    ChallengeModePlayerVictories: int = Field(description="Total Wins by players against this Villain with Challenge Mode", default=0)
+    ChallengeModePlayerVictoryRate: float = Field(description="Derived: Win percentage of Challenge Mode against this Villain", default=0.0)
     UltimateModeTotalGames: int = Field(description="Total games with Ultimate Mode", default=0)
-    UltimateModeWins: int = Field(description="Total Wins by players against this Villain with Ultimate Mode", default=0)
-    UltimateModeWinRate: float = Field(description="Derived: Win percentage of Ultimate Mode against this Villain", default=0.0)
+    UltimateModePlayerVictories: int = Field(description="Total Wins by players against this Villain with Ultimate Mode", default=0)
+    UltimateModePlayerVictoryRate: float = Field(description="Derived: Win percentage of Ultimate Mode against this Villain", default=0.0)
     Versus: Optional[Dict[str, HeroStatistics]] = Field(default_factory=dict)
     With: Optional[Dict[str, OpponentStatistics]] = Field(default_factory=dict)
     In: Optional[Dict[str, LocationStatistics]] = Field(default_factory=dict)
@@ -175,24 +174,24 @@ class OpponentStatistics(Statistics):
             schema["properties"] = {"comment": comment}
             schema["properties"] = {**schema["properties"], **values}
 
-    @validator("AdvancedModeWinRate", always=True, allow_reuse=True)
+    @validator("AdvancedModePlayerVictoryRate", always=True, allow_reuse=True)
     def calculate_advanced_win_rate(cls, wins, values):
         try:
-            return round(values["AdvancedModeWins"] / values["AdvancedModeTotalGames"] * 100, 3)
+            return round(values["AdvancedModePlayerVictories"] / values["AdvancedModeTotalGames"] * 100, 3)
         except Exception:
             return 0.0
 
-    @validator("ChallengeModeWinRate", always=True, allow_reuse=True)
+    @validator("ChallengeModePlayerVictoryRate", always=True, allow_reuse=True)
     def calculate_challenge_win_rate(cls, wins, values):
         try:
-            return round(values["ChallengeModeWins"] / values["ChallengeModeTotalGames"] * 100, 3)
+            return round(values["ChallengeModePlayerVictories"] / values["ChallengeModeTotalGames"] * 100, 3)
         except Exception:
             return 0.0
 
-    @validator("UltimateModeWinRate", always=True, allow_reuse=True)
+    @validator("UltimateModePlayerVictoryRate", always=True, allow_reuse=True)
     def calculate_ultimate_win_rate(cls, wins, values):
         try:
-            return round(values["UltimateModeWins"] / values["UltimateModeTotalGames"] * 100, 3)
+            return round(values["UltimateModePlayerVictories"] / values["UltimateModeTotalGames"] * 100, 3)
         except Exception:
             return 0.0
 

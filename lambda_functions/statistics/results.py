@@ -20,7 +20,7 @@ def calculate(request: LookUp, response: List[GameDetail]) -> models.StatisticsR
     total_wins = collection.where(lambda x: _is_win_condition(x.end_result)).count()
 
     # default
-    stats = models.Statistics(TotalGames=total_games, TotalWins=total_wins)
+    stats = models.Statistics(TotalGames=total_games, TotalPlayerVictories=total_wins)
 
     if (requested_parameters.heroes is None or len(requested_parameters.heroes) == 0) and len(requested_parameters.villains) >= 1:
 
@@ -34,14 +34,14 @@ def calculate(request: LookUp, response: List[GameDetail]) -> models.StatisticsR
 
         stats = models.OpponentStatistics(
             TotalGames=total_games,
-            TotalWins=total_wins,
+            TotalPlayerVictories=total_wins,
             AdvancedModeTotalGames=advanced_games_collection.count(),
             AdvancedModeWins=advanced_games_collection.where(lambda x: _is_win_condition(x.end_result)).count(),
             ChallengeModeTotalGames=challenge_games_collection.count(),
             ChallengeModeWins=challenge_games_collection.where(lambda x: _is_win_condition(x.end_result)).count(),
             UltimateModeTotalGames=ultimate_games_collection.count(),
             UltimateModeWins=ultimate_games_collection.where(lambda x: _is_win_condition(x.end_result)).count(),
-            Versus=build_related_hero_stats(collection),
+            Versus=build_related_hero_links(collection),
         )
 
     if requested_parameters.villains is None or len(requested_parameters.villains) == 0 and len(requested_parameters.heroes) >= 1:
@@ -67,7 +67,7 @@ def calculate(request: LookUp, response: List[GameDetail]) -> models.StatisticsR
     return models.StatisticsResponse(RequestedSet=requested_parameters, OriginalRequestedPath=request.path, Statistics=stats)
 
 
-def build_related_hero_stats(collection, original_hero: str = None) -> Dict[str, GameDetail]:
+def build_related_hero_links(collection, original_hero: str = None) -> Dict[str, GameDetail]:
     """
     Collects all the other heroes in the response and builds a dictionary of "Hero Name": Statistics
     """
@@ -82,7 +82,7 @@ def build_related_hero_stats(collection, original_hero: str = None) -> Dict[str,
 
         all_other_hero_stats[hero] = models.HeroStatistics(
             TotalGames=individual_hero_collection.count(),
-            TotalWins=individual_hero_collection.where(lambda x: _is_win_condition(x.end_result)).count(),
+            TotalPlayerVictories=individual_hero_collection.where(lambda x: _is_win_condition(x.end_result)).count(),
             Incapacitated=incapped_games.count(),
             TotalWinsWhileIncapacitated=incapped_games.where(lambda x: _is_win_condition(x.end_result)).count(),
         )
@@ -134,12 +134,6 @@ def get_all_heroes_in_results(results: Enumerable) -> list:
     Parses the result for all the hero names and returns a sorted set of them
     """
 
-    hero_one = results.distinct(lambda x: x.hero_one).select(lambda x: x.hero_one).to_list()
-    hero_two = results.distinct(lambda x: x.hero_two).select(lambda x: x.hero_two).to_list()
-    hero_three = results.distinct(lambda x: x.hero_three).select(lambda x: x.hero_three).to_list()
-    hero_four = results.distinct(lambda x: x.hero_four).select(lambda x: x.hero_four).to_list()
-    hero_five = results.distinct(lambda x: x.hero_five).select(lambda x: x.hero_five).to_list()
-
-    all_heroes = filter(None, [*hero_one, *hero_two, *hero_three, *hero_four, *hero_five])
-
-    return sorted(set(all_heroes))
+    return sorted(
+        set(results.select_many(lambda x: (x.hero_one, x.hero_two, x.hero_three, x.hero_four, x.hero_five)).except_(Enumerable([None])).to_list())
+    )
