@@ -45,6 +45,10 @@
 
 Common functionality that will be used between multiple lambda's. Also will be the basis for the SDK
 
+* Common/models
+
+    It is worth noting that there are many hard coded values within this directory. Things like character names and tags. This is not an ideal way to do this - it would be better to store these separately - in a database for instance - and call on them whenever they are needed. However, as this is a small time project and these values do not change very often (only new ones added every few years) we can get away with some bad practice hard coding. It works, and it works well enough.
+
 
 ## google_docs
 

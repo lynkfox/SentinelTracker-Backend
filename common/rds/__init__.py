@@ -81,19 +81,49 @@ def get_proxy_sql_client():
 
 
 def character_full_name(
-    full_name: Union[Character, str],
-    alternate_name: Union[AlternateTags, str, None],
-    mapping: dict,
+    full_name: Union[Character, str], alternate_name: Union[AlternateTags, str, None], mapping: dict, is_definitive: bool = False
 ) -> str:
     """
     Builds the "full_name" for a given Hero, Villain, or Environment entry in the RDS
     """
-    alternate_name = ALTERNATE_TAG_DISPLAY_MAPPING.get(alternate_name)
     full_name = mapping.get(full_name)
+    if is_definitive and alternate_name is not AlternateTags.definitive:
+        full_name = f"{full_name}{ALTERNATE_TAG_DISPLAY_MAPPING.get(AlternateTags.definitive)}"
+
+    alternate_name = ALTERNATE_TAG_DISPLAY_MAPPING.get(alternate_name)
+
     if alternate_name is not None:
         full_name = f"{full_name}{alternate_name}"
 
     return full_name
+
+
+def character_full_name_to_enums(full_name: str, mapping: dict) -> Tuple[Union[Hero, Villain, Location], List[AlternateTags]]:
+    """
+    Reverses a Full Display Name to enums. Given mapping dict is the one to try against to find the primary name
+    """
+
+    name = None
+    alternate = []
+    is_definitive = ALTERNATE_TAG_DISPLAY_MAPPING.get(AlternateTags.definitive) in full_name
+
+    if is_definitive:
+        alternate = [AlternateTags.definitive]
+
+    for key, value in ALTERNATE_TAG_DISPLAY_MAPPING.items():
+        if value in full_name and key is not AlternateTags.definitive:
+            alternate.append(key)
+            break
+
+    for key, value in mapping.items():
+        if value in full_name:
+            name = key
+            break
+
+    if len(alternate) == 0:
+        alternate = [None]
+
+    return name, alternate
 
 
 @dataclass

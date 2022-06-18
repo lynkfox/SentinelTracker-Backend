@@ -1,6 +1,14 @@
-from common.rds import LookUp, Operation
+from common.rds import LookUp, Operation, character_full_name, character_full_name_to_enums
 from common.models.enums import Default, Comparator, Type, Selector
-from common.models.character_enums import Hero, Villain, Location, AlternateTags
+from common.models.character_enums import (
+    Hero,
+    Villain,
+    Location,
+    AlternateTags,
+    HERO_DISPLAY_MAPPING,
+    VILLAIN_DISPLAY_MAPPING,
+    LOCATION_DISPLAY_MAPPING,
+)
 
 
 class Test_Lookup:
@@ -347,3 +355,47 @@ class Test_Lookup:
         assert len(test_lookup.operations) == 2
         assert test_lookup.operations[0] == operation_one
         assert test_lookup.operations[1] == operation_two
+
+
+class Test_character_full_name:
+    def test_single_name(self):
+        test_response = character_full_name(Hero.absolute_zero, None, mapping=HERO_DISPLAY_MAPPING)
+
+        assert test_response == "Absolute Zero"
+
+    def test_name_with_alternate(self):
+        test_response = character_full_name(Hero.absolute_zero, AlternateTags.freedom_five, mapping=HERO_DISPLAY_MAPPING)
+
+        assert test_response == "Absolute Zero, Freedom Five"
+
+    def test_name_with_alternate_and_is_definitive(self):
+        test_response = character_full_name(Hero.absolute_zero, AlternateTags.first_appearance, mapping=HERO_DISPLAY_MAPPING, is_definitive=True)
+
+        assert test_response == "Absolute Zero, Definitive, First Appearance of"
+
+
+class Test_character_full_name_to_enums:
+    def test_single_name(self):
+        test_response = character_full_name_to_enums("Absolute Zero", mapping=HERO_DISPLAY_MAPPING)
+
+        assert test_response == (Hero.absolute_zero, [None])
+
+    def test_name_with_alternate_tag(self):
+        test_response = character_full_name_to_enums("Absolute Zero, Freedom Five", mapping=HERO_DISPLAY_MAPPING)
+
+        assert test_response == (Hero.absolute_zero, [AlternateTags.freedom_five])
+
+    def test_definitive_base_hero(self):
+        test_response = character_full_name_to_enums("Absolute Zero, Definitive", mapping=HERO_DISPLAY_MAPPING)
+
+        assert test_response == (Hero.absolute_zero, [AlternateTags.definitive])
+
+    def test_definitive_base_hero_with_alternate_tag(self):
+        test_response = character_full_name_to_enums("Absolute Zero, Definitive, First Appearance of", mapping=HERO_DISPLAY_MAPPING)
+
+        assert test_response == (Hero.absolute_zero, [AlternateTags.definitive, AlternateTags.first_appearance])
+
+    def test_bad_input_returns_none(self):
+        test_response = character_full_name_to_enums("adfasdf, adsfaew", mapping=HERO_DISPLAY_MAPPING)
+
+        assert test_response == (None, [None])

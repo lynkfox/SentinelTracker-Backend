@@ -324,6 +324,7 @@ class AlternateTags(Character):
 
 
 ALTERNATE_TAG_DISPLAY_MAPPING = {
+    AlternateTags.definitive: ", Definitive",  # definitive edition
     AlternateTags.freedom_five: ", Freedom Five",
     AlternateTags.freedom_six: ", Freedom Six",
     AlternateTags.termi_nation: ", Termi-Nation",
@@ -333,7 +334,6 @@ ALTERNATE_TAG_DISPLAY_MAPPING = {
     AlternateTags.dark_watch: ", Dark Watch",
     AlternateTags.scion: ": Scion of OblivAeon",
     AlternateTags.team_villain: ": Team Villain",
-    AlternateTags.definitive: ", Definitive",  # definitive edition
     AlternateTags.first_appearance: ", First Appearance of",
     AlternateTags.spirit_of_the_void: ": The Spirit of the Void",  # Akash hero
     AlternateTags.dark_conductor: ": Dark Conductor",  # Argent
