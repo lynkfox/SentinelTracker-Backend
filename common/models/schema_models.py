@@ -107,8 +107,6 @@ class VillainOpponent(BaseModel):
     villain_three: Optional[str]
     villain_four: Optional[str]
     villain_five: Optional[str]
-    advanced: bool
-    challenge: bool
     id_hash: Optional[str]
     valid_team: Optional[str]
 
@@ -197,6 +195,8 @@ class GameDetail(BaseModel):
     villain_five_incapped: Optional[bool]
     comment: Optional[str]
     entry_is_valid: bool = Field(True)
+    advanced: Optional[bool]
+    challenge: Optional[bool]
 
     class Config:
         use_enum_values = True
@@ -212,10 +212,18 @@ class GameDetail(BaseModel):
 
     @validator("entry_is_valid", always=True)
     def validate_entry(cls, entry, values):
-        # validate that the number of villains, if not 1, is equal to the number of heroes.
+        """
+        For inputting data from the google sheet, this value will determine if the google sheet value constitutes
+        a valid game entry or not. If it doesn't, it simply marks this field as false in order to preserve the
+        game entries but not include them in statistics.
+
+        Coming from the database, this value is defaulted to true, so will always be there and the rest of the
+        validation can be ignored.
+        """
         if entry is not None:
             return entry
 
+        # make sure if a team game that the number of villains is not more than the number of heroes
         villains = [v for k, v in values["villain"].__dict__.items() if ("villain" in k and "incapped" not in k) and v is not None]
         if len(villains) != 1 and len(villains) != values["number_of_heroes"]:
             return False
@@ -226,7 +234,13 @@ class GameDetail(BaseModel):
 
         incapped_heroes = [v for k, v in values.items() if "hero" in k and "incapped" in k and v]
 
+        # validate if all heroes are incapped that the end_result is not a Win condition.
         if len(incapped_heroes) == values["number_of_heroes"] and isinstance(values["end_result"], HeroWinCondition):
+            return False
+
+        # if either Challenge or Advanced is none that means this entry didnt have values (the length of the response
+        # from google sheets wasn't long enough) which means this is an invalid entry.
+        if values["challenge"] is None or values["advanced"] is None:
             return False
 
         return True

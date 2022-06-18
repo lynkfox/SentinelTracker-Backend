@@ -65,6 +65,9 @@ These can all be combined in any order as long as the rules of all the heroes an
 **Enable OR keyword**
 * `hero/absolute_zero/or/legacy/in/insula_primalis` - gets all the games with *either* AZ and Legacy in Insula Primalis
 
+**Enable BETWEEN/BEFORE/AFTER keywords**
+* `hero/absolute_zero/after/2022-01-01` - only looks at the stats with a given dateframe.
+
 **Enable sending pseudo query language in body as part of a json structure**
 * Similar in idea to JSON-Logic but with less ambiguity and more sugar for friendliness
     * something like - for a generic query
@@ -92,6 +95,9 @@ These can all be combined in any order as long as the rules of all the heroes an
         }
     }
     ```
+
+    basically, each Key in a given object is either a Keyword (Hero, Where, In, Greater Than, With) or an attribute in the table to compare the keyword with.
+    *note for self: if key != dict, recursive parse as an instruction, else is a value*
 
 
 

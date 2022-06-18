@@ -128,6 +128,8 @@ def main():
         SqlColumns.V4_INCAP.value,
         SqlColumns.VILLAIN_FIVE.value,
         SqlColumns.V5_INCAP.value,
+        SqlColumns.ADVANCED.value,
+        SqlColumns.CHALLENGE.value,
         SqlColumns.COMMENTS.value,
         SqlColumns.ENTRY_IS_VALID.value,
     ]
@@ -251,6 +253,8 @@ def create_values_for_game_details_insert(game: GameDetail) -> set:
         game.villain_four_incapped,
         game.villain_five,
         game.villain_five_incapped,
+        game.advanced,
+        game.challenge,
         game.comment,
         game.entry_is_valid,
     )
@@ -285,7 +289,12 @@ def is_true(value) -> bool:
 
 
 def map_row_to_game_details(row: list, row_count: int) -> GameDetail:
-
+    """
+    Maps a given row from the google sheet to a GameDetails kwarg dictionary
+    Each number in the dispatch dict below is a row index for the result from
+    google sheet pull. If its a tuple, then the second action is a cleanup or
+    mapping of that value into something more consistent in the database.
+    """
     dispatch = {
         "username": (34, USERNAME_CONSOLIDATION),
         "entered_on": (0, process_date),
@@ -313,6 +322,8 @@ def map_row_to_game_details(row: list, row_count: int) -> GameDetail:
         "villain_three_incapped": 7,
         "villain_four_incapped": 9,
         "villain_five_incapped": 11,
+        "advanced": (13, is_true),
+        "challenge": (14, is_true),
         "comments": 35,
     }
     details = {}
@@ -354,7 +365,10 @@ def map_row_to_game_details(row: list, row_count: int) -> GameDetail:
                     )
 
             elif callable(index[1]):
-                value = index[1](row[index[0]])
+                if len(row) > index[0]:
+                    value = index[1](row[index[0]])
+                else:
+                    value = None
 
         elif callable(index):
             value = index(row)
@@ -363,11 +377,11 @@ def map_row_to_game_details(row: list, row_count: int) -> GameDetail:
             value = index
 
         details[key] = value
-        if key not in ["house_rules", "oblivaeon_details"] and details[key] is None:
-            if isinstance(index, tuple):
-                google_value = row[index[0]] if len(row) > index[0] else ""
-            else:
-                google_value = row[index]
+        # if key not in ["house_rules", "oblivaeon_details"] and details[key] is None:
+        #     if isinstance(index, tuple):
+        #         google_value = row[index[0]] if len(row) > index[0] else ""
+        #     else:
+        #         google_value = row[index]
 
     details["hero_team"], heroes = map_hero_team(row)
     if details["hero_team"] is None:

@@ -70,3 +70,5 @@ class SqlColumns(EnhancedEnum):
     ENTRY_IS_VALID = "entry_is_valid"
     VALID_TEAM = "valid_team"
     COMMENTS = "comments"
+    ADVANCED = "advanced"
+    CHALLENGE = "challenge"

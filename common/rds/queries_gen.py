@@ -220,8 +220,6 @@ def parse_for_rds_names(operations):
 
         instruction_dispatch = dispatch.get(instruction.entity_type)
 
-        print(instruction_dispatch)
-
         name = instruction_dispatch[0](instruction.name_selection)
         definitive = ALTERNATE_TAG_DISPLAY_MAPPING.get(AlternateTags.definitive) if instruction.definitive else ""
         alternate_name = ALTERNATE_TAG_DISPLAY_MAPPING.get(instruction.alternate_selection, "")

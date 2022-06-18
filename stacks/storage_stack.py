@@ -30,7 +30,7 @@ class StorageStack(NestedStack):
                 version=rds.MysqlEngineVersion.VER_8_0_28,
             ),
             vpc=props.vpc,
-            vpc_subnets=ec2.SubnetSelection(subnet_type=ec2.SubnetType.PUBLIC),
+            vpc_subnets=ec2.SubnetSelection(subnet_type=ec2.SubnetType.PRIVATE_WITH_NAT),
         )
 
         self.rds_proxy = rds.DatabaseProxy(
