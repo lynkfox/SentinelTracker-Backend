@@ -224,7 +224,6 @@ class LookUp:
             if character_enum == "user":
                 name_selection = next_part
             else:
-
                 name_selection = character_enum(next_part) if next_part != Default.ALL else Default.ALL
 
             if follow_up_part is not None and "definitive_" in follow_up_part:

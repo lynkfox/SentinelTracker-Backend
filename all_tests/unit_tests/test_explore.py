@@ -7,11 +7,11 @@ from common.rds import get_mysql_client
 
 
 def test_explore():
-    event = {"httpMethod": "GET", "pathParameters": {"proxy": "/hero/captain_cosmic"}}
+    event = {"httpMethod": "GET", "pathParameters": {"proxy": "hero/legacy/versus/baron_blade"}}
     MY_SQL_CLIENT = get_mysql_client()
 
     _event = StatsIncoming(event)
     results = query(_event.look_up_data.operations, MY_SQL_CLIENT)
-    body = calculate(_event.look_up_data, results).json()
-
-    print(body)
+    body = calculate(_event.look_up_data, results).json(exclude_none=True)
+    body = json.loads(body)
+    print("weee")

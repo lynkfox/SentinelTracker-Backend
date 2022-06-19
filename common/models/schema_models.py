@@ -1,3 +1,4 @@
+from __future__ import annotations
 from pydantic import BaseModel, Field, PrivateAttr, validator
 from pydantic.fields import ModelField
 from common.models.enums import Type
@@ -12,7 +13,7 @@ from common.models.game_details_enums import (
     GameLength,
 )
 import json
-from typing import Optional, Union
+from typing import Optional, Union, Dict, Any
 from datetime import datetime
 
 
@@ -23,33 +24,49 @@ class User(BaseModel):
 
     username: str
 
+    class Config:
+        @staticmethod
+        def schema_extra(schema: Dict[str, Any], model: Type["User"]) -> None:
+            for prop in schema.get("properties", {}).values():
+                prop.pop("title", None)
+
 
 class OblivAeonDetail(BaseModel):
     """
     Model of a row in t he OblivAeonDetails table
     """
 
-    scions: str = Field(...)  # scion ID values concatted into id#-id#-id#-id#
+    scions: str = Field(
+        ..., description="The Display names all together as a single string separated by - Name A-Name B-Name-C"
+    )  # scion ID values concatted into id#-id#-id#-id#
     shield: str = Field(...)
-    environments: Optional[str]  # id# concatted into id#-id#-id# ...
-    player_one_heroes: Optional[str]  # id# concatted into id#-id#-id# ...
-    player_two_heroes: Optional[str]  # id# concatted into id#-id#-id# ...
-    player_three_heroes: Optional[str]  # id# concatted into id#-id#-id# ...
-    player_four_heroes: Optional[str]  # id# concatted into id#-id#-id# ...
-    player_five_heroes: Optional[str]  # id# concatted into id#-id#-id# ...
-    rewards: Optional[str]  # reward ID values concatted into id#-id#-id#
+    environments: Optional[str] = Field(description="The Display names all together as a single string separated by - Name A-Name B-Name-C")
+    player_one_heroes: Optional[str] = Field(description="The Display names all together as a single string separated by - Name A-Name B-Name-C")
+    player_two_heroes: Optional[str] = Field(description="The Display names all together as a single string separated by - Name A-Name B-Name-C")
+    player_three_heroes: Optional[str] = Field(description="The Display names all together as a single string separated by - Name A-Name B-Name-C")
+    player_four_heroes: Optional[str] = Field(description="The Display names all together as a single string separated by - Name A-Name B-Name-C")
+    player_five_heroes: Optional[str] = Field(description="The Display names all together as a single string separated by - Name A-Name B-Name-C")
+    rewards: Optional[str] = Field(description="The Display names all together as a single string separated by - Name A-Name B-Name-C")
     id_hash: Optional[str]
 
     @validator("id_hash", always=True)
     def hash_team(cls, id_hash, values):
         if id_hash is None or id_hash == "":
-            return hash("".join([v if v is not None else "-" for k, v in values.items() if k != "id_hash"]))
+            return hash("".join([v if v is not None else "-" for k, v in values.items() if k in ["scions", "shield"]]))
         return id_hash
+
+    class Config:
+        @staticmethod
+        def schema_extra(schema: Dict[str, Any], model: Type["OblivAeonDetail"]) -> None:
+            for prop in schema.get("properties", {}).values():
+                prop.pop("title", None)
+
+            del schema["properties"]["id_hash"]
 
 
 class HeroTeam(BaseModel):
     """
-    Model of a row in the HeroTeams table
+    The Hero Team - IN ALPHABETICAL ORDER in order.
     """
 
     hero_one: str = Field(...)
@@ -63,6 +80,14 @@ class HeroTeam(BaseModel):
     class Config:
         use_enum_values = True
         anystr_strip_whitespace = True
+
+        @staticmethod
+        def schema_extra(schema: Dict[str, Any], model: Type["HeroTeam"]) -> None:
+            for prop in schema.get("properties", {}).values():
+                prop.pop("title", None)
+
+            del schema["properties"]["id_hash"]
+            del schema["properties"]["valid_team"]
 
     @validator("hero_five", always=True)
     def collapse_team(cls, hero_five, values):
@@ -81,25 +106,30 @@ class HeroTeam(BaseModel):
     @validator("valid_team", always=True)
     def validate_team(cls, validation, values):
         # alphabetize heroes
-        members = [value for key, value in values.items() if (key.startswith("hero")) and value is not None]
-        members.sort()
-        total_members = len(members)
+        if validation is None:
+            members = [value for key, value in values.items() if (key.startswith("hero")) and value is not None]
+            sorted_members = sorted(members)
+            total_members = len(members)
 
-        values["hero_one"] = members[0]
-        values["hero_two"] = members[1] if total_members > 1 else None
-        values["hero_three"] = members[2] if total_members > 2 else None
-        values["hero_four"] = members[3] if total_members > 3 else None
-        values["hero_five"] = members[4] if total_members > 4 else None
+            values["hero_one"] = sorted_members[0]
+            values["hero_two"] = sorted_members[1] if total_members > 1 else None
+            values["hero_three"] = sorted_members[2] if total_members > 2 else None
+            values["hero_four"] = sorted_members[3] if total_members > 3 else None
+            values["hero_five"] = sorted_members[4] if total_members > 4 else None
 
-        if len(set(members)) != len(members):
-            return False
+            # if there are duplications
+            if len(set(members)) != len(members):
+                return False
+
+        else:
+            return validation
 
         return True
 
 
 class VillainOpponent(BaseModel):
     """
-    Model of a row in the Opponents Table
+    Villain Team. This team should be entered ALPHABETICALLY
     """
 
     villain_one: str = Field(...)
@@ -113,6 +143,14 @@ class VillainOpponent(BaseModel):
     class Config:
         use_enum_values = True
         anystr_strip_whitespace = True
+
+        @staticmethod
+        def schema_extra(schema: Dict[str, Any], model: Type["VillainOpponent"]) -> None:
+            for prop in schema.get("properties", {}).values():
+                prop.pop("title", None)
+
+            del schema["properties"]["id_hash"]
+            del schema["properties"]["valid_team"]
 
     @validator("villain_two", "villain_three", "villain_four", "villain_five", always=True)
     def collapse_team(cls, villain, values):
@@ -135,19 +173,25 @@ class VillainOpponent(BaseModel):
 
     @validator("valid_team", always=True)
     def validate_team(cls, validation, values):
-        # alphabetize heroes
-        members = [value for key, value in values.items() if (key.startswith("villain")) and value is not None]
-        members.sort()
-        total_members = len(members)
 
-        values["villain_one"] = members[0]
-        values["villain_two"] = members[1] if total_members > 1 else None
-        values["villain_three"] = members[2] if total_members > 2 else None
-        values["villain_four"] = members[3] if total_members > 3 else None
-        values["villain_five"] = members[4] if total_members > 4 else None
+        if validation is None:
+            # alphabetize heroes
+            members = [value for key, value in values.items() if (key.startswith("villain")) and value is not None]
+            sorted_members = sorted(members)
+            total_members = len(members)
 
-        if len(set(members)) != len(members):
-            return False
+            values["villain_one"] = sorted_members[0]
+            values["villain_two"] = sorted_members[1] if total_members > 1 else None
+            values["villain_three"] = sorted_members[2] if total_members > 2 else None
+            values["villain_four"] = sorted_members[3] if total_members > 3 else None
+            values["villain_five"] = sorted_members[4] if total_members > 4 else None
+
+            # if there are duplications
+            if len(set(members)) != len(members):
+                return False
+
+        else:
+            return validation
 
         return True
 
@@ -201,6 +245,14 @@ class GameDetail(BaseModel):
     class Config:
         use_enum_values = True
         anystr_strip_whitespace = True
+
+        @staticmethod
+        def schema_extra(schema: Dict[str, Any], model: Type["GameDetail"]) -> None:
+            for prop in schema.get("properties", {}).values():
+                prop.pop("title", None)
+
+            del schema["properties"]
+            del schema["properties"]["entry_is_valid"]
 
     @validator("villain", always=True)
     def update_game_type(cls, opponent: VillainOpponent, values):

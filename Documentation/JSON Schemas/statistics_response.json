@@ -1,0 +1,313 @@
+{
+    "title": "StatisticsResponse",
+    "type": "object",
+    "properties": {
+        "RequestedSet": {
+            "$ref": "#/definitions/RequestedSet"
+        },
+        "OriginalRequestedPath": {
+            "description": "Original instruction path for the RequestedSet as reference",
+            "type": "string"
+        },
+        "Statistics": {
+            "anyOf": [
+                {
+                    "$ref": "#/definitions/Statistics"
+                },
+                {
+                    "$ref": "#/definitions/HeroStatistics"
+                },
+                {
+                    "$ref": "#/definitions/OpponentStatistics"
+                },
+                {
+                    "$ref": "#/definitions/UserStatistics"
+                }
+            ]
+        }
+    },
+    "required": [
+        "RequestedSet",
+        "OriginalRequestedPath"
+    ],
+    "definitions": {
+        "RequestedSet": {
+            "title": "RequestedSet",
+            "description": "Details about the requested data set, which heroes, villains, environments, and users were asked to be retrieved in combination",
+            "type": "object",
+            "properties": {
+                "heroes": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "villains": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "environment": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "user": {
+                    "type": "string"
+                }
+            }
+        },
+        "Statistics": {
+            "title": "Statistics",
+            "description": "Base statistics - Wins are always from the Hero/Players perspective",
+            "type": "object",
+            "properties": {
+                "TotalGames": {
+                    "description": "Total games recorded with this RequestedSet",
+                    "default": 0,
+                    "type": "integer"
+                },
+                "TotalPlayerVictories": {
+                    "description": "Total wins recorded with this RequestedSet",
+                    "default": 0,
+                    "type": "integer"
+                },
+                "PlayerVictoryRate": {
+                    "description": "Derived: Win percentage",
+                    "default": 0.0,
+                    "type": "number"
+                },
+                "TotalPlayerDefeats": {
+                    "description": "Derived: Number of losses",
+                    "default": 0,
+                    "type": "integer"
+                },
+                "PlayerDefeatRate": {
+                    "description": "Derived: Loss percentage",
+                    "default": 0.0,
+                    "type": "number"
+                }
+            }
+        },
+        "HeroStatistics": {
+            "title": "HeroStatistics",
+            "description": "Base statistics - Wins are always from the Hero/Players perspective",
+            "type": "object",
+            "properties": {
+                "TotalGames": {
+                    "description": "Total games recorded with this RequestedSet",
+                    "default": 0,
+                    "type": "integer"
+                },
+                "TotalPlayerVictories": {
+                    "description": "Total wins recorded with this RequestedSet",
+                    "default": 0,
+                    "type": "integer"
+                },
+                "PlayerVictoryRate": {
+                    "description": "Derived: Win percentage",
+                    "default": 0.0,
+                    "type": "number"
+                },
+                "TotalPlayerDefeats": {
+                    "description": "Derived: Number of losses",
+                    "default": 0,
+                    "type": "integer"
+                },
+                "PlayerDefeatRate": {
+                    "description": "Derived: Loss percentage",
+                    "default": 0.0,
+                    "type": "number"
+                },
+                "Incapacitated": {
+                    "description": "Total times incapacitated",
+                    "type": "integer"
+                },
+                "IncapacitatedRate": {
+                    "description": "Derived: Incapacitated percentage",
+                    "type": "number"
+                },
+                "TotalPlayerVictoriesWhileIncapacitated": {
+                    "description": "Total wins when incapacitated",
+                    "type": "number"
+                },
+                "PlayerVictoryRateWhenIncapacitated": {
+                    "description": "Derived: Win rate when incapacitated",
+                    "type": "number"
+                },
+                "Versus": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "With": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "In": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "SpecialEndConditions": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "OpponentStatistics": {
+            "title": "OpponentStatistics",
+            "description": "Base statistics - Wins are always from the Hero/Players perspective",
+            "type": "object",
+            "properties": {
+                "TotalGames": {
+                    "description": "Total games recorded with this RequestedSet",
+                    "default": 0,
+                    "type": "integer"
+                },
+                "TotalPlayerVictories": {
+                    "description": "Total wins recorded with this RequestedSet",
+                    "default": 0,
+                    "type": "integer"
+                },
+                "PlayerVictoryRate": {
+                    "description": "Derived: Win percentage",
+                    "default": 0.0,
+                    "type": "number"
+                },
+                "TotalPlayerDefeats": {
+                    "description": "Derived: Number of losses",
+                    "default": 0,
+                    "type": "integer"
+                },
+                "PlayerDefeatRate": {
+                    "description": "Derived: Loss percentage",
+                    "default": 0.0,
+                    "type": "number"
+                },
+                "AdvancedModeTotalGames": {
+                    "description": "Total games with Advanced Mode",
+                    "default": 0,
+                    "type": "integer"
+                },
+                "AdvancedModePlayerVictories": {
+                    "description": "Total Wins by players against this Villain with Advanced Mode",
+                    "default": 0,
+                    "type": "integer"
+                },
+                "AdvancedModePlayerVictoryRate": {
+                    "description": "Derived: Win percentage of Advanced Mode against this Villain",
+                    "default": 0.0,
+                    "type": "number"
+                },
+                "ChallengeModeTotalGames": {
+                    "description": "Total games with Challenge Mode",
+                    "default": 0,
+                    "type": "integer"
+                },
+                "ChallengeModePlayerVictories": {
+                    "description": "Total Wins by players against this Villain with Challenge Mode",
+                    "default": 0,
+                    "type": "integer"
+                },
+                "ChallengeModePlayerVictoryRate": {
+                    "description": "Derived: Win percentage of Challenge Mode against this Villain",
+                    "default": 0.0,
+                    "type": "number"
+                },
+                "UltimateModeTotalGames": {
+                    "description": "Total games with Ultimate Mode",
+                    "default": 0,
+                    "type": "integer"
+                },
+                "UltimateModePlayerVictories": {
+                    "description": "Total Wins by players against this Villain with Ultimate Mode",
+                    "default": 0,
+                    "type": "integer"
+                },
+                "UltimateModePlayerVictoryRate": {
+                    "description": "Derived: Win percentage of Ultimate Mode against this Villain",
+                    "default": 0.0,
+                    "type": "number"
+                },
+                "Versus": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "With": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "In": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "SpecialEndConditions": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "UserStatistics": {
+            "title": "UserStatistics",
+            "description": "Base statistics - Wins are always from the Hero/Players perspective",
+            "type": "object",
+            "properties": {
+                "TotalGames": {
+                    "description": "Total games recorded with this RequestedSet",
+                    "default": 0,
+                    "type": "integer"
+                },
+                "TotalPlayerVictories": {
+                    "description": "Total wins recorded with this RequestedSet",
+                    "default": 0,
+                    "type": "integer"
+                },
+                "PlayerVictoryRate": {
+                    "description": "Derived: Win percentage",
+                    "default": 0.0,
+                    "type": "number"
+                },
+                "TotalPlayerDefeats": {
+                    "description": "Derived: Number of losses",
+                    "default": 0,
+                    "type": "integer"
+                },
+                "PlayerDefeatRate": {
+                    "description": "Derived: Loss percentage",
+                    "default": 0.0,
+                    "type": "number"
+                },
+                "username": {
+                    "type": "string"
+                },
+                "Games": {
+                    "description": "Links to specific games for this user",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "required": [
+                "username"
+            ]
+        }
+    }
+}

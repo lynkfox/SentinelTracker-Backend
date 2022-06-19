@@ -1,4 +1,5 @@
 from py_linq import Enumerable
+import os
 import models
 from common.rds import LookUp, Operation, character_full_name_to_enums
 from common.rds.queries_gen import parse_for_rds_names
@@ -7,6 +8,9 @@ from common.models.game_details_enums import HeroWinCondition, HeroLossCondition
 from common.models.character_enums import HERO_DISPLAY_MAPPING, LOCATION_DISPLAY_MAPPING, VILLAIN_DISPLAY_MAPPING
 from common.hardcoded_data.all_names import HERO_NAMES, VILLAIN_SINGLE_NAMES, LOCATION_NAMES, VILLAIN_TEAM_NAMES
 from typing import List, Dict
+
+
+PRIMARY_ENDPOINT = os.getenv("ENDPOINT", "")
 
 
 def calculate(request: LookUp, response: List[GameDetail]) -> models.StatisticsResponse:
@@ -24,29 +28,14 @@ def calculate(request: LookUp, response: List[GameDetail]) -> models.StatisticsR
     # default
     stats = models.Statistics(TotalGames=total_games, TotalPlayerVictories=total_wins)
 
-    if (requested_parameters.heroes is None or len(requested_parameters.heroes) == 0) and len(requested_parameters.villains) >= 1:
+    if (
+        (requested_parameters.heroes is None or len(requested_parameters.heroes) == 0) and len(requested_parameters.villains) >= 1
+    ) or request.path_parts[0] == "villain":
+        stats = build_opponent_stats(request, collection, total_games, total_wins)
 
-        # Build Solo Villain or Villain Team response:
-        #   - includes: Villain stats, Against Other Heroes
-        #   - mutually exclusive to the next function
-
-        advanced_games_collection = collection.where(lambda x: x.advanced is True)
-        challenge_games_collection = collection.where(lambda x: x.challenge is True)
-        ultimate_games_collection = challenge_games_collection.where(lambda x: x.advanced is True)
-
-        stats = models.OpponentStatistics(
-            TotalGames=total_games,
-            TotalPlayerVictories=total_wins,
-            AdvancedModeTotalGames=advanced_games_collection.count(),
-            AdvancedModeWins=advanced_games_collection.where(lambda x: _is_win_condition(x.end_result)).count(),
-            ChallengeModeTotalGames=challenge_games_collection.count(),
-            ChallengeModeWins=challenge_games_collection.where(lambda x: _is_win_condition(x.end_result)).count(),
-            UltimateModeTotalGames=ultimate_games_collection.count(),
-            UltimateModeWins=ultimate_games_collection.where(lambda x: _is_win_condition(x.end_result)).count(),
-            Versus=build_related_links(HERO_NAMES, HERO_DISPLAY_MAPPING, f"{request.path}/versus"),
-        )
-
-    if requested_parameters.villains is None or len(requested_parameters.villains) == 0 and len(requested_parameters.heroes) >= 1:
+    if (
+        requested_parameters.villains is None or len(requested_parameters.villains) == 0 and len(requested_parameters.heroes) >= 1
+    ) or request.path_parts[0] == "hero":
         # Build Hero and Hero Team response:
         #   - includes: Hero/Team stats and against villains
         #   - mutual exclusive to the one above.
@@ -78,6 +67,30 @@ def calculate(request: LookUp, response: List[GameDetail]) -> models.StatisticsR
     return models.StatisticsResponse(RequestedSet=requested_parameters, OriginalRequestedPath=request.path, Statistics=stats)
 
 
+def build_opponent_stats(request, collection, total_games, total_wins):
+    """
+    Build Solo Villain or Villain Team response:
+        - includes: Villain stats, Against Other Heroes
+        - mutually exclusive to the next function
+    """
+
+    advanced_games_collection = collection.where(lambda x: x.advanced is True)
+    challenge_games_collection = collection.where(lambda x: x.challenge is True)
+    ultimate_games_collection = challenge_games_collection.where(lambda x: x.advanced is True)
+
+    return models.OpponentStatistics(
+        TotalGames=total_games,
+        TotalPlayerVictories=total_wins,
+        AdvancedModeTotalGames=advanced_games_collection.count(),
+        AdvancedModeWins=advanced_games_collection.where(lambda x: _is_win_condition(x.end_result)).count(),
+        ChallengeModeTotalGames=challenge_games_collection.count(),
+        ChallengeModeWins=challenge_games_collection.where(lambda x: _is_win_condition(x.end_result)).count(),
+        UltimateModeTotalGames=ultimate_games_collection.count(),
+        UltimateModeWins=ultimate_games_collection.where(lambda x: _is_win_condition(x.end_result)).count(),
+        Versus=build_related_links(HERO_NAMES, HERO_DISPLAY_MAPPING, f"{request.path}/versus"),
+    )
+
+
 def build_related_links(names: list, mapping: dict, prefix: str = None, original_character: str = None) -> Dict[str, GameDetail]:
     """
     Builds links to all heroes based on the mapping given and the prefix.
@@ -100,7 +113,7 @@ def build_related_links(names: list, mapping: dict, prefix: str = None, original
         else:
             prepared_tags = ""
 
-        all_reference_links[name] = f"{prefix}/{primary.value}{prepared_tags}"
+        all_reference_links[name] = f"{PRIMARY_ENDPOINT}/{prefix}/{primary.value}{prepared_tags}"
 
     return all_reference_links
 

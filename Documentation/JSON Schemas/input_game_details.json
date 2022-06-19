@@ -1,0 +1,425 @@
+{
+    "title": "GameDetail",
+    "description": "Model of a row in the Game Details table",
+    "type": "object",
+    "properties": {
+        "username": {
+            "title": "Username",
+            "anyOf": [
+                {
+                    "$ref": "#/definitions/User"
+                },
+                {
+                    "type": "string"
+                }
+            ]
+        },
+        "entered_on": {
+            "title": "Entered On",
+            "type": "string",
+            "format": "date-time"
+        },
+        "game_mode": {
+            "$ref": "#/definitions/GameMode"
+        },
+        "selection_method": {
+            "$ref": "#/definitions/SelectionMethod"
+        },
+        "platform": {
+            "$ref": "#/definitions/Platform"
+        },
+        "end_result": {
+            "title": "End Result",
+            "anyOf": [
+                {
+                    "$ref": "#/definitions/HeroLossCondition"
+                },
+                {
+                    "$ref": "#/definitions/HeroWinCondition"
+                }
+            ]
+        },
+        "estimated_time": {
+            "$ref": "#/definitions/GameLength"
+        },
+        "house_rules": {
+            "title": "House Rules",
+            "type": "string"
+        },
+        "number_of_players": {
+            "title": "Number Of Players",
+            "type": "integer"
+        },
+        "number_of_heroes": {
+            "title": "Number Of Heroes",
+            "type": "integer"
+        },
+        "perceived_difficulty": {
+            "title": "Perceived Difficulty",
+            "type": "integer"
+        },
+        "rounds": {
+            "title": "Rounds",
+            "type": "integer"
+        },
+        "oblivaeon_details": {
+            "$ref": "#/definitions/OblivAeonDetail"
+        },
+        "hero_team": {
+            "title": "Hero Team",
+            "anyOf": [
+                {
+                    "$ref": "#/definitions/HeroTeam"
+                },
+                {
+                    "type": "integer"
+                }
+            ]
+        },
+        "environment": {
+            "title": "Environment",
+            "type": "string"
+        },
+        "villain": {
+            "title": "Villain",
+            "anyOf": [
+                {
+                    "$ref": "#/definitions/VillainOpponent"
+                },
+                {
+                    "type": "integer"
+                }
+            ]
+        },
+        "hero_one": {
+            "title": "Hero One",
+            "type": "string"
+        },
+        "hero_one_incapped": {
+            "title": "Hero One Incapped",
+            "type": "boolean"
+        },
+        "hero_two": {
+            "title": "Hero Two",
+            "type": "string"
+        },
+        "hero_two_incapped": {
+            "title": "Hero Two Incapped",
+            "type": "boolean"
+        },
+        "hero_three": {
+            "title": "Hero Three",
+            "type": "string"
+        },
+        "hero_three_incapped": {
+            "title": "Hero Three Incapped",
+            "type": "boolean"
+        },
+        "hero_four": {
+            "title": "Hero Four",
+            "type": "string"
+        },
+        "hero_four_incapped": {
+            "title": "Hero Four Incapped",
+            "type": "boolean"
+        },
+        "hero_five": {
+            "title": "Hero Five",
+            "type": "string"
+        },
+        "hero_five_incapped": {
+            "title": "Hero Five Incapped",
+            "type": "boolean"
+        },
+        "villain_one": {
+            "title": "Villain One",
+            "type": "string"
+        },
+        "villain_one_incapped": {
+            "title": "Villain One Incapped",
+            "type": "boolean"
+        },
+        "villain_two": {
+            "title": "Villain Two",
+            "type": "string"
+        },
+        "villain_two_incapped": {
+            "title": "Villain Two Incapped",
+            "type": "boolean"
+        },
+        "villain_three": {
+            "title": "Villain Three",
+            "type": "string"
+        },
+        "villain_three_incapped": {
+            "title": "Villain Three Incapped",
+            "type": "boolean"
+        },
+        "villain_four": {
+            "title": "Villain Four",
+            "type": "string"
+        },
+        "villain_four_incapped": {
+            "title": "Villain Four Incapped",
+            "type": "boolean"
+        },
+        "villain_five": {
+            "title": "Villain Five",
+            "type": "string"
+        },
+        "villain_five_incapped": {
+            "title": "Villain Five Incapped",
+            "type": "boolean"
+        },
+        "advanced": {
+            "title": "Advanced",
+            "type": "boolean"
+        },
+        "challenge": {
+            "title": "Challenge",
+            "type": "boolean"
+        },
+        "comment": {
+            "title": "Comment",
+            "type": "string"
+        },
+        "entry_is_valid": {
+            "title": "Entry Is Valid",
+            "default": true,
+            "type": "boolean"
+        }
+    },
+    "required": [
+        "username",
+        "entered_on",
+        "hero_team",
+        "environment",
+        "villain"
+    ],
+    "definitions": {
+        "User": {
+            "title": "User",
+            "description": "Model of a row in the Users Table.",
+            "type": "object",
+            "properties": {
+                "username": {
+                    "title": "Username",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "username"
+            ]
+        },
+        "GameMode": {
+            "title": "GameMode",
+            "description": "An enumeration.",
+            "enum": [
+                "Normal",
+                "Team Villains",
+                "OblivAeon",
+                "Definitive",
+                "Mixed"
+            ]
+        },
+        "SelectionMethod": {
+            "title": "SelectionMethod",
+            "description": "An enumeration.",
+            "enum": [
+                "Unspecified",
+                "Random",
+                "Player Choice",
+                "Rematch/Replay",
+                "Event",
+                "Thematic",
+                "Specific Attempt"
+            ]
+        },
+        "Platform": {
+            "title": "Platform",
+            "description": "An enumeration.",
+            "enum": [
+                "Physical",
+                "Table Top Simulator",
+                "Steam",
+                "Apple",
+                "Android",
+                "Other",
+                "Mobile (Unknown Brand)",
+                "Playtesting"
+            ]
+        },
+        "HeroLossCondition": {
+            "title": "HeroLossCondition",
+            "description": "An enumeration.",
+            "enum": [
+                "Heroes Defeated by the Villains",
+                "Consumed! (Gloomweaver, Skinwalker)",
+                "Fell to her Dreams (The Dreamer)",
+                "Earth, Overrun! (Grand Warlord Voss)",
+                "Lives on through it's devices (Omnitron)",
+                "Engines Failed! (Mobile Defense Platform)",
+                "3, 2, 1, ZERO! (Mars Wagner Base)",
+                "Found: Guilty! (Celestial Tribunal)",
+                "Terra-Lunar Impulsion Beam, Activate! (Baron Blade)",
+                "For your own Good! (Deadline)",
+                "Lost in Time! (Silver Gulch 1883)",
+                "Wager: Lost! (Wager Master)",
+                "Lost the Crowds Favor (Kaargra Warfang)",
+                "Only the Void Left (OblivAeon)"
+            ]
+        },
+        "HeroWinCondition": {
+            "title": "HeroWinCondition",
+            "description": "An enumeration.",
+            "enum": [
+                "The Hero's Triumph (Villain(s) Incapacitated)",
+                "Destroy His Anchors (Gloomweaver Relics Destroyed)",
+                "The House always Wins (Environment ends the Villain)",
+                "Down, but not Out! (Incapacitated Ability ends the Villain)",
+                "Wager: Won! (Wager Master)"
+            ]
+        },
+        "GameLength": {
+            "title": "GameLength",
+            "description": "An enumeration.",
+            "enum": [
+                "Not Known / Not Recorded",
+                "Less than 30 mins",
+                "Less than 45 mins",
+                "Less than 1 hour",
+                "Less than 2 hours",
+                "More than 2 hours"
+            ]
+        },
+        "OblivAeonDetail": {
+            "title": "OblivAeonDetail",
+            "description": "Model of a row in t he OblivAeonDetails table",
+            "type": "object",
+            "properties": {
+                "scions": {
+                    "title": "Scions",
+                    "type": "string"
+                },
+                "shield": {
+                    "title": "Shield",
+                    "type": "string"
+                },
+                "environments": {
+                    "title": "Environments",
+                    "type": "string"
+                },
+                "player_one_heroes": {
+                    "title": "Player One Heroes",
+                    "type": "string"
+                },
+                "player_two_heroes": {
+                    "title": "Player Two Heroes",
+                    "type": "string"
+                },
+                "player_three_heroes": {
+                    "title": "Player Three Heroes",
+                    "type": "string"
+                },
+                "player_four_heroes": {
+                    "title": "Player Four Heroes",
+                    "type": "string"
+                },
+                "player_five_heroes": {
+                    "title": "Player Five Heroes",
+                    "type": "string"
+                },
+                "rewards": {
+                    "title": "Rewards",
+                    "type": "string"
+                },
+                "id_hash": {
+                    "title": "Id Hash",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "scions",
+                "shield"
+            ]
+        },
+        "HeroTeam": {
+            "title": "HeroTeam",
+            "description": "Model of a row in the HeroTeams table",
+            "type": "object",
+            "properties": {
+                "hero_one": {
+                    "title": "Hero One",
+                    "type": "string"
+                },
+                "hero_two": {
+                    "title": "Hero Two",
+                    "type": "string"
+                },
+                "hero_three": {
+                    "title": "Hero Three",
+                    "type": "string"
+                },
+                "hero_four": {
+                    "title": "Hero Four",
+                    "type": "string"
+                },
+                "hero_five": {
+                    "title": "Hero Five",
+                    "type": "string"
+                },
+                "id_hash": {
+                    "title": "Id Hash",
+                    "type": "string"
+                },
+                "valid_team": {
+                    "title": "Valid Team",
+                    "type": "boolean"
+                }
+            },
+            "required": [
+                "hero_one",
+                "hero_two",
+                "hero_three"
+            ]
+        },
+        "VillainOpponent": {
+            "title": "VillainOpponent",
+            "description": "Model of a row in the Opponents Table",
+            "type": "object",
+            "properties": {
+                "villain_one": {
+                    "title": "Villain One",
+                    "type": "string"
+                },
+                "villain_two": {
+                    "title": "Villain Two",
+                    "type": "string"
+                },
+                "villain_three": {
+                    "title": "Villain Three",
+                    "type": "string"
+                },
+                "villain_four": {
+                    "title": "Villain Four",
+                    "type": "string"
+                },
+                "villain_five": {
+                    "title": "Villain Five",
+                    "type": "string"
+                },
+                "id_hash": {
+                    "title": "Id Hash",
+                    "type": "string"
+                },
+                "valid_team": {
+                    "title": "Valid Team",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "villain_one"
+            ]
+        }
+    }
+}
