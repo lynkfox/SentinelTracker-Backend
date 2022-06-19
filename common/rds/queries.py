@@ -13,7 +13,7 @@ def query(operations: List[Operation], my_sql_client: any) -> List[GameDetail]:
     of QueryResult models
     """
 
-    query_string = generate_from_operations(operations)
+    query_string = generate_from_operations(operations).replace("'s", "\\'s")
 
     logger.debug("Query String", extra={"query_string": query_string})
     cursor = my_sql_client.cursor()

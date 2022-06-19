@@ -44,25 +44,29 @@ def calculate(request: LookUp, response: List[GameDetail]) -> models.StatisticsR
         stats = models.HeroStatistics(
             TotalGames=total_games,
             TotalPlayerVictories=total_wins,
-            Versus=build_related_links([*VILLAIN_SINGLE_NAMES, *VILLAIN_TEAM_NAMES], VILLAIN_DISPLAY_MAPPING, f"{request.path}/versus"),
+            Versus=build_related_links([*VILLAIN_SINGLE_NAMES, *VILLAIN_TEAM_NAMES], VILLAIN_DISPLAY_MAPPING, "versus", f"{request.path}")
+            if len(requested_parameters.villains) == 0
+            else None,
         )
 
     if requested_parameters.environment is None or len(requested_parameters.environment) == 0:
         # Build and add the Other Environments response, if the original query did not include any
-        stats.In = build_related_links(LOCATION_NAMES, LOCATION_DISPLAY_MAPPING, f"{request.path}/in")
+        stats.In = build_related_links(LOCATION_NAMES, LOCATION_DISPLAY_MAPPING, "in", f"{request.path}")
 
     if len(requested_parameters.heroes) == 1:
         # If only one Hero in the original query, build other Hero statistics for With this hero
-        stats.With = build_related_links(HERO_NAMES, HERO_DISPLAY_MAPPING, f"{request.path}/with", original_character=requested_parameters.heroes[0])
+        stats.With = build_related_links(
+            HERO_NAMES, HERO_DISPLAY_MAPPING, "with", f"{request.path}", original_character=requested_parameters.heroes[0]
+        )
 
         incapped_collection = collection.where(lambda x: _is_hero_incapped(x, requested_parameters.heroes[0]))
         stats.Incapacitated = incapped_collection.count()
         stats.TotalPlayerVictoriesWhileIncapacitated = incapped_collection.where(lambda x: _is_win_condition(x.end_result)).count()
 
-    if len(requested_parameters.villains) == 1 and requested_parameters.villains[0] in VILLAIN_TEAM_NAMES:
+    if len(requested_parameters.villains) >= 1 and requested_parameters.villains[0] in VILLAIN_TEAM_NAMES:
         # If Team Villain game, and if only one villain in original query, include With stats for other Team Villains
         stats.With = build_related_links(
-            VILLAIN_TEAM_NAMES, VILLAIN_DISPLAY_MAPPING, f"{request.path}/with", original_character=requested_parameters.villains[0]
+            VILLAIN_TEAM_NAMES, VILLAIN_DISPLAY_MAPPING, "with", f"{request.path}", original_character=requested_parameters.villains[0]
         )
 
     return models.StatisticsResponse(RequestedSet=requested_parameters, OriginalRequestedPath=request.path, Statistics=stats)
@@ -88,14 +92,22 @@ def build_opponent_stats(request, collection, total_games, total_wins):
         ChallengeModePlayerVictories=challenge_games_collection.where(lambda x: _is_win_condition(x.end_result)).count(),
         UltimateModeTotalGames=ultimate_games_collection.count(),
         UltimateModePlayerVictories=ultimate_games_collection.where(lambda x: _is_win_condition(x.end_result)).count(),
-        Versus=build_related_links(HERO_NAMES, HERO_DISPLAY_MAPPING, f"{request.path}/versus"),
+        Versus=build_related_links(HERO_NAMES, HERO_DISPLAY_MAPPING, "versus", f"{request.path}"),
     )
 
 
-def build_related_links(names: list, mapping: dict, prefix: str = None, original_character: str = None) -> Dict[str, GameDetail]:
+def build_related_links(names: list, mapping: dict, type: str, prefix: str = None, original_character: str = None) -> Dict[str, GameDetail]:
     """
     Builds links to all heroes based on the mapping given and the prefix.
     """
+
+    parts = prefix.split("/")
+    versus = ""
+    if "versus" in parts:
+        index = parts.index("versus")
+        prefix = "/".join(parts[:index])
+        versus = "/".join(parts[index:])
+        type = "" if type == "versus" else type
 
     all_reference_links = {}
     for name in names:
@@ -115,7 +127,9 @@ def build_related_links(names: list, mapping: dict, prefix: str = None, original
         else:
             prepared_tags = ""
 
-        all_reference_links[name] = f"{PRIMARY_ENDPOINT}/{prefix}/{primary.value}{prepared_tags}"
+        clean_value = f"{PRIMARY_ENDPOINT}/{prefix}/{type}/{primary.value}{prepared_tags}/{versus}".replace("//", "/")
+
+        all_reference_links[name] = clean_value
 
     return all_reference_links
 

@@ -96,15 +96,15 @@ class Villain(Character):
     biomancer = "biomancer"
     borr_the_unstable = "borr_the_unstable"
     bugbear = "bugbear"
-    chairman = "the_chairman"
+    chairman = "chairman"
     chokepoint = "chokepoint"
     citizen_dawn = "citizen_dawn"
     citizens_hammer_and_anvil = "citizens_hammer_and_anvil"
     dark_mind = "dark_mind"
     deadline = "deadline"
-    the_dreamer = "the_dreamer"
+    dreamer = "dreamer"
     empyreon = "empyreon"
-    the_ennead = "the_ennead"
+    ennead = "ennead"
     ermine = "ermine"
     faultless = "faultless"
     friction = "friction"
@@ -118,12 +118,12 @@ class Villain(Character):
     kaargra_warfang = "kaargra_warfang"
     kismet = "kismet"
     la_capitan = "la_capitan"
-    matriarch = "the_matriarch"
+    matriarch = "matriarch"
     miss_information = "miss_information"
     nixious_the_chosen = "nixious_the_chosen"
     oblivaeon = "oblivaeon"
     omnitron = "omnitron"
-    the_operative = "the_operative"
+    operative = "operative"
     plague_rat = "plague_rat"
     progeny = "progeny"
     proletariat = "proletariat"
@@ -136,7 +136,7 @@ class Villain(Character):
     anathema = "anathema"
     dendron = "dendron"
     gray = "gray"
-    the_ram = "the_ram"
+    ram = "ram"
     tiamat = "tiamat"
     dynamo = "dynamo"
     infernal_choir = "infernal_choir"
@@ -157,13 +157,13 @@ class Villain(Character):
 
 
 class Location(Character):
-    the_block = "the_block"
+    block = "block"
     celestial_tribunal = "celestial_tribunal"
     champion_studios = "champion_studios"
     court_of_blood = "court_of_blood"
     dok_thorath_capital = "dok_thorath_capital"
     enclave_of_the_endlings = "enclave_of_the_endlings"
-    the_final_wasteland = "the_final_wasteland"
+    final_wasteland = "final_wasteland"
     fort_adamant = "fort_adamant"
     freedom_tower = "freedom_tower"
     insula_primalis = "insula_primalis"
@@ -180,9 +180,9 @@ class Location(Character):
     rook_city = "rook_city"
     ruins_of_atlantis = "ruins_of_atlantis"
     silver_gulch_1883 = "silver_gulch:_1883"
-    temple_of_zhu_long = "the_temple_of_zhu_long"
+    temple_of_zhu_long = "temple_of_zhu_long"
     time_cataclysm = "time_cataclysm"
-    tomb_of_anubis = "the_tomb_of_anubis"
+    tomb_of_anubis = "tomb_of_anubis"
     wagner_mars_base = "wagner_mars_base"
 
     blackwood_forest = "blackwood_forest"
@@ -510,9 +510,9 @@ VILLAIN_DISPLAY_MAPPING = {
     Villain.citizens_hammer_and_anvil: "Citizens Hammer and Anvil",
     Villain.dark_mind: "Dark Mind",
     Villain.deadline: "Deadline",
-    Villain.the_dreamer: "The Dreamer",
+    Villain.dreamer: "The Dreamer",
     Villain.empyreon: "Empyreon",
-    Villain.the_ennead: "The Ennead",
+    Villain.ennead: "The Ennead",
     Villain.ermine: "Ermine",
     Villain.faultless: "Faultless",
     Villain.friction: "Friction",
@@ -531,7 +531,7 @@ VILLAIN_DISPLAY_MAPPING = {
     Villain.nixious_the_chosen: "Nixious The Chosen",
     Villain.oblivaeon: "OblivAeon",
     Villain.omnitron: "Omnitron",
-    Villain.the_operative: "The Operative",
+    Villain.operative: "The Operative",
     Villain.plague_rat: "Plague Rat",
     Villain.progeny: "Progeny",
     Villain.proletariat: "Proletariat",
@@ -544,7 +544,7 @@ VILLAIN_DISPLAY_MAPPING = {
     Villain.anathema: "Anathema",
     Villain.dendron: "Dendron",
     Villain.gray: "Gray",
-    Villain.the_ram: "Ram, The",
+    Villain.ram: "Ram, The",
     Villain.tiamat: "Tiamat",
     Villain.dynamo: "Dynamo",
     Villain.infernal_choir: "Infernal Choir, The",
@@ -565,13 +565,13 @@ VILLAIN_DISPLAY_MAPPING = {
 }
 
 LOCATION_DISPLAY_MAPPING = {
-    Location.the_block: "The Block",
+    Location.block: "The Block",
     Location.celestial_tribunal: "The Celestial Tribunal",
     Location.champion_studios: "Champion Studios",
     Location.court_of_blood: "The Court of Blood",
     Location.dok_thorath_capital: "Dok'Thorath Capital",
     Location.enclave_of_the_endlings: "Enclave of the Endlings",
-    Location.the_final_wasteland: "The Final Wasteland",
+    Location.final_wasteland: "The Final Wasteland",
     Location.fort_adamant: "Fort Adamant",
     Location.freedom_tower: "Freedom Tower",
     Location.insula_primalis: "Insula Primalis",

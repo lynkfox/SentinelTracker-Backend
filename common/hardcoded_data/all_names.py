@@ -87,7 +87,6 @@ VILLAIN_TEAM_NAMES = [
     "Ambuscade: Team Villain",
     "Baron Blade: Team Villain",
     "Biomancer",
-    "Borr the Unstable",
     "Bugbear",
     "Citizens Hammer and Anvil",
     "Ermine",
@@ -104,6 +103,7 @@ VILLAIN_TEAM_NAMES = [
 
 SCION_NAMES = [
     "Aeon Master",
+    "Borr the Unstable",
     "Dark Mind",
     "Empyreon",
     "Faultless",
