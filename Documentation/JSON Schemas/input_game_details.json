@@ -4,7 +4,6 @@
     "type": "object",
     "properties": {
         "username": {
-            "title": "Username",
             "anyOf": [
                 {
                     "$ref": "#/definitions/User"
@@ -15,7 +14,6 @@
             ]
         },
         "entered_on": {
-            "title": "Entered On",
             "type": "string",
             "format": "date-time"
         },
@@ -29,7 +27,6 @@
             "$ref": "#/definitions/Platform"
         },
         "end_result": {
-            "title": "End Result",
             "anyOf": [
                 {
                     "$ref": "#/definitions/HeroLossCondition"
@@ -43,30 +40,24 @@
             "$ref": "#/definitions/GameLength"
         },
         "house_rules": {
-            "title": "House Rules",
             "type": "string"
         },
         "number_of_players": {
-            "title": "Number Of Players",
             "type": "integer"
         },
         "number_of_heroes": {
-            "title": "Number Of Heroes",
             "type": "integer"
         },
         "perceived_difficulty": {
-            "title": "Perceived Difficulty",
             "type": "integer"
         },
         "rounds": {
-            "title": "Rounds",
             "type": "integer"
         },
         "oblivaeon_details": {
             "$ref": "#/definitions/OblivAeonDetail"
         },
         "hero_team": {
-            "title": "Hero Team",
             "anyOf": [
                 {
                     "$ref": "#/definitions/HeroTeam"
@@ -77,11 +68,9 @@
             ]
         },
         "environment": {
-            "title": "Environment",
             "type": "string"
         },
         "villain": {
-            "title": "Villain",
             "anyOf": [
                 {
                     "$ref": "#/definitions/VillainOpponent"
@@ -92,101 +81,73 @@
             ]
         },
         "hero_one": {
-            "title": "Hero One",
             "type": "string"
         },
         "hero_one_incapped": {
-            "title": "Hero One Incapped",
             "type": "boolean"
         },
         "hero_two": {
-            "title": "Hero Two",
             "type": "string"
         },
         "hero_two_incapped": {
-            "title": "Hero Two Incapped",
             "type": "boolean"
         },
         "hero_three": {
-            "title": "Hero Three",
             "type": "string"
         },
         "hero_three_incapped": {
-            "title": "Hero Three Incapped",
             "type": "boolean"
         },
         "hero_four": {
-            "title": "Hero Four",
             "type": "string"
         },
         "hero_four_incapped": {
-            "title": "Hero Four Incapped",
             "type": "boolean"
         },
         "hero_five": {
-            "title": "Hero Five",
             "type": "string"
         },
         "hero_five_incapped": {
-            "title": "Hero Five Incapped",
             "type": "boolean"
         },
         "villain_one": {
-            "title": "Villain One",
             "type": "string"
         },
         "villain_one_incapped": {
-            "title": "Villain One Incapped",
             "type": "boolean"
         },
         "villain_two": {
-            "title": "Villain Two",
             "type": "string"
         },
         "villain_two_incapped": {
-            "title": "Villain Two Incapped",
             "type": "boolean"
         },
         "villain_three": {
-            "title": "Villain Three",
             "type": "string"
         },
         "villain_three_incapped": {
-            "title": "Villain Three Incapped",
             "type": "boolean"
         },
         "villain_four": {
-            "title": "Villain Four",
             "type": "string"
         },
         "villain_four_incapped": {
-            "title": "Villain Four Incapped",
             "type": "boolean"
         },
         "villain_five": {
-            "title": "Villain Five",
             "type": "string"
         },
         "villain_five_incapped": {
-            "title": "Villain Five Incapped",
             "type": "boolean"
         },
         "advanced": {
-            "title": "Advanced",
             "type": "boolean"
         },
         "challenge": {
-            "title": "Challenge",
             "type": "boolean"
         },
         "comment": {
-            "title": "Comment",
             "type": "string"
-        },
-        "entry_is_valid": {
-            "title": "Entry Is Valid",
-            "default": true,
-            "type": "boolean"
         }
     },
     "required": [
@@ -203,7 +164,6 @@
             "type": "object",
             "properties": {
                 "username": {
-                    "title": "Username",
                     "type": "string"
                 }
             },
@@ -298,43 +258,38 @@
             "type": "object",
             "properties": {
                 "scions": {
-                    "title": "Scions",
+                    "description": "The Display names all together as a single string separated by - Name A-Name B-Name-C",
                     "type": "string"
                 },
                 "shield": {
-                    "title": "Shield",
                     "type": "string"
                 },
                 "environments": {
-                    "title": "Environments",
+                    "description": "The Display names all together as a single string separated by - Name A-Name B-Name-C",
                     "type": "string"
                 },
                 "player_one_heroes": {
-                    "title": "Player One Heroes",
+                    "description": "The Display names all together as a single string separated by - Name A-Name B-Name-C",
                     "type": "string"
                 },
                 "player_two_heroes": {
-                    "title": "Player Two Heroes",
+                    "description": "The Display names all together as a single string separated by - Name A-Name B-Name-C",
                     "type": "string"
                 },
                 "player_three_heroes": {
-                    "title": "Player Three Heroes",
+                    "description": "The Display names all together as a single string separated by - Name A-Name B-Name-C",
                     "type": "string"
                 },
                 "player_four_heroes": {
-                    "title": "Player Four Heroes",
+                    "description": "The Display names all together as a single string separated by - Name A-Name B-Name-C",
                     "type": "string"
                 },
                 "player_five_heroes": {
-                    "title": "Player Five Heroes",
+                    "description": "The Display names all together as a single string separated by - Name A-Name B-Name-C",
                     "type": "string"
                 },
                 "rewards": {
-                    "title": "Rewards",
-                    "type": "string"
-                },
-                "id_hash": {
-                    "title": "Id Hash",
+                    "description": "The Display names all together as a single string separated by - Name A-Name B-Name-C",
                     "type": "string"
                 }
             },
@@ -345,36 +300,23 @@
         },
         "HeroTeam": {
             "title": "HeroTeam",
-            "description": "Model of a row in the HeroTeams table",
+            "description": "The Hero Team - IN ALPHABETICAL ORDER in order.",
             "type": "object",
             "properties": {
                 "hero_one": {
-                    "title": "Hero One",
                     "type": "string"
                 },
                 "hero_two": {
-                    "title": "Hero Two",
                     "type": "string"
                 },
                 "hero_three": {
-                    "title": "Hero Three",
                     "type": "string"
                 },
                 "hero_four": {
-                    "title": "Hero Four",
                     "type": "string"
                 },
                 "hero_five": {
-                    "title": "Hero Five",
                     "type": "string"
-                },
-                "id_hash": {
-                    "title": "Id Hash",
-                    "type": "string"
-                },
-                "valid_team": {
-                    "title": "Valid Team",
-                    "type": "boolean"
                 }
             },
             "required": [
@@ -385,35 +327,22 @@
         },
         "VillainOpponent": {
             "title": "VillainOpponent",
-            "description": "Model of a row in the Opponents Table",
+            "description": "Villain Team. This team should be entered ALPHABETICALLY",
             "type": "object",
             "properties": {
                 "villain_one": {
-                    "title": "Villain One",
                     "type": "string"
                 },
                 "villain_two": {
-                    "title": "Villain Two",
                     "type": "string"
                 },
                 "villain_three": {
-                    "title": "Villain Three",
                     "type": "string"
                 },
                 "villain_four": {
-                    "title": "Villain Four",
                     "type": "string"
                 },
                 "villain_five": {
-                    "title": "Villain Five",
-                    "type": "string"
-                },
-                "id_hash": {
-                    "title": "Id Hash",
-                    "type": "string"
-                },
-                "valid_team": {
-                    "title": "Valid Team",
                     "type": "string"
                 }
             },

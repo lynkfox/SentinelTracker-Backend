@@ -7,6 +7,7 @@ from common.models.schema_models import GameDetail
 from common.models.game_details_enums import HeroWinCondition, HeroLossCondition
 from common.models.character_enums import HERO_DISPLAY_MAPPING, LOCATION_DISPLAY_MAPPING, VILLAIN_DISPLAY_MAPPING
 from common.hardcoded_data.all_names import HERO_NAMES, VILLAIN_SINGLE_NAMES, LOCATION_NAMES, VILLAIN_TEAM_NAMES
+from common.hardcoded_data.ignored_names import IGNORE_THESE
 from typing import List, Dict
 
 
@@ -82,11 +83,11 @@ def build_opponent_stats(request, collection, total_games, total_wins):
         TotalGames=total_games,
         TotalPlayerVictories=total_wins,
         AdvancedModeTotalGames=advanced_games_collection.count(),
-        AdvancedModeWins=advanced_games_collection.where(lambda x: _is_win_condition(x.end_result)).count(),
+        AdvancedModePlayerVictories=advanced_games_collection.where(lambda x: _is_win_condition(x.end_result)).count(),
         ChallengeModeTotalGames=challenge_games_collection.count(),
-        ChallengeModeWins=challenge_games_collection.where(lambda x: _is_win_condition(x.end_result)).count(),
+        ChallengeModePlayerVictories=challenge_games_collection.where(lambda x: _is_win_condition(x.end_result)).count(),
         UltimateModeTotalGames=ultimate_games_collection.count(),
-        UltimateModeWins=ultimate_games_collection.where(lambda x: _is_win_condition(x.end_result)).count(),
+        UltimateModePlayerVictories=ultimate_games_collection.where(lambda x: _is_win_condition(x.end_result)).count(),
         Versus=build_related_links(HERO_NAMES, HERO_DISPLAY_MAPPING, f"{request.path}/versus"),
     )
 
@@ -98,8 +99,9 @@ def build_related_links(names: list, mapping: dict, prefix: str = None, original
 
     all_reference_links = {}
     for name in names:
-        if name == original_character:
+        if name in IGNORE_THESE or name == original_character:
             continue
+
         primary, alternate = character_full_name_to_enums(name, mapping)
 
         if primary is None:

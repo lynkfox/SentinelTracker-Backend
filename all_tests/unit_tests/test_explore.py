@@ -7,7 +7,7 @@ from common.rds import get_mysql_client
 
 
 def test_explore():
-    event = {"httpMethod": "GET", "pathParameters": {"proxy": "hero/legacy/versus/baron_blade"}}
+    event = {"httpMethod": "GET", "pathParameters": {"proxy": "villain/baron_blade"}}
     MY_SQL_CLIENT = get_mysql_client()
 
     _event = StatsIncoming(event)

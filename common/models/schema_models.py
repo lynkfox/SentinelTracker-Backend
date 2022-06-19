@@ -251,7 +251,6 @@ class GameDetail(BaseModel):
             for prop in schema.get("properties", {}).values():
                 prop.pop("title", None)
 
-            del schema["properties"]
             del schema["properties"]["entry_is_valid"]
 
     @validator("villain", always=True)
