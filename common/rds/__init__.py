@@ -53,25 +53,19 @@ def get_mysql_client():
 
 def get_proxy_sql_client():
     """
-    for database proxy rolls.
+    for database proxy logins.
     """
-    try:
-        response = CLIENT.get_secret_value(SecretId=default_secret)
-    except ClientError as e:
-        logger.exception("Client Error")
-        raise e
 
     try:
-        secrets = json.loads(response["SecretString"])
+        endpoint = os.getenv("PROXY")
 
-        logger.info("got secrets, attempting to get token")
-        endpoint = os.getenv("PROXY", secrets["host"])
+        token = rds_client.generate_db_auth_token(DBHostname=endpoint, Port=3306, DBUsername="admin", Region="us-east-2")
 
-        token = rds_client.generate_db_auth_token(DBHostname=endpoint, Port=3306, DBUsername=secrets["username"], Region="us-east-2")
+        logger.debug("Token received, getting client")
 
         return mysql.connector.connect(
             host=endpoint,
-            user=secrets["username"],
+            user="admin",
             password=token,
             database=SqlTables.STATISTICS_DB_NAME.value,
         )

@@ -51,10 +51,10 @@ class LambdaStack(NestedStack):
 
         self.lambda_mapping[ResourceNames.STATISTICS] = statistics
         rds_table.grant_connect(statistics)
-        statistics.add_to_role_policy(
-            iam.PolicyStatement(
-                actions=["secretsmanager:GetSecretValue"], resources=[f"arn:aws:secretsmanager:{self.region}:{self.account}:secret:*"]
-            )
-        )
+        # statistics.add_to_role_policy(
+        #     iam.PolicyStatement(
+        #         actions=["secretsmanager:GetSecretValue"], resources=[f"arn:aws:secretsmanager:{self.region}:{self.account}:secret:*"]
+        #     )
+        # )
 
-        rds_table.grant_connect(statistics)
+        # rds_table.grant_connect(statistics)
