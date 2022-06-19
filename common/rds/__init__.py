@@ -120,7 +120,8 @@ def character_full_name_to_enums(full_name: str, mapping: dict) -> Tuple[Union[H
             name = key
             break
 
-    if len(alternate) == 0:
+    # deal with catchwater_habor_1929/1929 - its just an edge case and I'm lazy.
+    if len(alternate) == 0 or name is Location.catchwater_harbor_1929:
         alternate = [None]
 
     return name, alternate

@@ -127,10 +127,10 @@ class HeroStatistics(Statistics):
     IncapacitatedRate: Optional[float] = Field(description="Derived: Incapacitated percentage", default=0.0)
     TotalPlayerVictoriesWhileIncapacitated: Optional[float] = Field(description="Total wins when incapacitated", default=0)
     PlayerVictoryRateWhenIncapacitated: Optional[float] = Field(description="Derived: Win rate when incapacitated", default=0.0)
-    Versus: Optional[Dict[str, OpponentStatistics]] = Field(default_factory=dict)
-    With: Optional[Dict[str, HeroStatistics]] = Field(default_factory=dict)
-    In: Optional[Dict[str, LocationStatistics]] = Field(default_factory=dict)
-    SpecialEndConditions: Optional[Dict[str, SpecialStatistics]] = Field(default_factory=dict)
+    Versus: Optional[Dict[str, str]] = Field(default_factory=dict)
+    With: Optional[Dict[str, str]] = Field(default_factory=dict)
+    In: Optional[Dict[str, str]] = Field(default_factory=dict)
+    SpecialEndConditions: Optional[Dict[str, str]] = Field(default_factory=dict)
 
     @validator("IncapacitatedRate", always=True, allow_reuse=True)
     def calculate_incap_rate(cls, incap, values):
@@ -157,10 +157,10 @@ class OpponentStatistics(Statistics):
     UltimateModeTotalGames: int = Field(description="Total games with Ultimate Mode", default=0)
     UltimateModePlayerVictories: int = Field(description="Total Wins by players against this Villain with Ultimate Mode", default=0)
     UltimateModePlayerVictoryRate: float = Field(description="Derived: Win percentage of Ultimate Mode against this Villain", default=0.0)
-    Versus: Optional[Dict[str, HeroStatistics]] = Field(default_factory=dict)
-    With: Optional[Dict[str, OpponentStatistics]] = Field(default_factory=dict)
-    In: Optional[Dict[str, LocationStatistics]] = Field(default_factory=dict)
-    SpecialEndConditions: Optional[Dict[str, SpecialStatistics]] = Field(default_factory=dict)
+    Versus: Optional[Dict[str, str]] = Field(default_factory=dict)
+    With: Optional[Dict[str, str]] = Field(default_factory=dict)
+    In: Optional[Dict[str, str]] = Field(default_factory=dict)
+    SpecialEndConditions: Optional[Dict[str, str]] = Field(default_factory=dict)
 
     class Config:
         @staticmethod

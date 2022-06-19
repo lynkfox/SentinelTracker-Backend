@@ -1,9 +1,11 @@
 from py_linq import Enumerable
 import models
-from common.rds import LookUp, Operation
+from common.rds import LookUp, Operation, character_full_name_to_enums
 from common.rds.queries_gen import parse_for_rds_names
 from common.models.schema_models import GameDetail
 from common.models.game_details_enums import HeroWinCondition, HeroLossCondition
+from common.models.character_enums import HERO_DISPLAY_MAPPING, LOCATION_DISPLAY_MAPPING, VILLAIN_DISPLAY_MAPPING
+from common.hardcoded_data.all_names import HERO_NAMES, VILLAIN_SINGLE_NAMES, LOCATION_NAMES, VILLAIN_TEAM_NAMES
 from typing import List, Dict
 
 
@@ -41,53 +43,85 @@ def calculate(request: LookUp, response: List[GameDetail]) -> models.StatisticsR
             ChallengeModeWins=challenge_games_collection.where(lambda x: _is_win_condition(x.end_result)).count(),
             UltimateModeTotalGames=ultimate_games_collection.count(),
             UltimateModeWins=ultimate_games_collection.where(lambda x: _is_win_condition(x.end_result)).count(),
-            Versus=build_related_hero_links(collection),
+            Versus=build_related_links(HERO_NAMES, HERO_DISPLAY_MAPPING, f"{request.path}/versus"),
         )
 
     if requested_parameters.villains is None or len(requested_parameters.villains) == 0 and len(requested_parameters.heroes) >= 1:
         # Build Hero and Hero Team response:
         #   - includes: Hero/Team stats and against villains
         #   - mutual exclusive to the one above.
-        pass
+
+        stats = models.HeroStatistics(
+            TotalGames=total_games,
+            TotalPlayerVictories=total_wins,
+            Versus=build_related_links([*VILLAIN_SINGLE_NAMES, *VILLAIN_TEAM_NAMES], VILLAIN_DISPLAY_MAPPING, f"{request.path}/versus"),
+        )
 
     if requested_parameters.environment is None or len(requested_parameters.environment) == 0:
         # Build and add the Other Environments response, if the original query did not include any
-        pass
+        stats.In = build_related_links(LOCATION_NAMES, LOCATION_DISPLAY_MAPPING, f"{request.path}/in")
 
     if len(requested_parameters.heroes) == 1:
         # If only one Hero in the original query, build other Hero statistics for With this hero
-        pass
+        stats.With = build_related_links(HERO_NAMES, HERO_DISPLAY_MAPPING, f"{request.path}/with", original_character=requested_parameters.heroes[0])
 
-    if len(requested_parameters.villains) == 1:
+        incapped_collection = collection.where(lambda x: _is_hero_incapped(x, requested_parameters.heroes[0]))
+        stats.Incapacitated = incapped_collection.count()
+        stats.TotalPlayerVictoriesWhileIncapacitated = incapped_collection.where(lambda x: _is_win_condition(x.end_result)).count()
+
+    if len(requested_parameters.villains) == 1 and requested_parameters.villains[0] in VILLAIN_TEAM_NAMES:
         # If Team Villain game, and if only one villain in original query, include With stats for other Team Villains
-        pass
-
-    # temp
+        stats.With = build_related_links(
+            VILLAIN_TEAM_NAMES, VILLAIN_DISPLAY_MAPPING, f"{request.path}/with", original_character=requested_parameters.villains[0]
+        )
 
     return models.StatisticsResponse(RequestedSet=requested_parameters, OriginalRequestedPath=request.path, Statistics=stats)
 
 
-def build_related_hero_links(collection, original_hero: str = None) -> Dict[str, GameDetail]:
+def build_related_links(names: list, mapping: dict, prefix: str = None, original_character: str = None) -> Dict[str, GameDetail]:
     """
-    Collects all the other heroes in the response and builds a dictionary of "Hero Name": Statistics
+    Builds links to all heroes based on the mapping given and the prefix.
     """
-    heroes = get_all_heroes_in_results(collection)
 
-    all_other_hero_stats = {}
-    for hero in heroes:
-        if hero == original_hero:
+    all_reference_links = {}
+    for name in names:
+        if name == original_character:
             continue
-        individual_hero_collection = collection.where(lambda x: _is_hero(x, hero))
-        incapped_games = individual_hero_collection.where(lambda x: _is_hero_incapped(x, hero))
+        primary, alternate = character_full_name_to_enums(name, mapping)
 
-        all_other_hero_stats[hero] = models.HeroStatistics(
-            TotalGames=individual_hero_collection.count(),
-            TotalPlayerVictories=individual_hero_collection.where(lambda x: _is_win_condition(x.end_result)).count(),
-            Incapacitated=incapped_games.count(),
-            TotalWinsWhileIncapacitated=incapped_games.where(lambda x: _is_win_condition(x.end_result)).count(),
-        )
+        if primary is None:
+            continue
 
-    return all_other_hero_stats
+        prepared_tags = [tag.value.replace("alt_", "") for tag in alternate if tag is not None]
+        if len(prepared_tags) == 2:
+            prepared_tags = f"/{prepared_tags[0]}_{prepared_tags[1]}"
+        elif len(prepared_tags) > 0:
+            prepared_tags = f"/{prepared_tags[0]}"
+        else:
+            prepared_tags = ""
+
+        all_reference_links[name] = f"{prefix}/{primary.value}{prepared_tags}"
+
+    return all_reference_links
+
+
+def is_hero_incapped(details: GameDetail, hero_name: str) -> bool:
+    """
+    Determines if the hero was incapped within this game.
+    """
+    dispatch_order = [
+        (details.hero_one, details.hero_one_incapped),
+        (details.hero_two, details.hero_two_incapped),
+        (details.hero_three, details.hero_three_incapped),
+        (details.hero_four, details.hero_four_incapped),
+        (details.hero_five, details.hero_five_incapped),
+    ]
+
+    for check in dispatch_order:
+        if check[0] == hero_name and check[1] is True:
+            return True
+
+    return False
 
 
 def describe_query_parameters(operations=List[Operation]) -> models.RequestedSet:
