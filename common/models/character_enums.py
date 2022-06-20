@@ -24,6 +24,14 @@ class Character(Enum):
         return self.value
 
 
+class EntityType(Character):
+    BASE = "base"
+    ALT = "alternate"
+    TEAM = "team villain"
+    LOCATION = "environment"
+    SCION = "scion"
+
+
 class Hero(Character):
     absolute_zero = "absolute_zero"
     akash_thriya = "akash_thriya"

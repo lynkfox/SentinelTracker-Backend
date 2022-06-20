@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 from common.models.character_enums import (
     AlternateTags,
+    EntityType,
     Hero,
     HERO_DISPLAY_MAPPING,
     ALTERNATE_TAG_DISPLAY_MAPPING,
@@ -18,6 +19,7 @@ class HeroInsert:
     full_name: str = field(init=False)
     query_name_value: str = field(init=False)
     query_alt_value: str = field(init=False)
+    type: Union[EntityType, str] = field(init=False)
 
     def __post_init__(self):
 
@@ -35,8 +37,11 @@ class HeroInsert:
                 if is_definitive
                 else _deal_with_alt_prefix(self.alternate_name.value)
             )
+            self.type = f"definitive {EntityType.ALT.value}" if is_definitive else EntityType.ALT.value
+
         else:
             self.query_alt_value = None
+            self.type = f"definitive {EntityType.BASE.value}" if is_definitive else EntityType.BASE.value
 
         self.box_set = self.box_set.value
         self.base = display_name

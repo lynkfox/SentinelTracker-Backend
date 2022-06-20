@@ -6,7 +6,6 @@ class SqlTables(EnhancedEnum):
     STATISTICS_DB_NAME = "sentinel_statistics"
 
     # table names
-    BOX_SETS = "boxSets"
     ENVIRONMENTS = "environments"
     HEROES = "heroes"
     VILLAINS = "villains"
@@ -15,8 +14,6 @@ class SqlTables(EnhancedEnum):
     HERO_TEAMS = "heroTeams"
     OPPONENTS = "opponents"
     OBLIVAEON_SETUPS = "oblivaeonSetups"
-    NON_POS_HERO_TEAMS = "nonPositionalHeroTeams"
-    NON_POS_OPPONENTS = "nonPositionalOpponents"
 
 
 class SqlColumns(EnhancedEnum):
@@ -27,7 +24,7 @@ class SqlColumns(EnhancedEnum):
     BASE = "base"
     QUERY_NAME = "query_name_value"
     QUERY_ALT = "query_alt_value"
-    BOX_SET = "box_set"
+    ENTITY_TYPE = "entity_type"
     USERNAME = "username"
     HERO_ONE = "hero_one"
     HERO_TWO = "hero_two"
@@ -72,3 +69,67 @@ class SqlColumns(EnhancedEnum):
     COMMENTS = "comments"
     ADVANCED = "advanced"
     CHALLENGE = "challenge"
+
+
+HERO_TEAMS_COLUMNS = [
+    SqlColumns.HERO_ONE.value,
+    SqlColumns.HERO_TWO.value,
+    SqlColumns.HERO_THREE.value,
+    SqlColumns.HERO_FOUR.value,
+    SqlColumns.HERO_FIVE.value,
+    SqlColumns.VALID_TEAM.value,
+    SqlColumns.ID_HASH.value,
+]
+
+OPPONENTS_COLUMNS = [
+    SqlColumns.VILLAIN_ONE.value,
+    SqlColumns.VILLAIN_TWO.value,
+    SqlColumns.VILLAIN_THREE.value,
+    SqlColumns.VILLAIN_FOUR.value,
+    SqlColumns.VILLAIN_FIVE.value,
+    SqlColumns.VALID_TEAM.value,
+    SqlColumns.ID_HASH.value,
+]
+
+GAME_DETAILS_COLUMNS = [
+    SqlColumns.USERNAME.value,
+    SqlColumns.ENTER_DATE.value,
+    SqlColumns.GAME_MODE.value,
+    SqlColumns.SELECTION_METHOD.value,
+    SqlColumns.PLATFORM.value,
+    SqlColumns.END_RESULT.value,
+    SqlColumns.ESTIMATED_TIME.value,
+    SqlColumns.HOUSE_RULES.value,
+    SqlColumns.NUMBER_OF_PLAYERS.value,
+    SqlColumns.NUMBER_OF_HEROES.value,
+    SqlColumns.PERCEIVED_DIFFICULTY.value,
+    SqlColumns.ROUNDS.value,
+    SqlColumns.OBLIVAEON_DETAIL.value,
+    SqlColumns.HERO_TEAM.value,
+    SqlColumns.ENVIRONMENT.value,
+    SqlColumns.VILLAIN.value,
+    SqlColumns.HERO_ONE.value,
+    SqlColumns.H1_INCAP.value,
+    SqlColumns.HERO_TWO.value,
+    SqlColumns.H2_INCAP.value,
+    SqlColumns.HERO_THREE.value,
+    SqlColumns.H3_INCAP.value,
+    SqlColumns.HERO_FOUR.value,
+    SqlColumns.H4_INCAP.value,
+    SqlColumns.HERO_FIVE.value,
+    SqlColumns.H5_INCAP.value,
+    SqlColumns.VILLAIN_ONE.value,
+    SqlColumns.V1_INCAP.value,
+    SqlColumns.VILLAIN_TWO.value,
+    SqlColumns.V2_INCAP.value,
+    SqlColumns.VILLAIN_THREE.value,
+    SqlColumns.V3_INCAP.value,
+    SqlColumns.VILLAIN_FOUR.value,
+    SqlColumns.V4_INCAP.value,
+    SqlColumns.VILLAIN_FIVE.value,
+    SqlColumns.V5_INCAP.value,
+    SqlColumns.ADVANCED.value,
+    SqlColumns.CHALLENGE.value,
+    SqlColumns.COMMENTS.value,
+    SqlColumns.ENTRY_IS_VALID.value,
+]

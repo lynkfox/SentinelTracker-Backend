@@ -2,6 +2,7 @@ from __future__ import annotations
 from pydantic import BaseModel, Field, PrivateAttr, validator
 from pydantic.fields import ModelField
 from common.models.enums import Type
+from common.sql_attributes import SqlColumns, SqlTables, HERO_TEAMS_COLUMNS, OPPONENTS_COLUMNS, GAME_DETAILS_COLUMNS
 from common.models.character_enums import Location, Hero, Villain
 from common.models.game_details_enums import BoxSet
 from common.models.game_details_enums import (
@@ -15,6 +16,18 @@ from common.models.game_details_enums import (
 import json
 from typing import Optional, Union, Dict, Any
 from datetime import datetime
+import hashlib
+
+
+def _build_id_hash(string_to_hash: str) -> int:
+    """
+    Builds a deterministic and repeatable hash
+
+    `hash()` has a randomized salt included, which makes it repeatable during a
+    python execution but not between different executions. This still produces
+    a similar format to hash() but without the randomization.
+    """
+    return int(hashlib.sha256(bytes(string_to_hash, "utf-8")).hexdigest()[:16], 16) - 2**63
 
 
 class User(BaseModel):
@@ -36,9 +49,7 @@ class OblivAeonDetail(BaseModel):
     Model of a row in t he OblivAeonDetails table
     """
 
-    scions: str = Field(
-        ..., description="The Display names all together as a single string separated by - Name A-Name B-Name-C"
-    )  # scion ID values concatted into id#-id#-id#-id#
+    scions: str = Field(..., description="The Display names all together as a single string separated by - Name A-Name B-Name-C")
     shield: str = Field(...)
     environments: Optional[str] = Field(description="The Display names all together as a single string separated by - Name A-Name B-Name-C")
     player_one_heroes: Optional[str] = Field(description="The Display names all together as a single string separated by - Name A-Name B-Name-C")
@@ -52,7 +63,7 @@ class OblivAeonDetail(BaseModel):
     @validator("id_hash", always=True)
     def hash_team(cls, id_hash, values):
         if id_hash is None or id_hash == "":
-            return hash("".join([v if v is not None else "-" for k, v in values.items() if k in ["scions", "shield"]]))
+            return _build_id_hash("".join([v if v is not None else "-" for k, v in values.items() if k in ["scions", "shield"]]))
         return id_hash
 
     class Config:
@@ -74,8 +85,8 @@ class HeroTeam(BaseModel):
     hero_three: str = Field(...)
     hero_four: Optional[str]
     hero_five: Optional[str]
-    id_hash: Optional[str]
     valid_team: Optional[bool]
+    id_hash: Optional[str]
 
     class Config:
         use_enum_values = True
@@ -100,7 +111,7 @@ class HeroTeam(BaseModel):
     def hash_team_positions(cls, id_hash, values):
 
         if id_hash is None or id_hash == "":
-            return hash("".join([v if v is not None else "-" for k, v in values.items() if "hero" in k]))
+            return _build_id_hash("".join([v if v is not None else "-" for k, v in values.items() if "hero" in k]))
         return id_hash
 
     @validator("valid_team", always=True)
@@ -126,6 +137,14 @@ class HeroTeam(BaseModel):
 
         return True
 
+    def get_insert_statement(self):
+        """
+        Builds an insert statement for heroes
+        """
+        input_mapping = {HERO_TEAMS_COLUMNS[i]: value for i, value in enumerate(self.__dict__.values()) if value is not None}
+        values = ", ".join([f"'{value}'" if isinstance(value, str) else f"{str(value)}" for value in input_mapping.values()])
+        return f"INSERT INTO {SqlTables.HERO_TEAMS} ({', '.join(input_mapping.keys())}) VALUES ({values})"
+
 
 class VillainOpponent(BaseModel):
     """
@@ -137,8 +156,8 @@ class VillainOpponent(BaseModel):
     villain_three: Optional[str]
     villain_four: Optional[str]
     villain_five: Optional[str]
+    valid_team: Optional[bool]
     id_hash: Optional[str]
-    valid_team: Optional[str]
 
     class Config:
         use_enum_values = True
@@ -168,7 +187,7 @@ class VillainOpponent(BaseModel):
     @validator("id_hash", always=True)
     def hash_team_positions(cls, id_hash, values):
         if id_hash is None or id_hash == "":
-            return hash("".join([str(v) if v is not None else "-" for k, v in values.items() if k != "id_hash"]))
+            return _build_id_hash("".join([str(v) if v is not None else "-" for k, v in values.items() if k != "id_hash"]))
         return id_hash
 
     @validator("valid_team", always=True)
@@ -194,6 +213,17 @@ class VillainOpponent(BaseModel):
             return validation
 
         return True
+
+    def get_insert_statement(self):
+        """
+        Builds an insert statement for opponents
+        """
+        input_mapping = {OPPONENTS_COLUMNS[i]: value for i, value in enumerate(self.__dict__.values()) if value is not None}
+
+        qmarks = ", ".join("?" * len(input_mapping))
+        qry = f"INSERT INTO {SqlTables.OPPONENTS} ({qmarks}) VALUES ({qmarks})"
+
+        return (qry, input_mapping.keys(), input_mapping.values())
 
 
 class GameDetail(BaseModel):
@@ -302,3 +332,14 @@ class GameDetail(BaseModel):
             return False
 
         return True
+
+    def get_insert_statement(self):
+        """
+        Builds an insert statement for Game Details
+        """
+        input_mapping = {GAME_DETAILS_COLUMNS[i]: value for i, value in enumerate(self.__dict__.values()) if value is not None}
+
+        qmarks = ", ".join("?" * len(input_mapping))
+        qry = f"INSERT INTO {SqlTables.GAME_DETAILS} ({qmarks}) VALUES ({qmarks})"
+
+        return (qry, input_mapping.keys(), input_mapping.values())

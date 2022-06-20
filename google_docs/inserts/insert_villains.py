@@ -2,9 +2,11 @@ from dataclasses import dataclass, field
 from common.models.character_enums import (
     AlternateTags,
     Villain,
+    EntityType,
     VILLAIN_DISPLAY_MAPPING,
     ALTERNATE_TAG_DISPLAY_MAPPING,
 )
+from common.hardcoded_data.all_names import VILLAIN_TEAM_NAMES, SCION_NAMES
 from common.models.game_details_enums import BoxSet
 from google_docs.inserts.insert_heroes import _deal_with_alt_prefix
 from typing import Union
@@ -19,6 +21,7 @@ class VillainInsert:
     full_name: str = field(init=False)
     query_name_value: str = field(init=False)
     query_alt_value: str = field(init=False)
+    type: Union[EntityType, str] = field(init=False)
 
     def __post_init__(self):
 
@@ -36,8 +39,11 @@ class VillainInsert:
                 if is_definitive
                 else _deal_with_alt_prefix(self.alternate_name.value)
             )
+            self.type = f"definitive {EntityType.ALT.value}" if is_definitive else EntityType.ALT.value
+
         else:
             self.query_alt_value = None
+            self.type = f"definitive {EntityType.BASE.value}" if is_definitive else EntityType.BASE.value
 
         self.box_set = self.box_set.value
         self.base = display_name
@@ -48,6 +54,12 @@ class VillainInsert:
             self.full_name = f"{display_name}{display_alt}"
         else:
             self.full_name = display_name
+
+        if self.full_name in VILLAIN_TEAM_NAMES:
+            self.type = f"definitive {EntityType.TEAM.value}" if is_definitive else EntityType.TEAM.value
+
+        if self.full_name in SCION_NAMES:
+            self.type = f"definitive {EntityType.SCION.value}" if is_definitive else EntityType.SCION.value
 
 
 VILLAINS_TO_INSERT = [
@@ -78,9 +90,9 @@ VILLAINS_TO_INSERT = [
     VillainInsert(Villain.citizens_hammer_and_anvil, BoxSet.VILLAINS),
     VillainInsert(Villain.dark_mind, BoxSet.OBLIVAEON),
     VillainInsert(Villain.deadline, BoxSet.WRATH_OF_THE_COSMOS),
-    VillainInsert(Villain.the_dreamer, BoxSet.SHATTERED_TIMELINES),
+    VillainInsert(Villain.dreamer, BoxSet.SHATTERED_TIMELINES),
     VillainInsert(Villain.empyreon, BoxSet.OBLIVAEON),
-    VillainInsert(Villain.the_ennead, BoxSet.INFERNAL_RELICS),
+    VillainInsert(Villain.ennead, BoxSet.INFERNAL_RELICS),
     VillainInsert(Villain.ermine, BoxSet.VENGEANCE),
     VillainInsert(Villain.faultless, BoxSet.OBLIVAEON),
     VillainInsert(Villain.friction, BoxSet.VENGEANCE),
@@ -118,7 +130,7 @@ VILLAINS_TO_INSERT = [
     ),
     VillainInsert(Villain.omnitron, BoxSet.DEFINITIVE_EDITION, AlternateTags.definitive),
     VillainInsert(Villain.omnitron, BoxSet.DEFINITIVE_EDITION, AlternateTags.definitive_cosmic),
-    VillainInsert(Villain.the_operative, BoxSet.VILLAINS),
+    VillainInsert(Villain.operative, BoxSet.VILLAINS),
     VillainInsert(Villain.plague_rat, BoxSet.ROOK_CITY),
     VillainInsert(Villain.plague_rat, BoxSet.VILLAINS, AlternateTags.team_villain),
     VillainInsert(Villain.progeny, BoxSet.WRATH_OF_THE_COSMOS),
@@ -144,8 +156,8 @@ VILLAINS_TO_INSERT = [
     VillainInsert(Villain.dendron, BoxSet.CAULDRON),
     VillainInsert(Villain.dendron, BoxSet.CAULDRON, AlternateTags.windcolor),
     VillainInsert(Villain.gray, BoxSet.CAULDRON),
-    VillainInsert(Villain.the_ram, BoxSet.CAULDRON),
-    VillainInsert(Villain.the_ram, BoxSet.CAULDRON, AlternateTags.alt_1929),
+    VillainInsert(Villain.ram, BoxSet.CAULDRON),
+    VillainInsert(Villain.ram, BoxSet.CAULDRON, AlternateTags.alt_1929),
     VillainInsert(Villain.tiamat, BoxSet.CAULDRON),
     VillainInsert(Villain.tiamat, BoxSet.CAULDRON, AlternateTags.hydra),
     VillainInsert(Villain.oriphel, BoxSet.CAULDRON_EXPERIMENTAL),

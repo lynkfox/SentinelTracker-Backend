@@ -37,12 +37,12 @@ def main():
 
 
 def insert_entities(cursor, table, values):
-    sql = f"INSERT INTO {table} ({SqlColumns.FULL_NAME}, {SqlColumns.BASE}, {SqlColumns.QUERY_NAME}, {SqlColumns.QUERY_ALT}) VALUES (%s, %s, %s, %s)"
+    sql = f"INSERT INTO {table} ({SqlColumns.FULL_NAME}, {SqlColumns.BASE}, {SqlColumns.QUERY_NAME}, {SqlColumns.QUERY_ALT}, {SqlColumns.ENTITY_TYPE}) VALUES (%s, %s, %s, %s, %s)"
     cursor.executemany(sql, values)
 
 
 def create_values(entities: list):
-    return [(entity.full_name, entity.base, entity.query_name_value, entity.query_alt_value) for entity in entities]
+    return [(entity.full_name, entity.base, entity.query_name_value, entity.query_alt_value, entity.type) for entity in entities]
 
 
 def _clean_name(name: str) -> str:

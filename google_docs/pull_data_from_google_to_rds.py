@@ -1,5 +1,5 @@
 from __future__ import print_function
-from common.sql_attributes import SqlColumns, SqlTables
+from common.sql_attributes import SqlColumns, SqlTables, HERO_TEAMS_COLUMNS, OPPONENTS_COLUMNS, GAME_DETAILS_COLUMNS
 from auth import get_google_credentials_through_oath2
 from common.models.schema_models import (
     GameDetail,
@@ -63,79 +63,16 @@ def main():
     )
     blank_user_sql = f"INSERT {SqlTables.USERS} ({SqlColumns.USERNAME}, claimed) VALUES ('', '')"
 
-    hero_team_columns = [
-        SqlColumns.ID_HASH.value,
-        SqlColumns.HERO_ONE.value,
-        SqlColumns.HERO_TWO.value,
-        SqlColumns.HERO_THREE.value,
-        SqlColumns.HERO_FOUR.value,
-        SqlColumns.HERO_FIVE.value,
-        SqlColumns.VALID_TEAM.value,
-    ]
-
     hero_team_sql_statement = (
-        f"INSERT INTO {SqlTables.HERO_TEAMS} ({','.join(hero_team_columns)}) VALUES ({insert_value_shortcut(hero_team_columns)})"
+        f"INSERT INTO {SqlTables.HERO_TEAMS} ({','.join(HERO_TEAMS_COLUMNS)}) VALUES ({insert_value_shortcut(HERO_TEAMS_COLUMNS)})"
     )
     hero_team_values = list(set([create_values_for_hero_insert(detail.hero_team) for detail in details]))
 
-    opponent_columns = [
-        SqlColumns.ID_HASH.value,
-        SqlColumns.VILLAIN_ONE.value,
-        SqlColumns.VILLAIN_TWO.value,
-        SqlColumns.VILLAIN_THREE.value,
-        SqlColumns.VILLAIN_FOUR.value,
-        SqlColumns.VILLAIN_FIVE.value,
-        SqlColumns.VALID_TEAM.value,
-    ]
-
-    opponents_sql_statement = f"INSERT INTO {SqlTables.OPPONENTS} ({','.join(opponent_columns)}) VALUES ({insert_value_shortcut(opponent_columns)})"
+    opponents_sql_statement = f"INSERT INTO {SqlTables.OPPONENTS} ({','.join(OPPONENTS_COLUMNS)}) VALUES ({insert_value_shortcut(OPPONENTS_COLUMNS)})"
     opponent_team_values = list(set([create_values_for_opponent_team_insert(detail.villain) for detail in details]))
 
-    game_details_column_names = [
-        SqlColumns.USERNAME.value,
-        SqlColumns.ENTER_DATE.value,
-        SqlColumns.GAME_MODE.value,
-        SqlColumns.SELECTION_METHOD.value,
-        SqlColumns.PLATFORM.value,
-        SqlColumns.END_RESULT.value,
-        SqlColumns.ESTIMATED_TIME.value,
-        SqlColumns.HOUSE_RULES.value,
-        SqlColumns.NUMBER_OF_PLAYERS.value,
-        SqlColumns.NUMBER_OF_HEROES.value,
-        SqlColumns.PERCEIVED_DIFFICULTY.value,
-        SqlColumns.ROUNDS.value,
-        SqlColumns.OBLIVAEON_DETAIL.value,
-        SqlColumns.HERO_TEAM.value,
-        SqlColumns.ENVIRONMENT.value,
-        SqlColumns.VILLAIN.value,
-        SqlColumns.HERO_ONE.value,
-        SqlColumns.H1_INCAP.value,
-        SqlColumns.HERO_TWO.value,
-        SqlColumns.H2_INCAP.value,
-        SqlColumns.HERO_THREE.value,
-        SqlColumns.H3_INCAP.value,
-        SqlColumns.HERO_FOUR.value,
-        SqlColumns.H4_INCAP.value,
-        SqlColumns.HERO_FIVE.value,
-        SqlColumns.H5_INCAP.value,
-        SqlColumns.VILLAIN_ONE.value,
-        SqlColumns.V1_INCAP.value,
-        SqlColumns.VILLAIN_TWO.value,
-        SqlColumns.V2_INCAP.value,
-        SqlColumns.VILLAIN_THREE.value,
-        SqlColumns.V3_INCAP.value,
-        SqlColumns.VILLAIN_FOUR.value,
-        SqlColumns.V4_INCAP.value,
-        SqlColumns.VILLAIN_FIVE.value,
-        SqlColumns.V5_INCAP.value,
-        SqlColumns.ADVANCED.value,
-        SqlColumns.CHALLENGE.value,
-        SqlColumns.COMMENTS.value,
-        SqlColumns.ENTRY_IS_VALID.value,
-    ]
-
     game_details_sql_statement = (
-        f"INSERT INTO {SqlTables.GAME_DETAILS} ({', '.join(game_details_column_names)}) VALUES ({insert_value_shortcut(game_details_column_names)})"
+        f"INSERT INTO {SqlTables.GAME_DETAILS} ({', '.join(GAME_DETAILS_COLUMNS)}) VALUES ({insert_value_shortcut(GAME_DETAILS_COLUMNS)})"
     )
     game_details_values = list(set([create_values_for_game_details_insert(detail) for detail in details]))
 
@@ -172,8 +109,8 @@ def main():
         f"\n ..... inserted in {end_insert-end_statement} seconds"
         f"\n\n *Complete."
         f"\n   - {len(user_values)} Users added."
-        f"\n   - {len(hero_team_values)} Unique Hero Team setups added."
-        f"\n   - {len(opponent_team_values)} Unique Opponent Team setups added."
+        f"\n   - {len(hero_team_values)} Unique Hero Teams added."
+        f"\n   - {len(opponent_team_values)} Unique Opponent Teams added."
         f"\n   - {len(game_details_values)} Game data inserted."
         f"\n in {end_insert-start} total seconds "
     )
@@ -193,25 +130,25 @@ def create_values_for_user_insert(user: User) -> set:
 
 def create_values_for_hero_insert(hero_team: HeroTeam) -> set:
     return (
-        str(hero_team.id_hash),
         hero_team.hero_one,
         hero_team.hero_two,
         hero_team.hero_three,
         hero_team.hero_four,
         hero_team.hero_five,
         hero_team.valid_team,
+        str(hero_team.id_hash),
     )
 
 
 def create_values_for_opponent_team_insert(villain: VillainOpponent) -> set:
     return (
-        str(villain.id_hash),
         villain.villain_one,
         villain.villain_two,
         villain.villain_three,
-        villain.villain_four,
         villain.villain_five,
+        villain.villain_four,
         villain.valid_team,
+        str(villain.id_hash),
     )
 
 

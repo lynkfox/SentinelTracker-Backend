@@ -4,6 +4,7 @@ from dataclasses import dataclass, field
 from common.models.character_enums import (
     AlternateTags,
     Location,
+    EntityType,
     LOCATION_DISPLAY_MAPPING,
     ALTERNATE_TAG_DISPLAY_MAPPING,
 )
@@ -21,6 +22,7 @@ class EnvironmentInsert:
     full_name: str = field(init=False)
     query_name_value: str = field(init=False)
     query_alt_value: str = field(init=False)
+    type: Union[EntityType, str] = field(init=False)
 
     def __post_init__(self):
 
@@ -41,6 +43,8 @@ class EnvironmentInsert:
         else:
             self.query_alt_value = None
 
+        self.type = EntityType.LOCATION.value if is_definitive else f"definitive {EntityType.LOCATION.value}"
+
         self.box_set = self.box_set.value
         self.base = display_name
 
@@ -53,13 +57,13 @@ class EnvironmentInsert:
 
 
 ENVIRONMENTS_TO_INSERT = [
-    EnvironmentInsert(Location.the_block, BoxSet.SHATTERED_TIMELINES),
+    EnvironmentInsert(Location.block, BoxSet.SHATTERED_TIMELINES),
     EnvironmentInsert(Location.celestial_tribunal, BoxSet.CELESTIAL_TRIBUNAL),
     EnvironmentInsert(Location.champion_studios, BoxSet.OBLIVAEON),
     EnvironmentInsert(Location.court_of_blood, BoxSet.VILLAINS),
     EnvironmentInsert(Location.dok_thorath_capital, BoxSet.WRATH_OF_THE_COSMOS),
     EnvironmentInsert(Location.enclave_of_the_endlings, BoxSet.WRATH_OF_THE_COSMOS),
-    EnvironmentInsert(Location.the_final_wasteland, BoxSet.FINAL_WASTELAND),
+    EnvironmentInsert(Location.final_wasteland, BoxSet.FINAL_WASTELAND),
     EnvironmentInsert(Location.fort_adamant, BoxSet.OBLIVAEON),
     EnvironmentInsert(Location.freedom_tower, BoxSet.VENGEANCE),
     EnvironmentInsert(Location.insula_primalis, BoxSet.ENHANCED_EDITION),
