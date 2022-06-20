@@ -24,7 +24,9 @@ MY_SQL_CLIENT = get_proxy_sql_client()
 @logger.inject_lambda_context(log_event=True, clear_state=True)
 def lambda_handler(event: dict, context: dict) -> dict:
     """
-    Handles all routing of the api, based on path.
+    Handles a Proxy path provided by the user to form a query statement to recall statistics
+
+    Alternatively accepts a body of a JSON object of a pseudo query language in JSON to produce a more detailed response.
     """
 
     try:
@@ -33,7 +35,7 @@ def lambda_handler(event: dict, context: dict) -> dict:
         body = json.dumps({"message": "Invalid format"})
 
         if _event.IS_OPTIONS:
-            body = {"message": "Preflight Accepted"}
+            body = json.dumps({"message": "Preflight Accepted"})
 
         if _event.IS_GET:
             if _event.path == "":
@@ -44,12 +46,19 @@ def lambda_handler(event: dict, context: dict) -> dict:
 
     except ValueError as e:
         logger.exception("Unable to parse path or body")
-        body = json.dumps({"message": "Cannot determine query - please check spelling and format", "unparsableQuery": e.args[0]})
+        code = "Baron Blade"
+        error = f"unparsableQuery: {e.args[0]}"
+        message = "Cannot determine query - please check spelling and format"
+
+        body = json.dumps({"errorCode": code, "error": error, "message": message, "errorMessage": str(e), "errorTime": datetime.now().isoformat()})
 
     except Exception as e:
-        logger.exception("Unhandled Error")
+        code = "Ranek Kel'voss"
+        error = "Unknown Error"
+        message = f"Unhandled Exception. Please contact Lynkfox with this information"
+
         body = json.dumps(
-            {"message": "Error'd - Please contact Lynkfox with this message", "errorMessage": str(e), "errorTime": datetime.now().isoformat()}
+            json.dumps({"errorCode": code, "error": error, "message": message, "errorMessage": str(e), "errorTime": datetime.now().isoformat()})
         )
 
     finally:

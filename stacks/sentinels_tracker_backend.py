@@ -40,6 +40,9 @@ class MainStack(Stack):
         # vpc.apply_removal_policy(core.RemovalPolicy.DESTROY)
 
         self.props.vpc = vpc
+        self.props.add_security_group(
+            ec2.SecurityGroup(self, "LambdaToRDSProxySG", security_group_name=self.props.prefix_name("Lambda-To-RDS-Proxy"), vpc=vpc)
+        )
 
         storage = StorageStack(self, "StorageStack", self.props)
 

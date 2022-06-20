@@ -201,7 +201,7 @@ class GameDetail(BaseModel):
     Model of a row in the Game Details table
     """
 
-    username: Union[User, str]
+    username: Union[User, str, None]
     entered_on: datetime
     game_mode: Optional[GameMode]
     selection_method: Optional[SelectionMethod]
@@ -214,20 +214,20 @@ class GameDetail(BaseModel):
     perceived_difficulty: Optional[int]
     rounds: Optional[int] = Field()
     oblivaeon_details: Optional[OblivAeonDetail]
-    hero_team: Union[HeroTeam, int]
+    hero_team: Union[HeroTeam, int, None]
     environment: str
-    villain: Union[VillainOpponent, int]
-    hero_one: Optional[str]
+    villain: Union[VillainOpponent, int, None]
+    hero_one: str
     hero_one_incapped: Optional[bool]
-    hero_two: Optional[str]
+    hero_two: str
     hero_two_incapped: Optional[bool]
-    hero_three: Optional[str]
+    hero_three: str
     hero_three_incapped: Optional[bool]
     hero_four: Optional[str]
     hero_four_incapped: Optional[bool]
     hero_five: Optional[str]
     hero_five_incapped: Optional[bool]
-    villain_one: Optional[str]
+    villain_one: str
     villain_one_incapped: Optional[bool]
     villain_two: Optional[str]
     villain_two_incapped: Optional[bool]
@@ -240,7 +240,7 @@ class GameDetail(BaseModel):
     advanced: Optional[bool]
     challenge: Optional[bool]
     comment: Optional[str]
-    entry_is_valid: bool = Field(True)
+    entry_is_valid: Optional[bool] = Field(default=None)
 
     class Config:
         use_enum_values = True
@@ -251,7 +251,11 @@ class GameDetail(BaseModel):
             for prop in schema.get("properties", {}).values():
                 prop.pop("title", None)
 
+            del schema["properties"]["villain"]
+            del schema["properties"]["hero_team"]
             del schema["properties"]["entry_is_valid"]
+            del schema["properties"]["username"]["anyOf"]
+            schema["properties"]["username"] = {"type": "string"}
 
     @validator("villain", always=True)
     def update_game_type(cls, opponent: VillainOpponent, values):
@@ -273,6 +277,9 @@ class GameDetail(BaseModel):
         """
         if entry is not None:
             return entry
+
+        if values.get("house_rules") is True:
+            return False
 
         # make sure if a team game that the number of villains is not more than the number of heroes
         villains = [v for k, v in values["villain"].__dict__.items() if ("villain" in k and "incapped" not in k) and v is not None]

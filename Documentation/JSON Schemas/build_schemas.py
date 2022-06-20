@@ -12,4 +12,8 @@ if __name__ == "__main__":
         json.dump(StatisticsResponse.schema(), f, ensure_ascii=False, indent=4)
 
     with open("Documentation\JSON Schemas\input_game_details.json", "w") as f:
-        json.dump(GameDetail.schema(), f, ensure_ascii=False, indent=4)
+        schema = GameDetail.schema()
+        del schema["definitions"]["HeroTeam"]
+        del schema["definitions"]["VillainOpponent"]
+        del schema["definitions"]["User"]
+        json.dump(schema, f, ensure_ascii=False, indent=4)

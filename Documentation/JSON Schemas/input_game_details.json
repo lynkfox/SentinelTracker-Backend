@@ -4,14 +4,7 @@
     "type": "object",
     "properties": {
         "username": {
-            "anyOf": [
-                {
-                    "$ref": "#/definitions/User"
-                },
-                {
-                    "type": "string"
-                }
-            ]
+            "type": "string"
         },
         "entered_on": {
             "type": "string",
@@ -57,28 +50,8 @@
         "oblivaeon_details": {
             "$ref": "#/definitions/OblivAeonDetail"
         },
-        "hero_team": {
-            "anyOf": [
-                {
-                    "$ref": "#/definitions/HeroTeam"
-                },
-                {
-                    "type": "integer"
-                }
-            ]
-        },
         "environment": {
             "type": "string"
-        },
-        "villain": {
-            "anyOf": [
-                {
-                    "$ref": "#/definitions/VillainOpponent"
-                },
-                {
-                    "type": "integer"
-                }
-            ]
         },
         "hero_one": {
             "type": "string"
@@ -151,26 +124,14 @@
         }
     },
     "required": [
-        "username",
         "entered_on",
-        "hero_team",
         "environment",
-        "villain"
+        "hero_one",
+        "hero_two",
+        "hero_three",
+        "villain_one"
     ],
     "definitions": {
-        "User": {
-            "title": "User",
-            "description": "Model of a row in the Users Table.",
-            "type": "object",
-            "properties": {
-                "username": {
-                    "type": "string"
-                }
-            },
-            "required": [
-                "username"
-            ]
-        },
         "GameMode": {
             "title": "GameMode",
             "description": "An enumeration.",
@@ -296,58 +257,6 @@
             "required": [
                 "scions",
                 "shield"
-            ]
-        },
-        "HeroTeam": {
-            "title": "HeroTeam",
-            "description": "The Hero Team - IN ALPHABETICAL ORDER in order.",
-            "type": "object",
-            "properties": {
-                "hero_one": {
-                    "type": "string"
-                },
-                "hero_two": {
-                    "type": "string"
-                },
-                "hero_three": {
-                    "type": "string"
-                },
-                "hero_four": {
-                    "type": "string"
-                },
-                "hero_five": {
-                    "type": "string"
-                }
-            },
-            "required": [
-                "hero_one",
-                "hero_two",
-                "hero_three"
-            ]
-        },
-        "VillainOpponent": {
-            "title": "VillainOpponent",
-            "description": "Villain Team. This team should be entered ALPHABETICALLY",
-            "type": "object",
-            "properties": {
-                "villain_one": {
-                    "type": "string"
-                },
-                "villain_two": {
-                    "type": "string"
-                },
-                "villain_three": {
-                    "type": "string"
-                },
-                "villain_four": {
-                    "type": "string"
-                },
-                "villain_five": {
-                    "type": "string"
-                }
-            },
-            "required": [
-                "villain_one"
             ]
         }
     }

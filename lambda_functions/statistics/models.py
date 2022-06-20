@@ -1,7 +1,5 @@
 from __future__ import annotations
-from copy import deepcopy
 from dataclasses import dataclass, field
-from common.models.entity import ApiEvent
 from common.models.enums import ApiEventTypes
 from common.rds import LookUp
 from pydantic import BaseModel, Field, validator

@@ -45,6 +45,7 @@ class StorageStack(NestedStack):
             f"{ResourceNames.STATISTICS_RDS}proxy",
             secrets=[self.statistics.secret],
             vpc=props.vpc,
+            security_groups=props.security_groups,
             proxy_target=rds.ProxyTarget.from_instance(self.statistics),
             iam_auth=True,
         )

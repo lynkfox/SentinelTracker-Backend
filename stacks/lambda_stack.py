@@ -1,9 +1,6 @@
-from logging import root
-from typing import Dict
-
 import aws_cdk as core
 from aws_cdk import NestedStack
-from aws_cdk import aws_iam as iam
+from aws_cdk import aws_ec2 as ec2
 from aws_cdk import aws_lambda
 from aws_cdk import aws_rds as rds
 from constructs import Construct
@@ -46,15 +43,10 @@ class LambdaStack(NestedStack):
             layers=[layer],
             memory_size=512,
             vpc=props.vpc,
+            security_groups=props.security_groups,
             allow_public_subnet=True,
         )
 
         self.lambda_mapping[ResourceNames.STATISTICS] = statistics
         rds_table.grant_connect(statistics)
-        # statistics.add_to_role_policy(
-        #     iam.PolicyStatement(
-        #         actions=["secretsmanager:GetSecretValue"], resources=[f"arn:aws:secretsmanager:{self.region}:{self.account}:secret:*"]
-        #     )
-        # )
-
-        # rds_table.grant_connect(statistics)
+        rds_table.connections.allow_from(statistics.connections, port_range=ec2.Port.tcp(3306))
