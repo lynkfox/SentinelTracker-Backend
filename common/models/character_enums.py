@@ -427,7 +427,7 @@ ALTERNATE_TAG_DISPLAY_MAPPING = {
     AlternateTags.stealth_suit: ", Stealth Suit",  # bunker
     AlternateTags.haunted: ", Haunted",  # fanatic
     AlternateTags.backdraft: ", Backdraft",  # ra
-    AlternateTags.werewolf: ", Berewolf",  # haka
+    AlternateTags.werewolf: ", Werewolf",  # haka
     AlternateTags.bear: ": Critical Event! The Bear",  # Organization
     AlternateTags.doctor_toxica: ": Critical Event! Doctor Toxica",  # Plague rat
     AlternateTags.abomination: ", Abomination: Critical Event!",  # spite

@@ -6,4 +6,4 @@ inner join heroTeams as ht on ht.id_hash = gameDetails.hero_team
 where  entry_is_valid
 group by team
 order by count desc
-limit 10
+#limit 10

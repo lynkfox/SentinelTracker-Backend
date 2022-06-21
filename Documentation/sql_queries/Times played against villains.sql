@@ -46,5 +46,6 @@ and   c2.villain2 = c3.villain3
 and   c3.villain3 = c4.villain4
 and   c4.villain4 = c5.villain5
 and (c1.cnt+c2.cnt+c3.cnt+c4.cnt+c5.cnt) != 0
+and c2.cnt = 0
 
-order by total desc #limit 10
+order by total desc limit 10
