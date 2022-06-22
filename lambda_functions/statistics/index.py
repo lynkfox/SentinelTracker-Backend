@@ -8,6 +8,7 @@ from results import calculate
 from common.rds import get_proxy_sql_client
 from common.rds.queries import query
 from datetime import datetime
+from common.security.api import check_approved_preflight_cors
 
 
 logger = Logger()
@@ -35,6 +36,7 @@ def lambda_handler(event: dict, context: dict) -> dict:
         body = json.dumps({"message": "Invalid format"})
 
         if _event.IS_OPTIONS:
+            check_approved_preflight_cors(event)
             body = json.dumps({"message": "Preflight Accepted"})
 
         if _event.IS_GET:
