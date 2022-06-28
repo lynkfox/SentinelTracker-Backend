@@ -71,6 +71,8 @@ class ApiStack(NestedStack):
 
         statistics = apigateway.Resource(self, "statistics", parent=version_one, path_part="statistics")
 
+        add_entry = apigateway.Resource(self, "add_entry", parent=version_one, path_part="add")
+
         user = apigateway.Resource(self, "user", parent=version_one, path_part="user")
 
         response_template = {
@@ -93,17 +95,29 @@ class ApiStack(NestedStack):
             response_templates=response_template,
         )
 
-        statistics_integration = apigateway.LambdaIntegration(
-            handler=lambda_mapping[ResourceNames.STATISTICS],
-            proxy=True,
-            integration_responses=[json_200_integration_response],
-        )
-
-        statistics_method = apigateway.MethodOptions(api_key_required=False, method_responses=[json_200_method_response])
+        standard_method = apigateway.MethodOptions(api_key_required=False, method_responses=[json_200_method_response])
 
         statistics.add_proxy(
-            default_integration=statistics_integration,
-            default_method_options=statistics_method,
+            default_integration=apigateway.LambdaIntegration(
+                handler=lambda_mapping[ResourceNames.STATISTICS],
+                proxy=True,
+                integration_responses=[json_200_integration_response],
+            ),
+            default_method_options=standard_method,
+            default_cors_preflight_options=apigateway.CorsOptions(
+                allow_origins=apigateway.Cors.ALL_ORIGINS,
+                allow_credentials=True,
+            ),
+            any_method=True,
+        )
+
+        add_entry.add_proxy(
+            default_integration=apigateway.LambdaIntegration(
+                handler=lambda_mapping[ResourceNames.POST_ENTRY],
+                proxy=True,
+                integration_responses=[json_200_integration_response],
+            ),
+            default_method_options=standard_method,
             default_cors_preflight_options=apigateway.CorsOptions(
                 allow_origins=apigateway.Cors.ALL_ORIGINS,
                 allow_credentials=True,

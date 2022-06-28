@@ -8,7 +8,7 @@ class ResourceNames:
     STATISTICS_RDS: ClassVar[str] = field(init=False, default="statistics-rds")
     BACKEND_API: ClassVar[str] = field(init=False, default="SentinelTrackerAPI")
     STATISTICS: ClassVar[str] = field(init=False, default="Get-Sentinels-Statistics")
-    POST_ENTRY: ClassVar[str] = field(init="Add-Entry-To-RDS")
+    POST_ENTRY: ClassVar[str] = field(init=False, default="Add-Entry-To-RDS")
     USER: ClassVar[str] = field(init=False, default="Get-Sentinels-Statistics-User")
     COMMON_LAYER: ClassVar[str] = field(init=False, default="common")
 
