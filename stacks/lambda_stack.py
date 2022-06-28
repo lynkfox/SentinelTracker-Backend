@@ -50,3 +50,23 @@ class LambdaStack(NestedStack):
         self.lambda_mapping[ResourceNames.STATISTICS] = statistics
         rds_table.grant_connect(statistics)
         rds_table.connections.allow_from(statistics.connections, port_range=ec2.Port.tcp(3306))
+
+        add_entry = aws_lambda.Function(
+            self,
+            ResourceNames.POST_ENTRY,
+            function_name=props.prefix_name(ResourceNames.POST_ENTRY),
+            code=aws_lambda.Code.from_asset(os.path.join(root_directory, DirectoryLocations.POST_ENTRY)),
+            environment=LambdaEnvironmentVariables({}, ResourceNames.POST_ENTRY, rds_table.endpoint).as_dict(),
+            runtime=aws_lambda.Runtime.PYTHON_3_9,
+            handler="index.lambda_handler",
+            timeout=core.Duration.seconds(29),
+            layers=[layer],
+            memory_size=512,
+            vpc=props.vpc,
+            security_groups=props.security_groups,
+            allow_public_subnet=True,
+        )
+
+        self.lambda_mapping[ResourceNames.POST_ENTRY] = add_entry
+        rds_table.grant_connect(add_entry)
+        rds_table.connections.allow_from(add_entry.connections, port_range=ec2.Port.tcp(3306))

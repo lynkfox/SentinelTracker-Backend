@@ -6,6 +6,7 @@ from aws_lambda_powertools import Logger
 from entry_models import GameDetailIncoming
 from common.models.schema_models import GameDetail
 from common.rds import get_proxy_sql_client
+from common.rds.inserts import insert
 from datetime import datetime
 from common.security.api import check_approved_preflight_cors
 
@@ -43,6 +44,9 @@ def lambda_handler(event: dict, context: dict) -> dict:
         if _event.IS_POST:
             if _event.entry_data.entry_is_valid is False and _event.entry_data.house_rules is False:
                 raise ValueError("NotHouseRuled")
+
+            if insert(MY_SQL_CLIENT, _event.entry_data) is True:
+                body = json.dumps({"message": "Data successfully added", "code": "Legacy", "dataEntered": _event.entry_data.dict()})
 
     except ValueError as e:
 

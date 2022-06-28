@@ -345,17 +345,3 @@ class LookUp:
 
     def _not_a_known_enum(self, next_part) -> bool:
         return not Hero.has_member(next_part) and not Villain.has_member(next_part) and not Location.has_member(next_part)
-
-
-def generate_sql(instructions: List[Operation]) -> any:
-    """
-    generates an SQL query string.
-    """
-
-
-def generate_query(instructions: List[Operation]) -> any:
-    """
-    Takes Instructions and parses out appropriate PK/SK
-    """
-    first_instruction = instructions[0]
-    pk = f"{first_instruction.entity_type.value.upper()}#{first_instruction.name_selection.value}"

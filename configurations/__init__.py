@@ -8,6 +8,7 @@ class ResourceNames:
     STATISTICS_RDS: ClassVar[str] = field(init=False, default="statistics-rds")
     BACKEND_API: ClassVar[str] = field(init=False, default="SentinelTrackerAPI")
     STATISTICS: ClassVar[str] = field(init=False, default="Get-Sentinels-Statistics")
+    POST_ENTRY: ClassVar[str] = field(init="Add-Entry-To-RDS")
     USER: ClassVar[str] = field(init=False, default="Get-Sentinels-Statistics-User")
     COMMON_LAYER: ClassVar[str] = field(init=False, default="common")
 
@@ -16,6 +17,7 @@ class ResourceNames:
 class DirectoryLocations:
     FRONT_END: ClassVar[str] = field(init=False, default="front_end")
     STATISTICS: ClassVar[str] = field(init=False, default="lambda_functions/statistics")
+    POST_ENTRY: ClassVar[str] = field(init=False, default="lambda_functions/game_detail_entry")
     COMMON_LAYER: ClassVar[str] = field(init=False, default="common.zip")
 
 
