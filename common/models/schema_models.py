@@ -1,10 +1,8 @@
 from __future__ import annotations
-from pydantic import BaseModel, Field, PrivateAttr, validator
-from pydantic.fields import ModelField
+from pydantic import BaseModel, Field, validator
 from common.models.enums import Type
-from common.sql_attributes import SqlColumns, SqlTables, HERO_TEAMS_COLUMNS, OPPONENTS_COLUMNS, GAME_DETAILS_COLUMNS
-from common.models.character_enums import Location, Hero, Villain
-from common.models.game_details_enums import BoxSet
+from common.sql_attributes import SqlTables, HERO_TEAMS_COLUMNS, OPPONENTS_COLUMNS, GAME_DETAILS_COLUMNS
+from dateutil.tz import UTC
 from common.models.game_details_enums import (
     HeroLossCondition,
     HeroWinCondition,
@@ -13,7 +11,6 @@ from common.models.game_details_enums import (
     Platform,
     GameLength,
 )
-import json
 from typing import Optional, Union, Dict, Any
 from datetime import datetime
 import hashlib
@@ -219,11 +216,8 @@ class VillainOpponent(BaseModel):
         Builds an insert statement for opponents
         """
         input_mapping = {OPPONENTS_COLUMNS[i]: value for i, value in enumerate(self.__dict__.values()) if value is not None}
-
-        qmarks = ", ".join("?" * len(input_mapping))
-        qry = f"INSERT INTO {SqlTables.OPPONENTS} ({qmarks}) VALUES ({qmarks})"
-
-        return (qry, input_mapping.keys(), input_mapping.values())
+        values = ", ".join([f"'{value}'" if isinstance(value, str) else f"{str(value)}" for value in input_mapping.values()])
+        return f"INSERT INTO {SqlTables.OPPONENTS} ({', '.join(input_mapping.keys())}) VALUES ({values})"
 
 
 class GameDetail(BaseModel):
@@ -232,7 +226,7 @@ class GameDetail(BaseModel):
     """
 
     username: Union[User, str, None]
-    entered_on: datetime
+    entered_on: Union[datetime, str, None]
     game_mode: Optional[GameMode]
     selection_method: Optional[SelectionMethod]
     platform: Optional[Platform]
@@ -285,14 +279,23 @@ class GameDetail(BaseModel):
             del schema["properties"]["hero_team"]
             del schema["properties"]["entry_is_valid"]
             del schema["properties"]["username"]["anyOf"]
+            del schema["properties"]["entered_on"]
             schema["properties"]["username"] = {"type": "string"}
+
+    @validator("entered_on", always=True)
+    def update_entered_on(cls, entry_time, values):
+        if entry_time is not None:
+            return entry_time
+
+        return datetime.now(tz=UTC).isoformat()
 
     @validator("villain", always=True)
     def update_game_type(cls, opponent: VillainOpponent, values):
         if isinstance(opponent, int):
             return opponent
-        if opponent.villain_two is not None:
-            values["game_mode"] = GameMode.VILLAINS.value
+        elif opponent is not None:
+            if opponent.villain_two is not None:
+                values["game_mode"] = GameMode.VILLAINS.value
         return opponent
 
     @validator("entry_is_valid", always=True)
@@ -311,19 +314,10 @@ class GameDetail(BaseModel):
         if values.get("house_rules") is True:
             return False
 
-        # make sure if a team game that the number of villains is not more than the number of heroes
-        villains = [v for k, v in values["villain"].__dict__.items() if ("villain" in k and "incapped" not in k) and v is not None]
-        if len(villains) != 1 and len(villains) != values["number_of_heroes"]:
+        if not cls._format_and_validate_opponents(values):
             return False
 
-        # validate that the heroes are all unique
-        if not values["hero_team"].valid_team:
-            return False
-
-        incapped_heroes = [v for k, v in values.items() if "hero" in k and "incapped" in k and v]
-
-        # validate if all heroes are incapped that the end_result is not a Win condition.
-        if len(incapped_heroes) == values["number_of_heroes"] and isinstance(values["end_result"], HeroWinCondition):
+        if not cls._format_and_validate_heroes(values):
             return False
 
         # if either Challenge or Advanced is none that means this entry didnt have values (the length of the response
@@ -333,13 +327,71 @@ class GameDetail(BaseModel):
 
         return True
 
+    @classmethod
+    def _format_and_validate_opponents(cls, values) -> bool:
+        villains = values.get("villain")
+
+        if villains is None or (not isinstance(villains, VillainOpponent) and not isinstance(villains, int)):
+            values["villain"] = VillainOpponent(
+                villain_one=values.get("villain_one"),
+                villain_two=values.get("villain_two"),
+                villain_three=values.get("villain_three"),
+                villain_four=values.get("villain_four"),
+                villain_five=values.get("villain_five"),
+            )
+
+        if villains is not None and isinstance(villains, VillainOpponent):
+            # make sure if a team game that the number of villains is not more than the number of heroes
+            villains = [v for k, v in values["villain"].__dict__.items() if ("villain" in k and "incapped" not in k) and v is not None]
+            if len(villains) != 1 and len(villains) != values["number_of_heroes"]:
+                return False
+
+        return True
+
+    @classmethod
+    def _format_and_validate_heroes(cls, values) -> bool:
+
+        hero_team = values.get("hero_team")
+
+        if hero_team is None or (not isinstance(hero_team, HeroTeam) and not isinstance(hero_team, int)):
+            values["hero_team"] = HeroTeam(
+                hero_one=values.get("hero_one"),
+                hero_two=values.get("hero_two"),
+                hero_three=values.get("hero_three"),
+                hero_four=values.get("hero_four"),
+                hero_five=values.get("hero_five"),
+            )
+
+        if hero_team is not None and isinstance(hero_team, HeroTeam):
+
+            # validate that the heroes are all unique
+            if not values["hero_team"].valid_team:
+                return False
+
+            incapped_heroes = [v for k, v in values.items() if "hero" in k and "incapped" in k and v]
+
+            # validate if all heroes are incapped that the end_result is not a Win condition.
+            if len(incapped_heroes) == values["number_of_heroes"] and isinstance(values["end_result"], HeroWinCondition):
+                return False
+
+        return True
+
     def get_insert_statement(self):
         """
         Builds an insert statement for Game Details
         """
-        input_mapping = {GAME_DETAILS_COLUMNS[i]: value for i, value in enumerate(self.__dict__.values()) if value is not None}
+        input_mapping = {}
+        i = 0
+        for key, value in self.__dict__.items():
+            if value is not None and key not in ["entered_on"]:
+                if isinstance(value, VillainOpponent) or isinstance(value, HeroTeam):
+                    value_to_add = value.id_hash
+                else:
+                    value_to_add = value
 
-        qmarks = ", ".join("?" * len(input_mapping))
-        qry = f"INSERT INTO {SqlTables.GAME_DETAILS} ({qmarks}) VALUES ({qmarks})"
+                input_mapping[GAME_DETAILS_COLUMNS[i]] = value_to_add
 
-        return (qry, input_mapping.keys(), input_mapping.values())
+            i += 1
+
+        values = ", ".join([f"'{value}'" if isinstance(value, str) else f"{str(value)}" for value in input_mapping.values()])
+        return f"INSERT INTO {SqlTables.GAME_DETAILS} ({', '.join(input_mapping.keys())}) VALUES ({values})"

@@ -33,23 +33,27 @@ def lambda_handler(event: dict, context: dict) -> dict:
         body = json.dumps({"message": "Invalid format"})
 
         if _event.IS_OPTIONS:
-
+            logger.debug("OPTIONS triggered")
             check_approved_preflight_cors(event)
 
             body = json.dumps({"message": "Preflight Accepted"})
 
-        if _event.IS_GET:
+        elif _event.IS_GET:
+            logger.debug("GET triggered")
             body = GameDetail.schema_json()
 
-        if _event.IS_POST:
+        elif _event.IS_POST:
+            logger.debug("POST triggered")
+            if _event.entry_data is None:
+                raise ValueError("Missing")
             if _event.entry_data.entry_is_valid is False and _event.entry_data.house_rules is False:
                 raise ValueError("NotHouseRuled")
 
             if insert(MY_SQL_CLIENT, _event.entry_data) is True:
-                body = json.dumps({"message": "Data successfully added", "code": "Legacy", "dataEntered": _event.entry_data.dict()})
+                body = {"message": "Data successfully added", "code": "Legacy", "dataEntered": _event.entry_data.dict()}
 
     except ValueError as e:
-
+        logger.info("error!", exc_info=True)
         code = "Omnitron"
         error = "ValueError"
         message = f"Unknown Value Error"
@@ -59,20 +63,25 @@ def lambda_handler(event: dict, context: dict) -> dict:
             error = "InvalidData"
             message = "One or more inputs has made this an invalid game set up. If this was intentional, please ensure that 'house_rules' is set to True and re-submit. Please note these games will not be counted in the official response statistics. It is highly recommended you add a comment explaining your house rules."
 
-        body = json.dumps(
-            json.dumps({"errorCode": code, "error": error, "message": message, "errorMessage": str(e), "errorTime": datetime.now().isoformat()})
-        )
+        if e.args[0] == "Missing":
+            code = "Ambuscade"
+            error = "MissingData"
+            message = "Add Game Entry call with no body"
+
+        body = {"errorCode": code, "error": error, "message": message, "errorMessage": str(e), "errorTime": datetime.now().isoformat()}
+        logger.debug("Value Error", extra=body, exc_info=True)
 
     except Exception as e:
         code = "OblivAeon"
         error = "Unknown Error"
         message = f"Unhandled Exception. Please contact Lynkfox with this information"
 
-        body = json.dumps(
-            json.dumps({"errorCode": code, "error": error, "message": message, "errorMessage": str(e), "errorTime": datetime.now().isoformat()})
-        )
+        body = {"errorCode": code, "error": error, "message": message, "errorMessage": str(e), "errorTime": datetime.now().isoformat()}
+        logger.debug("Unknown Error", extra=body, exc_info=True)
 
     finally:
+        if isinstance(body, dict):
+            body = json.dumps(body)
         return {
             "statusCode": 200,
             "headers": {

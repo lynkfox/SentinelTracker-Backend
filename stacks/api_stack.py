@@ -111,16 +111,26 @@ class ApiStack(NestedStack):
             any_method=True,
         )
 
-        add_entry.add_proxy(
-            default_integration=apigateway.LambdaIntegration(
+        add_entry.add_method(
+            "ANY",
+            integration=apigateway.LambdaIntegration(
                 handler=lambda_mapping[ResourceNames.POST_ENTRY],
                 proxy=True,
                 integration_responses=[json_200_integration_response],
             ),
-            default_method_options=standard_method,
-            default_cors_preflight_options=apigateway.CorsOptions(
-                allow_origins=apigateway.Cors.ALL_ORIGINS,
-                allow_credentials=True,
-            ),
-            any_method=True,
+            method_responses=[json_200_method_response],
         )
+
+        # add_entry.add_proxy(
+        #     default_integration=apigateway.LambdaIntegration(
+        #         handler=lambda_mapping[ResourceNames.POST_ENTRY],
+        #         proxy=True,
+        #         integration_responses=[json_200_integration_response],
+        #     ),
+        #     default_method_options=standard_method,
+        #     default_cors_preflight_options=apigateway.CorsOptions(
+        #         allow_origins=apigateway.Cors.ALL_ORIGINS,
+        #         allow_credentials=True,
+        #     ),
+        #     any_method=True,
+        # )

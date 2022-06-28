@@ -55,7 +55,7 @@ def lambda_handler(event: dict, context: dict) -> dict:
         body = json.dumps({"errorCode": code, "error": error, "message": message, "errorMessage": str(e), "errorTime": datetime.now().isoformat()})
 
     except Exception as e:
-        code = "Ranek Kel'voss"
+        code = "OblivAeon"
         error = "Unknown Error"
         message = f"Unhandled Exception. Please contact Lynkfox with this information"
 
