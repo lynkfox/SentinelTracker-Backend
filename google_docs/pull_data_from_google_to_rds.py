@@ -160,6 +160,7 @@ def create_values_for_game_details_insert(game: GameDetail) -> set:
         game.selection_method,
         game.platform,
         game.end_result,
+        game.win,
         game.estimated_time,
         game.house_rules,
         game.number_of_players,

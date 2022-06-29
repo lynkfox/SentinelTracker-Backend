@@ -75,6 +75,7 @@ CREATE TABLE [gameDetails] (
   [selection_method] nvarchar(255),
   [platform] nvarchar(255),
   [end_result] nvarchar(255),
+  [win] bool DEFAULT (0),
   [estimated_time] nvarchar(255),
   [house_rules] nvarchar(255),
   [number_of_players] int,

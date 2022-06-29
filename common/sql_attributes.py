@@ -44,6 +44,7 @@ class SqlColumns(EnhancedEnum):
     SELECTION_METHOD = "selection_method"
     PLATFORM = "platform"
     END_RESULT = "end_result"
+    WIN = "win"
     ESTIMATED_TIME = "estimated_time"
     HOUSE_RULES = "house_rules"
     NUMBER_OF_PLAYERS = "number_of_players"
@@ -98,6 +99,7 @@ GAME_DETAILS_COLUMNS = [
     SqlColumns.SELECTION_METHOD.value,
     SqlColumns.PLATFORM.value,
     SqlColumns.END_RESULT.value,
+    SqlColumns.WIN.value,
     SqlColumns.ESTIMATED_TIME.value,
     SqlColumns.HOUSE_RULES.value,
     SqlColumns.NUMBER_OF_PLAYERS.value,

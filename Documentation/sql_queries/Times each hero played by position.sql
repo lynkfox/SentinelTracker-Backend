@@ -1,9 +1,4 @@
 select c1.hero1,
-       c1.cnt as pos1,
-       c2.cnt as pos2,
-       c3.cnt as pos3,
-       c4.cnt as pos4,
-       c5.cnt as pos5,
        c1.cnt+c2.cnt+c3.cnt+c4.cnt+c5.cnt as total
 from
 (
@@ -47,4 +42,4 @@ and   c3.hero3 = c4.hero4
 and   c4.hero4 = c5.hero5
 and (c1.cnt+c2.cnt+c3.cnt+c4.cnt+c5.cnt) != 0
 
-order by total limit 10
+order by total

@@ -24,7 +24,7 @@ def calculate(request: LookUp, response: List[GameDetail]) -> models.StatisticsR
 
     requested_parameters = describe_query_parameters(request.operations)
     total_games = len(response)
-    total_wins = collection.where(lambda x: _is_win_condition(x.end_result)).count()
+    total_wins = collection.where(lambda x: x.win).count()
 
     # default
     stats = models.Statistics(TotalGames=total_games, TotalPlayerVictories=total_wins)
@@ -61,7 +61,7 @@ def calculate(request: LookUp, response: List[GameDetail]) -> models.StatisticsR
 
         incapped_collection = collection.where(lambda x: _is_hero_incapped(x, requested_parameters.heroes[0]))
         stats.Incapacitated = incapped_collection.count()
-        stats.TotalPlayerVictoriesWhileIncapacitated = incapped_collection.where(lambda x: _is_win_condition(x.end_result)).count()
+        stats.TotalPlayerVictoriesWhileIncapacitated = incapped_collection.where(lambda x: x.win).count()
 
     if len(requested_parameters.villains) >= 1 and requested_parameters.villains[0] in VILLAIN_TEAM_NAMES:
         # If Team Villain game, and if only one villain in original query, include With stats for other Team Villains
@@ -87,11 +87,11 @@ def build_opponent_stats(request, collection, total_games, total_wins):
         TotalGames=total_games,
         TotalPlayerVictories=total_wins,
         AdvancedModeTotalGames=advanced_games_collection.count(),
-        AdvancedModePlayerVictories=advanced_games_collection.where(lambda x: _is_win_condition(x.end_result)).count(),
+        AdvancedModePlayerVictories=advanced_games_collection.where(lambda x: x.win).count(),
         ChallengeModeTotalGames=challenge_games_collection.count(),
-        ChallengeModePlayerVictories=challenge_games_collection.where(lambda x: _is_win_condition(x.end_result)).count(),
+        ChallengeModePlayerVictories=challenge_games_collection.where(lambda x: x.win).count(),
         UltimateModeTotalGames=ultimate_games_collection.count(),
-        UltimateModePlayerVictories=ultimate_games_collection.where(lambda x: _is_win_condition(x.end_result)).count(),
+        UltimateModePlayerVictories=ultimate_games_collection.where(lambda x: x.win).count(),
         Versus=build_related_links(HERO_NAMES, HERO_DISPLAY_MAPPING, "versus", f"{request.path}"),
     )
 
@@ -162,13 +162,6 @@ def describe_query_parameters(operations=List[Operation]) -> models.RequestedSet
     heroes, opponents, locations, username = parse_for_rds_names(operations)
 
     return models.RequestedSet(heroes=heroes, villains=opponents, environment=locations, user=username)
-
-
-def _is_win_condition(end_result: str) -> bool:
-    """
-    LINQ helper function - returns if the end_result is a HeroWinCondition compatible enum value or not.
-    """
-    return any([end_result == (win_condition.value if isinstance(end_result, str) else win_condition) for win_condition in HeroWinCondition])
 
 
 def _is_hero(details: GameDetail, hero_name: str) -> bool:

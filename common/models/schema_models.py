@@ -231,6 +231,7 @@ class GameDetail(BaseModel):
     selection_method: Optional[SelectionMethod]
     platform: Optional[Platform]
     end_result: Union[HeroLossCondition, HeroWinCondition, None]
+    win: Optional[bool]
     estimated_time: Optional[GameLength]
     house_rules: Optional[str]
     number_of_players: Optional[int]
@@ -297,6 +298,17 @@ class GameDetail(BaseModel):
             if opponent.villain_two is not None:
                 values["game_mode"] = GameMode.VILLAINS.value
         return opponent
+
+    @validator("win", always=True)
+    def determine_win(cls, win, values):
+        if win is not None:
+            return win
+        else:
+            try:
+                HeroWinCondition(values["end_result"])
+                return True
+            except Exception:
+                return False
 
     @validator("entry_is_valid", always=True)
     def validate_entry(cls, entry, values):
