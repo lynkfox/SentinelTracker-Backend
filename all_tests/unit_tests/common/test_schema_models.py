@@ -345,9 +345,3 @@ class Test_GameDetail:
         test_object = GameDetail(**self.test_add_event)
 
         assert not test_object.entry_is_valid
-
-    def test_get_insert_statement(self):
-        test_object = GameDetail(**self.test_add_event)
-        expected_statement = "INSERT INTO gameDetails (username, game_mode, selection_method, platform, end_result, win, estimated_time, number_of_players, number_of_heroes, perceived_difficulty, hero_team, environment, villain, hero_one, hero_one_incapped, hero_two, hero_two_incapped, hero_three, hero_three_incapped, villain_one, villain_one_incapped, advanced, comments, entry_is_valid) VALUES ('Lynkfox', 'Normal', 'Random', 'Physical', 'The Hero's Triumph (Villain(s) Incapacitated)', True, 'More than 2 hours', 1, 3, 2, -2505219922851692492, 'Insula Primalis', -8658938199108491557, 'Absolute Zero', False, 'Legacy', False, 'Tachyon, Super Scientific', False, 'Baron Blade', True, True, 'Test Entry', True)"
-
-        assert not test_object.get_insert_statement() == expected_statement

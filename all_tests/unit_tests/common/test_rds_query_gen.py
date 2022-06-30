@@ -81,7 +81,7 @@ class Test_team_is:
             team_is(["", "", "", "", "", ""], Type.VILLAIN)
 
 
-class Test_in_environment:
+class Test_in_location:
     def test_returns_a_string(self):
         assert isinstance(in_location("Insula Primalis"), str)
 
@@ -195,3 +195,45 @@ class Test_generate_from_operations:
             test_result
             == "SELECT * from gameDetails INNER JOIN heroTeams on heroTeams.id_hash = gameDetails.hero_team INNER JOIN opponents on opponents.id_hash = gameDetails.villain WHERE 'Absolute Zero' IN (heroTeams.hero_one, heroTeams.hero_two, heroTeams.hero_three, heroTeams.hero_four, heroTeams.hero_five) AND gameDetails.username='Lynkfox' AND gameDetails.entry_is_valid"
         )
+
+
+class Test_parse_for_rds_names:
+    def setup(self):
+        self.operations = LookUp("hero/absolute_zero/versus/baron_blade/in/insula_primalis/from/Lynkfox").operations
+
+    def teardown(self):
+        del self.operations
+
+    def test_retrieves_hero_name(self):
+        test_result, _, _, _ = parse_for_rds_names(self.operations)
+
+        assert test_result == ["Absolute Zero"]
+
+    def test_retrieves_opponent_names(self):
+        _, test_result, _, _ = parse_for_rds_names(self.operations)
+
+        assert test_result == ["Baron Blade"]
+
+    def test_retrieves_location_names(self):
+        _, _, test_result, _ = parse_for_rds_names(self.operations)
+
+        assert test_result == ["Insula Primalis"]
+
+    def test_retrieves_username(self):
+        _, _, _, test_result = parse_for_rds_names(self.operations)
+
+        assert test_result == "Lynkfox"
+
+    def test_combines_alternate_tags_into_main_name(self):
+        operations = LookUp("hero/absolute_zero/freedom_five").operations
+
+        test_result, _, _, _ = parse_for_rds_names(operations)
+
+        assert test_result == ["Absolute Zero, Freedom Five"]
+
+    def test_handles_definitive_types_properly(self):
+        operations = LookUp("villain/baron_blade/definitive_mad_bomber").operations
+
+        _, test_result, _, _ = parse_for_rds_names(operations)
+
+        assert test_result == ["Baron Blade, Definitive, Mad Bomber"]

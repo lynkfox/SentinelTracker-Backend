@@ -201,6 +201,10 @@ def generate_from_operations(operations: List[Operation]) -> str:
 
 
 def parse_for_rds_names(operations):
+    """
+    Parses operation instructions (operations) for the various names that are being queried against, and returns them
+    in order to be used as needed. Returns full display names (The same values stored in the RDS)
+    """
     heroes = []
     opponents = []
     locations = []
