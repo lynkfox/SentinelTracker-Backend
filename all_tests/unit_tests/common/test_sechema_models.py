@@ -1,6 +1,8 @@
 from common.models.schema_models import _build_id_hash, User, OblivAeonDetail, HeroTeam, VillainOpponent, GameDetail
 import pytest
 from pydantic import ValidationError
+from common.models.game_details_enums import HeroWinCondition, HeroLossCondition, GameLength, GameMode, SelectionMethod
+from datetime import datetime
 
 
 class Test_build_id_hash:
@@ -201,3 +203,151 @@ class Test_VillainOpponentBaseModel:
         expected_statement = "INSERT INTO opponents (villain_one, valid_team, id_hash) VALUES ('Baron Blade', True, -8658938199108491557)"
 
         assert self.test_object.get_insert_statement() == expected_statement
+
+
+class Test_GameDetail:
+    def setup(self):
+        self.test_add_event = {
+            "username": "Lynkfox",
+            "game_mode": GameMode.NORMAL,
+            "selection_method": SelectionMethod.RANDOM.value,
+            "platform": "Physical",
+            "end_result": HeroWinCondition.STANDARD.value,
+            "estimated_time": GameLength.MORE_THAN_TWO_HOURS.value,
+            "number_of_players": 1,
+            "number_of_heroes": 3,
+            "perceived_difficulty": 2,
+            "environment": "Insula Primalis",
+            "hero_one": "Absolute Zero",
+            "hero_one_incapped": False,
+            "hero_two": "Legacy",
+            "hero_two_incapped": False,
+            "hero_three": "Tachyon, Super Scientific",
+            "hero_three_incapped": False,
+            "villain_one": "Baron Blade",
+            "villain_one_incapped": True,
+            "advanced": True,
+            "comment": "Test Entry",
+        }
+
+    def teardown(self):
+        del self.test_add_event
+
+    def test_no_entry_time_sets_as_datetime(self):
+        test_object = GameDetail(**self.test_add_event)
+
+        assert test_object.entered_on is not None
+        assert datetime.fromisoformat(test_object.entered_on)
+
+    def test_entry_time_provided_returns_as_is(self):
+        now = datetime.now()
+        self.test_add_event["entered_on"] = now
+        test_object = GameDetail(**self.test_add_event)
+
+        assert test_object.entered_on == now
+
+    def test_one_villain_retains_game_mode_as_normal(self):
+        test_object = GameDetail(**self.test_add_event)
+
+        assert test_object.game_mode == GameMode.NORMAL.value
+
+    def test_more_than_one_villain_automatically_changes_to_team_game_mode(self):
+        self.test_add_event["villain_two"] = "Plague Rat"
+        test_object = GameDetail(**self.test_add_event)
+
+        assert test_object.game_mode == GameMode.VILLAINS.value
+
+    def test_creates_OpponentObject_for_villain_if_not_provided(self):
+        test_object = GameDetail(**self.test_add_event)
+
+        assert isinstance(test_object.villain, VillainOpponent)
+
+    def test_creates_HeroTeamObject_for_hero_team_if_not_provided(self):
+        test_object = GameDetail(**self.test_add_event)
+
+        assert isinstance(test_object.hero_team, HeroTeam)
+
+    def test_if_villain_id_hash_number_in_villain_does_not_create_object(self):
+        self.test_add_event["villain"] = 123456789
+        test_object = GameDetail(**self.test_add_event)
+
+        assert test_object.villain == 123456789
+
+    def test_if_team_id_hash_number_in_hero_team_does_not_create_object(self):
+        self.test_add_event["hero_team"] = 123456789
+        test_object = GameDetail(**self.test_add_event)
+
+        assert test_object.hero_team == 123456789
+
+    def test_win_set_true_if_HeroWinCondition_in_end_result(self):
+        self.test_add_event["end_result"] = HeroWinCondition.GLOOMWEAVER
+        test_object = GameDetail(**self.test_add_event)
+
+        assert test_object.win
+
+    def test_win_set_true_if_HeroWinCondition_string_in_end_result(self):
+        self.test_add_event["end_result"] = HeroWinCondition.GLOOMWEAVER.value
+        test_object = GameDetail(**self.test_add_event)
+
+        assert test_object.win
+
+    def test_win_set_false_if_HeroLossCondition_in_end_result(self):
+        self.test_add_event["end_result"] = HeroLossCondition.OBILVAEON
+        test_object = GameDetail(**self.test_add_event)
+
+        assert not test_object.win
+
+    def test_win_set_false_if_HeroLossCondition__string_in_end_result(self):
+        self.test_add_event["end_result"] = HeroLossCondition.OBILVAEON.value
+        test_object = GameDetail(**self.test_add_event)
+
+        assert not test_object.win
+
+    def test_respects_win_if_passed_directly_without_changing_it(self):
+        # loss value but win is set to true, so win should remain true
+        self.test_add_event["end_result"] = HeroLossCondition.OBILVAEON
+        self.test_add_event["win"] = True
+        test_object = GameDetail(**self.test_add_event)
+
+        assert test_object.win
+
+    def test_entry_is_valid_respects_value_passed(self):
+        self.test_add_event["entry_is_valid"] = False
+        test_object = GameDetail(**self.test_add_event)
+
+        assert not test_object.entry_is_valid
+
+    def test_entry_is_valid_automatically_false_if_house_rules_true(self):
+        self.test_add_event["entry_is_valid"] = True
+        self.test_add_event["house_rules"] = True
+        test_object = GameDetail(**self.test_add_event)
+
+        assert not test_object.entry_is_valid
+
+    def test_entry_is_valid_automatically_false_if_house_rules_is_not_None(self):
+        self.test_add_event["entry_is_valid"] = True
+        self.test_add_event["house_rules"] = "6 players, all Freedom Six"
+        test_object = GameDetail(**self.test_add_event)
+
+        assert not test_object.entry_is_valid
+
+    def test_entry_is_valid_false_if_hero_team_not_valid_team(self):
+        self.test_add_event["hero_two"] = "Absolute Zero"
+        test_object = GameDetail(**self.test_add_event)
+
+        assert not test_object.entry_is_valid
+
+    def test_entry_is_valid_false_if_more_villains_than_heroes(self):
+        self.test_add_event["villain_two"] = "Plague Rat"
+        self.test_add_event["villain_three"] = "Ambuscade, Team Villain"
+        self.test_add_event["villain_four"] = "The Operative"
+        self.test_add_event["villain_five"] = "Ermine"
+        test_object = GameDetail(**self.test_add_event)
+
+        assert not test_object.entry_is_valid
+
+    def test_get_insert_statement(self):
+        test_object = GameDetail(**self.test_add_event)
+        expected_statement = "INSERT INTO gameDetails (username, game_mode, selection_method, platform, end_result, win, estimated_time, number_of_players, number_of_heroes, perceived_difficulty, hero_team, environment, villain, hero_one, hero_one_incapped, hero_two, hero_two_incapped, hero_three, hero_three_incapped, villain_one, villain_one_incapped, advanced, comments, entry_is_valid) VALUES ('Lynkfox', 'Normal', 'Random', 'Physical', 'The Hero's Triumph (Villain(s) Incapacitated)', True, 'More than 2 hours', 1, 3, 2, -2505219922851692492, 'Insula Primalis', -8658938199108491557, 'Absolute Zero', False, 'Legacy', False, 'Tachyon, Super Scientific', False, 'Baron Blade', True, True, 'Test Entry', True)"
+
+        assert not test_object.get_insert_statement() == expected_statement

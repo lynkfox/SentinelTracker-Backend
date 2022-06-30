@@ -233,7 +233,7 @@ class GameDetail(BaseModel):
     end_result: Union[HeroLossCondition, HeroWinCondition, None]
     win: Optional[bool]
     estimated_time: Optional[GameLength]
-    house_rules: Optional[str]
+    house_rules: Union[bool, str, None]
     number_of_players: Optional[int]
     number_of_heroes: Optional[int]
     perceived_difficulty: Optional[int]
@@ -320,11 +320,11 @@ class GameDetail(BaseModel):
         Coming from the database, this value is defaulted to true, so will always be there and the rest of the
         validation can be ignored.
         """
+        if values.get("house_rules") is not None:
+            return False
+
         if entry is not None:
             return entry
-
-        if values.get("house_rules") is True:
-            return False
 
         if not cls._format_and_validate_opponents(values):
             return False
@@ -332,10 +332,13 @@ class GameDetail(BaseModel):
         if not cls._format_and_validate_heroes(values):
             return False
 
+        if values.get("villain_two") is not None:
+            values["game_mode"] = GameMode.VILLAINS.value
+
         # if either Challenge or Advanced is none that means this entry didnt have values (the length of the response
         # from google sheets wasn't long enough) which means this is an invalid entry.
-        if values["challenge"] is None or values["advanced"] is None:
-            return False
+        # if values["challenge"] is None or values["advanced"] is None:
+        #     return False
 
         return True
 
